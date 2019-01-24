@@ -1,0 +1,33 @@
+---
+title: "Interpreting Regression: Rough Outline"
+output: github_document
+---
+
+# 
+
+# Intro to Regression
+
+## What is regression?
+
+It's the estimation of a probabilistic quantity of a numeric random variable, conditional on some predictors. 
+
+[Explain this]
+
+## The two main tasks that regression tries to solve
+
+prediction and interpretation
+
+Example 1: (Basic numeric example, perhaps with y in R)
+
+Example 2: (Another numeric example, perhaps with y being a count)
+
+Example 3: (binary response) There's a 5% that a person will get pregnant through an in-vivo insemination procedure. It's well-know that age is an important factor. It also depends on how long after the leutenizing hormone (LH) first spiked.
+
+- Prediction: Given the person's age, what is the chance of pregnancy?
+- Interpretation: How does age influence the chance of pregnancy? What about LH? What about LH for people over 40?
+
+### Prediction
+
+[Explain it here; start univariate]
+
+# The model-fitting paradigms in R and python

@@ -1,0 +1,49 @@
+# Writing the sample mean as an optimization problem
+
+(DSCI 561 lab2, 2018-2019)
+
+It's important to know that the sample mean can also be calculated by finding the value that minimizes the sum of squared errors with respect to that value. We'll explore that here.
+
+2.1
+Store some numbers in the vector y.
+Calculate the sample mean of the data, stored in mu_y.
+This is not worth any marks, but having it as its own question jibes better with the autograder.
+
+In [ ]:
+# Find the mean of some numbers
+# your code here
+fail() # No Answer - remove if you provide an answer
+cat("mean:\n")
+print(mu_y)
+In [ ]:
+test_that("Solution correctness", {
+    expect_identical(mu_y, mean(y))
+})
+print("success!")
+2.2
+rubric={autograde:6}
+
+We've defined sse() below, a function that takes some number and returns the sum of squared "errors" of all values of y with respect to the inputted number. An "error" is defined as the difference between two values.
+
+We've also generated a quick plot of this function for you.
+
+In [ ]:
+sse <- Vectorize(function(m) sum((y - m)^2))
+curve(sse, mu_y - 2*sd(y), mu_y + 2*sd(y))
+Your task: use the optimize() function to find the value that minimizes the sum of squared errors. Store this value in sse_minimizer, and put your code in between q2 <- expr({ and }).
+
+Hint: for the interval argument, specify an interval that contains the sample mean.
+
+Important points:
+
+You should recognize that the sample mean minimizes this function!
+You'll be seeing the sum of squared errors a lot through the program (mean squared error and R^2 are based on it). This is because the mean is a very popular quantity to model and use as a prediction.
+If you're not convinced, play with different numbers to see for yourself.
+In [ ]:
+# Find the SSE minimizer
+q2 <- expr({
+# your code here
+fail() # No Answer - remove if you provide an answer
+})
+eval(q2)
+print(sse_minimizer)

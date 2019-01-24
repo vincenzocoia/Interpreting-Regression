@@ -1,0 +1,103 @@
+---
+title: "From Linear Regression to Mixed Effects Models"
+output: github_document
+---
+
+## Motivation for LME
+
+Let's take a look at the `esoph` data set, to see how the number of controls `ncontrols` affects the number of cases `ncases` of cancer for each age group `agegp`. Here's what the data look like (with a tad bit of vertical jitter):
+
+```{r, echo=FALSE, fig.width=4, fig.height=3, fig.align="center"}
+suppressMessages(library(tidyverse))
+dat <- as_tibble(esoph) %>% 
+    mutate(agegp = as.character(agegp))
+(p <- ggplot(dat, aes(ncontrols, ncases, group=agegp, colour=agegp)) +
+    geom_jitter(height=0.25) +
+    scale_colour_discrete("Age Group") +
+    ylab("Number of Cases") + xlab("Number of Controls"))
+```
+
+It seems each age group has a different relationship. Should we then fit regression lines for each group separately? Here's what we get, if we do:
+
+```{r, echo=FALSE, fig.width=4, fig.height=3, fig.align="center"}
+p + geom_smooth(method="lm", se=FALSE, size=0.5)
+```
+
+But, each group has so few observations, making the regression less powerful:
+
+```{r, echo=FALSE}
+dat %>% 
+    group_by(agegp) %>% 
+    summarise(n=length(ncases)) %>% 
+    knitr::kable()
+```
+
+__Question__: can we borrow information across groups to strengthen regression, while still allowing each group to have its own regression line?
+
+Yes -- we can use _Linear Mixed Effects_ (LME) models. An LME model is just a linear regression model for each group, with different slopes and intercepts, but the collection of slopes and intercepts _is assumed to come from some normal distribution_.
+
+## Definition
+
+With one predictor ($X$), we can write an LME as follows:
+$$ Y = \left(\beta_0 + b_0\right) + \left(\beta_1 + b_1\right) X + \varepsilon,  $$
+where the error term $\varepsilon$ has mean zero, and the $b_0$ and $b_1$ terms are normally distributed having a mean of zero, and some unknown variances and correlation. The $\beta$ terms are called the _fixed effects_, and the $b$ terms are called the _random effects_. Since the model has both types of effects, it's said to be a _mixed_ model -- hence the name of "LME". 
+
+Note that we don't have to make _both_ the slope and intercept random. For example, we can remove the $b_0$ term, which would mean that each group is forced to have the same (fixed) intercept $\beta_0$. Also, we can add more predictors ($X$ variables).
+
+## R Tools for Fitting
+
+Two R packages exist for working with mixed effects models: `lme4` and `nlme`. We'll be using the `lme4` package (check out [this](http://stats.stackexchange.com/questions/5344/how-to-choose-nlme-or-lme4-r-library-for-mixed-effects-models) discussion on Cross Validated for a comparison of the two packages).
+
+Let's fit the model. We need to indicate a formula first in the `lmer` function, and indicate the data set we're using.
+
+```{r}
+library(lme4)
+fit <- lmer(ncases ~ ncontrols + (ncontrols | agegp), 
+            data=dat)
+```
+
+Let's take a closer look at the _formula_, which in this case is `ncases ~ ncontrols + (ncontrols | agegp)`. 
+
+On the left of the `~` is the response variable, as usual (just like for `lm`). On the right, we need to specify both the fixed and random effects. The fixed effects part is the same as usual: `ncontrols` indicates the explanatory variables that get a fixed effect. Then, we need to indicate which explanatory variables get a random effect. The random effects can be indicated in parentheses, separated by `+`, followed by a `|`, after which the variable(s) that you wish to group by are indicated. So `|` can be interpreted as "grouped by".
+
+Now let's look at the model output:
+
+```{r}
+summary(fit)
+```
+
+The random and fixed effects are indicated here.
+
+- Under the "Random effects:" section, we have the variance of each random effect, and the lower part of the correlation matrix of these random effects.
+- Under the "Fixed effects:" section, we have the estimates of the fixed effects, as well as the uncertainty in the estimate (indicated by the Std. Error).
+
+We can extract the collection of slopes and intercepts for each group using the `coef` function:
+
+```{r}
+(par_coll <- coef(fit)[[1]])
+```
+
+Let's put these regression lines on the plot:
+
+```{r, echo=FALSE, fig.width=4, fig.height=3, fig.align="center"}
+## Put the slopes and intercepts with the data frame:
+par_coll %>% 
+    rownames_to_column("agegp") %>% 
+    left_join(dat, by="agegp")
+par_coll <- rownames_to_column(par_coll)
+dat <- ddply(dat, ~ agegp, function(df){
+    pars <- subset(par_coll, rowname==unique(df$agegp))
+    int <- pars$`(Intercept)`
+    slp <- pars$ncontrols
+    cbind(df, intercept=int, slope=slp)
+})
+
+## Plot
+ggplot(dat, aes(ncontrols, ncases, group=agegp, colour=agegp)) +
+    geom_jitter(height=0.25) +
+    geom_abline(aes(intercept=intercept, slope=slope, colour=agegp)) +
+    scale_colour_discrete("Age Group") +
+    ylab("Number of Cases") + xlab("Number of Controls")
+```
+
+So, each group still gets its own regression line, but tying the parameters together with a normal distribution gives us a more powerful regression.

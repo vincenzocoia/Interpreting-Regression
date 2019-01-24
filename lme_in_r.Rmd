@@ -1,0 +1,77 @@
+---
+title: "Mixed Effects Models in R: tutorial"
+author: "Vincenzo Coia"
+date: '2017-01-15'
+output: html_document
+---
+
+```{r, warning=FALSE, echo=FALSE}
+library(knitr)
+opts_chunk$set(warning=FALSE, fig.width=5, fig.height=3, fig.align="center")
+```
+
+## Mixed-Effects Models
+
+Two R packages exist for working with mixed effects models: `lme4` and `nlme`. We'll be using the `lme4` package (check out [this](http://stats.stackexchange.com/questions/5344/how-to-choose-nlme-or-lme4-r-library-for-mixed-effects-models) discussion on Cross Validated for a comparison of the two packages).
+
+```{r}
+library(lme4)
+```
+
+In Lab 1, we compared linear regression (function `lm`) with GLM's (function `glm`). In Lab 2, we consider adding a random effect to either of these:
+
+- A linear model with random effects is a _Linear Mixed-Effects Model_, and is fit using the `lmer` function.
+- A generalized linear model with random effects is a _Generalized Linear Mixed-Effects Model_, and is fit using the `glmer` function.
+
+We'll work with the `esoph` data set, to see how the number of controls `ncontrols` affects the number of cases `ncases` based on age group `agegp`. Here's what the data look like (with a tad bit of vertical jitter):
+
+```{r}
+library(ggplot2)
+library(dplyr)
+dat <- esoph
+p <- ggplot(dat, aes(ncontrols, ncases)) +
+    geom_jitter(aes(colour=agegp), height=0.25)
+p
+```
+
+Since the response is a count variable, we'll go ahead with a Poisson regression -- a Generalized Linear Mixed-Effects Model. The model is
+$$ Y_{ij} \mid X_{ij} = x_{ij} \sim \text{Poisson}\left(\lambda_{ij}\right) $$
+for each observation $i$ on the $j$'th age group, where $Y_{ij}$ is the number of cases, $X_{ij}$ is the number of controls, and $\lambda_{ij}$ is the conditional mean of $Y_{ij}.$ We model $\lambda_{ij}$ as
+$$ \log\left(\lambda_{ij}\right) = \left(\beta_0 + b_{0j}\right) + \left(\beta_1 + b_{1j}\right) x_{ij}, $$
+where $b_{0j}$ and $b_{1j}$ are joint (bivariate) normally distributed with zero mean. 
+
+What does this model mean? First, it means that the mean is exponential in the explanatory variable, since we chose a $\log$ link function. Second, each age group ($j$) gets its own mean curve, via its own linear predictor. But we're saying that these linear predictors are related: the collection of slopes and intercepts across age groups are centered around $\beta_0$ and $\beta_1$ (respectively, called the _fixed effects_), and the slope and intercept of each age group departs from this center according to some Gaussian random noise (the $b$ terms, called the _random effects_).
+
+Let's fit the model. Then we'll go through the formula, and the output.
+
+```{r}
+fit <- glmer(ncases ~ ncontrols + (1 + ncontrols | agegp), 
+             data=dat, 
+             family=poisson)
+summary(fit)
+```
+
+To specify the formula, the fixed effects part is the same as usual: `ncases ~ ncontrols` gives you `ncases = beta0 + beta1 * ncontrols`. Note that the intercept is put in there by default. Then, we need to indicate which explanatory variables are getting the random effects -- including the intercept this time (with a 1), if you want it (in this case, we do). The random effects can be indicated in parentheses, separated by `+`, followed by a `|`, after which the variable(s) that you wish to group by are indicated. So `|` can be interpreted as "grouped by".
+
+The output of the model fit is similar to what you've seen before (in `glm` for example), but the "random effects" part is new. That gives us the estimates of the joint normal distribution of the random effects -- through the variances, and correlation matrix to the right (only the lower-diagonal of the correlation matrix is given, because that matrix is symmetric anyway).
+
+Let's see what the intercepts and slopes for each age group are, and let's plot the estimated mean curves:
+
+```{r}
+(coef_fit <- coef(fit)$agegp)
+## Colours with stat_function are not nice to deal with. Do manually.
+p + stat_function(aes(colour="25-34"), fun = function(x) exp(coef_fit[1,1] + coef_fit[1,2]*x)) +
+    stat_function(aes(colour="35-44"), fun = function(x) exp(coef_fit[2,1] + coef_fit[2,2]*x)) +
+    stat_function(aes(colour="45-54"), fun = function(x) exp(coef_fit[3,1] + coef_fit[3,2]*x)) +
+    stat_function(aes(colour="55-64"), fun = function(x) exp(coef_fit[4,1] + coef_fit[4,2]*x)) +
+    stat_function(aes(colour="65-74"), fun = function(x) exp(coef_fit[5,1] + coef_fit[5,2]*x)) +
+    stat_function(aes(colour="75+"),   fun = function(x) exp(coef_fit[6,1] + coef_fit[6,2]*x))
+```
+
+A (response-) residual plot is somewhat sensible to look at here:
+
+```{r}
+plot(fit)
+```
+
+Looks fairly centered at zero, so the shape of the mean curves are satisfactory.

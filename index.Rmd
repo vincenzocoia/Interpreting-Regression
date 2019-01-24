@@ -1,0 +1,11 @@
+--- 
+title: "Interpreting Regression"
+author: "Vincenzo Coia"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "My tutorials for regression analysis, in the form of a bookdown book."
+---

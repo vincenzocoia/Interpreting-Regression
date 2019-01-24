@@ -1,0 +1,41 @@
+---
+title: "Some Linear Algebra For DSCI 563 Lab4"
+date: "March 10, 2017"
+output: pdf_document
+---
+
+This document outlines some Linear Algebra results that you'll need to know for the DSCI 563 Lab4 assignment. You can take these as given -- you don't have to prove them. 
+
+## Covariance Rule
+
+The variance-covariance matrix (or, just _covariance matrix_ for short) of a random vector $\boldsymbol{X}$ is denoted $\text{Cov}(\boldsymbol{X})$. Now, if $A$ is a matrix/vector, then the following rule holds:
+$$ \text{Cov}(A\boldsymbol{X}) = A \text{Cov}(\boldsymbol{X}) A ^{\top}, $$
+where $A ^ {\top}$ denotes the transpose of $A$.
+
+## Orthogonal Matrices
+
+An orthogonal matrix $A$ is defined such that $A$ is square, and
+$$ A^{\top} A = A A^{\top} = I, $$
+where $I$ is the identity matrix. That is, $A$ and $A^{\top}$ are inverses.
+
+## Spectral Decomposition
+
+Let $\Sigma$ be a covariance matrix. That is, it's a square matrix that's positive definite. Then, $\Sigma$ can be decomposed/reconstructed by its eigenvalues and eigenvectors. Specifically, if $U$ is a matrix whose columns are the eigenvectors of $\Sigma$, and $\Lambda$ is a diagonal matrix with the corresponding eigenvectors along the diagonal, then
+$$ \Sigma = U \Lambda U^{\top}. $$
+
+Further, $U$ is orthogonal. 
+
+
+## Diagonal Matrices
+
+Suppose $A$ is a square diagonal matrix. Then $A^{\top} = A$. Also, if $a \in \mathbb{R}$, then $A^a$ is a diagonal matrix where the $i$'th diagonal entry is the $i$'th diagonal entry of $A$ raised to the power of $a$.
+
+## Transpose of a Matrix Product
+
+Suppose $A_1, \ldots, A_k$ are $k$ matrices. Then, the transpose of their product can be found by reversing the order of the product, and transposing each matrix:
+$$ \left(\prod_{i=1}^{k}A_{i}\right)^{\top}=\prod_{i=1}^{k}A_{k-i+1}^{\top}. $$
+
+## Summability of Powers
+
+Let $a_1, \ldots, a_k$ be real numbers, and $A$ a square matrix. If $A^{a_i}$ for $i=1,\ldots,k$ exist, then
+$$ \prod_{i=1}^{k}A^{a_{i}}=A^{\sum_{i=1}^{k}a_{i}}. $$
