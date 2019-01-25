@@ -3,7 +3,31 @@ title: "Interpreting Regression: Rough Outline"
 output: github_document
 ---
 
-# 
+# Intro Stats
+
+## Probabilistic Quantities
+
+- Sometimes confusingly called "parameters".
+- Explain the quantities by their interpretation/usefulness, using examples.
+	- Mean: what number would you want if you have 10 weeks worth of data, and you want to estimate the total after 52 weeks (one year)?
+	- Median: 
+	- Mode:
+	- High Quantile:
+	- Low Quantile:
+	- Extreme quantile?
+
+When you want information about an unknown quantity, it's up to you what you decide to use. 
+
+The mean is the most commonly sought when the unknown is numeric. I suspect this is the case for two main reasons:
+
+1. It simplifies computations.
+2. It's what's taught in school.
+
+## Estimation of Probabilistic Quantities
+
+What makes a formula an estimator? It should go to the actual value as the sample size increases.
+
+It's important to note that there are many ways to estimate a probabilistic quantity. Some of these will be better than others, often depending on the situation. Typically, the bias-variance tradeoff is at play here, where some estimators sacrifice bias to reduce variance, or vice versa. 
 
 # Intro to Regression
 
