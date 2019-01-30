@@ -1,32 +1,14 @@
----
-title: 'BAIT 509 Class Meeting 03'
-subtitle: "Local Classification and Regression"
-date: "January 9, 2019"
-output: 
-    html_document:
-        keep_md: true
-        toc: true
-        toc_depth: 2
-        number_sections: true
-        theme: cerulean
-        toc_float: true
----
+# Local Regression
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
+(BAIT 509 Class Meeting 03)
 
 ```{r setup, include=FALSE}
 suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(knitr))
-opts_chunk$set(fig.width=5, fig.height=3, fig.align="center",
-               warning=FALSE)
 my_accent <- "#d95f02"
 rotate_y <- theme(axis.title.y=element_text(angle=0, vjust=0.5))
 ```
-
-
-# Outline
-
-- Loess and kNN
-
-# Local machine learning methods
 
 Let's turn our attention to the first "new" machine learning methods of the course: $k$ __Nearest Neighbours__ (aka kNN or $k$-NN) and __loess__ (aka "LOcal regrESSion").
 
@@ -60,7 +42,7 @@ Notice that Step 2 is the same as in kNN.
 
 $k$ and $r$ are called __hyperparameters__, because we don't estimate them -- we choose them outright.
 
-# In-Class Exercises
+## In-Class Exercises
 
 Consider the following data set, given by `dat`. Here's the top six rows of data:
 
@@ -68,7 +50,6 @@ Consider the following data set, given by `dat`. Here's the top six rows of data
 set.seed(87)
 dat <- tibble(x = c(rnorm(100), rnorm(100)+5)-3,
               y = sin(x^2/5)/x + rnorm(200)/10 + exp(1))
-kable(head(dat))
 ```
 
 Here's a scatterplot of the data:
@@ -80,7 +61,7 @@ ggplot(dat, aes(x,y)) +
     rotate_y
 ```
 
-## Exercise 1: Mean at $X=0$
+### Exercise 1: Mean at $X=0$
 
 Let's check your understanding of loess and kNN. Consider estimating the mean of $Y$ when $X=0$ by using data whose $X$ values are near 0. 
 
@@ -107,7 +88,7 @@ loess_prediction <- FILL_THIS_IN
 
 4. There's a tradeoff between choosing large and small values of either hyperparameter. What's good and what's bad about choosing a large value? What about small values?
 
-## Exercise 2: Regression Curve
+### Exercise 2: Regression Curve
 
 Form the __regression curve__ / __model function__ by doing the estimation over a grid of x values, and connecting the dots:
 
@@ -146,7 +127,7 @@ __Exercises__:
 
 The phenomenon you see when $k$ and $r$ are very small is called __overfitting__. This means that your model displays patterns that are not actually present. __Underfitting__, on the other hand, is when your model misses patterns in the data that are actually present. 
 
-# Hyperparameters and the bias/variance tradeoff 
+## Hyperparameters and the bias/variance tradeoff 
 
 Let's look at the bias and variance for different values of the hyperparameter in loess. 
 
@@ -195,9 +176,9 @@ Notice some other things about these plots:
 - Estimates don't exist sometimes, if no data fall in the "window". You can see that the tails are cut short when the bandwidth is small. 
 
 
-# Extensions to kNN and loess
+## Extensions to kNN and loess
 
-## Kernel weighting
+### Kernel weighting
 
 kNN and loess can be generalized by downweighing points that are further from the query point. In particular, we take a weighted average.
 
@@ -208,7 +189,7 @@ If the response is categorical, then each subsetted observation gives a "weighte
 
 We obtain these weights using a __kernel function__. A kernel function is any non-increasing function over the positive real numbers. Plug in the distance between the observed predictor(s) and the query point to obtain the weight. Some examples of kernel functions are plotted below.
 
-## Local polynomials
+### Local polynomials
 
 Another extension of loess is to consider __local polynomials__. The idea here is, after subsetting the data lying within $r$ units of the query point, add the following two steps:
 
@@ -225,19 +206,19 @@ Note:
 - We _could_ fit any other curve locally besides a polynomial, but polynomials are justified by the Taylor approximation.
 - Local polynomials with degree=0 is the same as "not doing" local polynomials.
 
-## Combination
+### Combination
 
 You can combine kernel weighting with local polynomials. When you fit the local polynomial to the subsetted data, you can run a _weighted_ regression. Instead of minimizing the sum of squared errors, we minimize the _weighted_ sum of squared errors. 
 
-## Other distances
+### Other distances
 
 We don't have to use the "usual" notion of distance. The formula I gave you earlier (above) is called the _Euclidean distance_, or L2 norms. There's also the L1 norm (also called the manhattan distance, which is distance by moving along the axes/rectangularly) and L0 norm (number of predictors having non-zero univariate distance).
 
-## Scaling
+### Scaling
 
 When you're using two or more predictors, your predictors might be on different scales. This means distances aren't weighed equally, depending on the direction. Instead of measuring distance on the original scale of the predictors, consider re-scaling the predictors by subtracting the mean and dividing by the standard deviation for each predictor. 
 
-## Demonstration
+### Demonstration
 
 Let's look at the same example, but with kernel downweighting and local polynomials. 
 
@@ -283,7 +264,7 @@ Notice:
 - For small bandwidth, increasing the degree of the poynomial just results in more variance -- degree=0 looks best for this bandwidth.
 - But by increasing the degree (inc. variance, dec. bias) _and_ increasing the bandwidth (dec. variance, inc. bias), we end up getting an overall better fit: low bias, low variance. Bandwidth=0.5 and Degree=2 here seem to work best. 
 
-# Model assumptions and the bias/variance tradeoff
+## Model assumptions and the bias/variance tradeoff
 
 Recall that we saw an incorrect model assumption leads to bias, such as fitting linear regression when the true mean is non-linear.
 

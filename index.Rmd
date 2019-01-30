@@ -3,14 +3,21 @@ title: "Interpreting Regression"
 author: "Vincenzo Coia"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
+output: bookdown::gitbook
 documentclass: book
-bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
+github-repo: vincenzocoia/Interpreting-Regression
 description: "My tutorials for regression analysis, in the form of a bookdown book."
 ---
 
 # Preamble
+
+## Caution {#caution}
+
+**This book is in its very preliminary stages**. Content will be moving around.
+
+Currently, much of the book is a stitching together of previous pieces of my writing that I think might be relevant to this book. These chapters will be updated to consider the different context, audience, and content organization that's best for this book.
 
 ## The two main tasks that regression tries to solve
 
@@ -24,3 +31,4 @@ Example 3: (binary response) There's a 5% that a person will get pregnant throug
 
 - Prediction: Given the person's age, what is the chance of pregnancy?
 - Interpretation: How does age influence the chance of pregnancy? What about LH? What about LH for people over 40?
+

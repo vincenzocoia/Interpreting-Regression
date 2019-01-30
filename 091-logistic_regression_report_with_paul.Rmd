@@ -1,17 +1,20 @@
-Introduction
-============
+# Logistic Regression paper with Paul
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
+**Warning: Highly developmental**
 
 The focus of this paper is on medical studies with a binary response,
 such as survival/death or healthy/diseased. Typically, we are more
 interested in the probability of the worse outcome and therefore refer
-to the probability as “risk”, denoted by $\pi$. Ultimately, we would
+to the probability as "risk", denoted by $\pi$. Ultimately, we would
 like to know how certain covariatessuch as smokingaffect the risk. As a
-means of comparison, it is common to define “exposure” and “baseline”
+means of comparison, it is common to define "exposure" and "baseline"
 levels of each covariate. For instance, a smoker (exposed) as compared
 to a non-smoker (baseline) in the case of a binary variable, or exposure
 to a certain amount of lead as compared to the population average
 baseline in the case of a continuous variable. Some popular
-interpretable quantities (IQ’s) which compare exposure risk $\pi_{E}$ to
+interpretable quantities (IQ's) which compare exposure risk $\pi_{E}$ to
 baseline (unexposed) risk $\pi_{B}$ are
 
 1.  the *risk difference*, $\pi_{E}-\pi_{B}$,
@@ -24,13 +27,13 @@ baseline (unexposed) risk $\pi_{B}$ are
 4.  the *odds ratio*,
     $$\frac{\pi_{E}/\left(1-\pi_{E}\right)}{\pi_{B}/\left(1-\pi_{B}\right)}.$$
 
-These IQ’s consider all other factors to be equal.
+These IQ's consider all other factors to be equal.
 
 The techniques outlined in this paper are generic to either experimental
 or observational studies, though a strong focus is put on observational
 studies. In these situations, we must take into account some confounders
 which would have otherwise been controlled for in an experimental study.
-As such, we would like to compute the IQ’s after adjusting for the
+As such, we would like to compute the IQ's after adjusting for the
 confounders, which can be done by including the confounders as other
 covariates in the model. To distinguish between the types of covariates,
 the non-confounder explanatory variables will be called interaction
@@ -61,19 +64,17 @@ sample
 $\left(Y_{1},\boldsymbol{X}_{1}\right),\ldots,\left(Y_{n},\boldsymbol{X_{n}}\right)$
 of outcomes and covariates.
 
-The Traditional Approach
-========================
+## The Traditional Approach
 
-The Linear Probability Model
-----------------------------
+### The Linear Probability Model
 
 A first inclination may be to model the mean as one would in the case of
 multiple linear regression that is, as a linear combination of the
 covariates. The link function $g$ is the identity, and the model becomes
 $$\pi\left(\boldsymbol{x}\right)=\beta_{0}+\boldsymbol{x}^{T}\boldsymbol{\beta}.\label{eq:Model 1 - LPM}$$
-Kovalchik and others (2013) refer to this as the “Binomial Linear
-Model”, or BLM, though it is more commonly known as the “Linear
-Probability Model”, or LPM (see, for example, Aldrich and Nelson, 1984;
+Kovalchik and others (2013) refer to this as the "Binomial Linear
+Model", or BLM, though it is more commonly known as the "Linear
+Probability Model", or LPM (see, for example, Aldrich and Nelson, 1984;
 Amemiya, 1977; Horrace and Oaxaca, 2006). In this paper, the model is
 referred to as the LPM.
 
@@ -94,7 +95,7 @@ even if component $k$ of $\mathcal{X}$ is bounded, if it has a large
 range, then the slope is restricted to be small.
 
 One reason why the LPM is used, despite the above restrictions, is for
-access to *constant interpretable quantities* that is, IQ’s discussed in
+access to *constant interpretable quantities* that is, IQ's discussed in
 section 1 which do not depend on other covariates. In an LPM, the risk
 difference by increasing $X_{k}$ by one unit is simply given by
 $\beta_{k}$, and the NNT is $1/\beta_{k}$. However, the relative risk
@@ -112,7 +113,7 @@ unknown, an iterative algorithm is used, which calculates weights using
 the fitted probabilities
 $\hat{\pi}\left(\boldsymbol{x}\right)=\hat{\beta}_{0}+\boldsymbol{x}^{T}\hat{\boldsymbol{\beta}}$
 from parameter estimates of the previous step to compute a new
-“re-weighted” estimator. Iterating this beginning with the OLS estimator
+"re-weighted" estimator. Iterating this beginning with the OLS estimator
 converges to the *iteratively re-weighted least squares* (IRLS)
 estimator. Amemiya (1977) shows that the IRLS is identical to the
 maximum likelihood estimator (MLE).
@@ -121,7 +122,7 @@ An alternative model which is sometimes confused for the LPM (for
 example, see Horrace and Oaxaca, 2006) is to allow for an arbitrary
 parameter space $\mathcal{F}$ (unrestricted by $\mathcal{X}$) by taking
 $\pi\left(\boldsymbol{x}\right)$ to be zero when $\eta$ is less than
-zero, and unity otherwise. This model, which I call the “truncated LPM”
+zero, and unity otherwise. This model, which I call the "truncated LPM"
 (TLPM), is
 $$\pi\left(\boldsymbol{x}\right)=T\left(\beta_{0}+\boldsymbol{x}^{T}\boldsymbol{\beta}\right),\label{eq:Model 1b - TLPM}$$
 where the inverse-link function $T$ is the ramp function
@@ -139,8 +140,7 @@ biased and inconsistent estimators. This is a good reason why the TLPM
 should not be used unless a different method of estimation is
 considered.
 
-The Logistic Model
-------------------
+### The Logistic Model
 
 To rid the parameter space $\mathcal{F}$ of restrictions, one may
 consider link functions similar to the ramp function of (\[eq:ramp
@@ -167,8 +167,8 @@ stands out over models with other link functions because a constant IQ
 can be obtained from it the odds ratio by increasing $X_{k}$ by one unit
 is simply $\exp\left(\beta_{k}\right)$. However, of the interpretable
 quantities discussed in Section 1, the odds ratio is the most difficult
-to interpret. Though, if both risks are smallthe “rare disease
-assumption” with risks under $0.1$then the odds ratio is a good
+to interpret. Though, if both risks are smallthe "rare disease
+assumption" with risks under $0.1$then the odds ratio is a good
 approximation to the relative risk, which is easier to interpret. The
 lack of an easy interpretable constant IQ is why some researchers will
 opt for the LPM instead of the logistic model when the rare disease
@@ -188,7 +188,7 @@ $\left(b_{0},\boldsymbol{b}\right)\in\mathcal{F}$ such that
 $b_{0}+\boldsymbol{x}_{i}^{T}\boldsymbol{b}>0$ has $Y_{i}=1$ and
 $b_{0}+\boldsymbol{x}_{i}^{T}\boldsymbol{b}<0$ has $Y_{i}=0$ for each
 $i=1,\ldots,n$ (Albert and Anderson, 1984). This is called the case of
-“complete separation”, and the likelihood has no maximum, so a “perfect
-fit” is made by infinitely pushing the covariate data to the tails of
+"complete separation", and the likelihood has no maximum, so a "perfect
+fit" is made by infinitely pushing the covariate data to the tails of
 the ${\operatorname{expit}}$ curve. This is not an issue with the LPM
 model.

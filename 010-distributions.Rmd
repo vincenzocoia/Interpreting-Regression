@@ -1,9 +1,7 @@
----
-title: "Distributions"
-output: html_document
----
-
 # Distributions
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
 
 ## Probabilistic Quantities
 

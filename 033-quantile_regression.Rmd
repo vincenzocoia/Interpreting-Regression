@@ -1,49 +1,13 @@
----
-title: 'BAIT 509 Class Meeting 08'
-subtitle: "Quantile Regression"
-date: 'January 23, 2019'
-output: 
-    html_document:
-        keep_md: true
-        toc: true
-        toc_depth: 2
-        number_sections: true
-        theme: cerulean
-        toc_float: true
-references:
-- id: gneiting_raftery
-  title: Strictly proper scoring rules, prediction, and estimation
-  author:
-  - family: Gneiting
-    given: Tilmann
-  - family: Raftery
-    given: Adrian
-  volume: 102
-  issue: 477
-  publisher: Journal of the American Statistical Association
-  page: 359-378
-  type: article-journal
-  issued:
-    year: 2007
----
+# Quantile Regression
 
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 ```{r, warning=FALSE}
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(Lahman))
-suppressPackageStartupMessages(library(knitr))
-opts_chunk$set(warning=FALSE, fig.width=6, fig.height=3, fig.align="center")
 my_accent <- "#d95f02"
 ```
 
-# Outline
- 
-- Quantile Regression:
-    - How to fit a linear quantile regression model in R (using both `ggplot2` and the `quantreg` package), and how to interpret it.
-    - Understand the "crossing quantile" problem.
-    - Know how to evaluate goodness of quantile regression models
-
-# Quantile Regression
 
 It's common to "default" to using the mean to make decisions. But, the mean is not always appropriate (I wrote a [blog post](https://vincenzocoia.github.io/20180218-mean/) about this):
 

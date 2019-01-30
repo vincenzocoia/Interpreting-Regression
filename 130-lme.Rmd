@@ -1,7 +1,6 @@
----
-title: "From Linear Regression to Mixed Effects Models"
-output: github_document
----
+# From Linear Regression to Mixed Effects Models
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 ## Motivation for LME
 
@@ -9,6 +8,7 @@ Let's take a look at the `esoph` data set, to see how the number of controls `nc
 
 ```{r, echo=FALSE, fig.width=4, fig.height=3, fig.align="center"}
 suppressMessages(library(tidyverse))
+library(plyr)
 dat <- as_tibble(esoph) %>% 
     mutate(agegp = as.character(agegp))
 (p <- ggplot(dat, aes(ncontrols, ncases, group=agegp, colour=agegp)) +
@@ -28,8 +28,7 @@ But, each group has so few observations, making the regression less powerful:
 ```{r, echo=FALSE}
 dat %>% 
     group_by(agegp) %>% 
-    summarise(n=length(ncases)) %>% 
-    knitr::kable()
+    summarise(n=length(ncases))
 ```
 
 __Question__: can we borrow information across groups to strengthen regression, while still allowing each group to have its own regression line?

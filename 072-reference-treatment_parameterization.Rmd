@@ -1,5 +1,7 @@
 # reference-treatment parameterization
 
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
 (From DSCI 561 lab1, 2018-2019)
 
 When data fall into groups, you already know how to estimate the population mean for each group: calculate the sample mean of the data in each group. For example, the mean Sepal.Width of the three species in the iris dataset are:
@@ -91,32 +93,26 @@ In class, we saw two "ways to store information" about groups means -- in techni
 
 The first and most "direct" parameterization is cell-wise parameterization, a fancy way of saying that we're just going to consider the raw means themselves: one mean for each group. For the three species in the iris dataset, here are estimates of these parameters:
 
-In [ ]:
+```
 iris %>% 
 	group_by(Species) %>% 
 	summarize(mean_sepal_width = mean(Sepal.Width))
+```
 The mean of the response (conditional on species) can be written as a linear model, if we call the above means $\mu_0,\mu_1,\mu_2$ (respectively), and define the following three predictors:
 
-$$X_0 = 1 \text{ if setosa, } 0 \text{ otherwise},$$$$X_1 = 1 \text{ if versicolor, } 0 \text{ otherwise},$$$$X_2 = 1 \text{ if virginica, } 0 \text{ otherwise}.$$
+$$X_0 = 1 \text{ if setosa, } 0 \text{ otherwise},$$ $$X_1 = 1 \text{ if versicolor, } 0 \text{ otherwise},$$ $$X_2 = 1 \text{ if virginica, } 0 \text{ otherwise}.$$
 Then, the linear model is
 
 $$E(\text{Sepal Width} \mid \text{species}) = \mu_0 X_0 + \mu_1 X_1 + \mu_2 X_2.$$
 In this exercise, you'll be exploring another parameterization that's useful in linear regression: the reference-treatment parameterization.
 
 1.1
-rubric={autograde:3}
 
-To keep things different from lm(), let's consider the virginica species as our "reference". The reference-treatment parameterization is then: $$\theta=\mu_{\text{virginica}},$$$$\tau_1=\mu_{\text{versicolor}}-\theta,$$$$\tau_2=\mu_{\text{setosa}}-\theta,$$ where $\mu$ denotes the mean of that species' sepal width.
+To keep things different from lm(), let's consider the virginica species as our "reference". The reference-treatment parameterization is then: $$\theta=\mu_{\text{virginica}},$$ $$\tau_1=\mu_{\text{versicolor}}-\theta,$$ $$\tau_2=\mu_{\text{setosa}}-\theta,$$ where $\mu$ denotes the mean of that species' sepal width.
 
 Your task: Calculate estimates of these parameters, and store the estimates in the (respective) variables theta, tau1, and tau2.
 
-In [ ]:
-# Calculate theta, tau1, and tau2
-# your code here
-fail() # No Answer - remove if you provide an answer
-print(theta)
-print(tau1)
-print(tau2)
+
 
 
 Provide an interpretation for $\theta$, $\tau_1$, and $\tau_2$. One brief sentence for each is enough.
@@ -125,7 +121,7 @@ Let's now write this information as a single (linear) equation containing:
 
 two predictors $X_1$ and $X_2$, and
 the parameters $\theta$, $\tau_1$, and $\tau_2$.
-Let's focus on the predictors first. Define: $$X_1 = 1 \text{ if versicolor, } 0 \text{ otherwise},$$$$X_2 = 1 \text{ if setosa, } 0 \text{ otherwise}.$$ We've deliberately not defined a predictor for virginica, the reference group.
+Let's focus on the predictors first. Define: $$X_1 = 1 \text{ if versicolor, } 0 \text{ otherwise},$$ $$X_2 = 1 \text{ if setosa, } 0 \text{ otherwise}.$$ We've deliberately not defined a predictor for virginica, the reference group.
 
 Your task: What are the values of $X_1$ and $X_2$ for each species? Store the values in three length-2 vectors called x_setosa, x_versicolor, and x_virginica.
 

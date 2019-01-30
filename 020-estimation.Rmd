@@ -1,9 +1,6 @@
----
-title: "Estimation"
-output: html_document
----
-
 # Estimation
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 ## Estimation of Probabilistic Quantities
 

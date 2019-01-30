@@ -1,8 +1,6 @@
----
-title: "Non-identifiability"
-author: "Vincenzo Coia"
-output: html_document
----
+# Non-identifiability in GAMS
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 Here is some help on Lab 4 Exercise 1(b). Exercise 1(b) is intended to get you to think about what the $h$ functions in a Generalized Additive Model (GAM) are.
 
@@ -29,9 +27,7 @@ where $\beta_0$ is any real number, $h_1$ and $h_2$ are any smooth functions, an
 So, the "parameters" (which includes the $h$ functions) in a GAM are non-identifiable -- the $h$ functions can be vertically shifted, and $\beta_0$ can just compensate for these shifts to give the same regression surface.
 
 To make the model identifiable, we force the $h$ functions to be vertically centered at zero. Here's how: we ensure that after transforming the $j$'th predictor to $h_j\left(X_j\right)$, the resulting data are centered at 0. Mathematically, we ensure that
-\begin{equation} \label{eq:restrict}
-\frac{1}{n}\sum_{i=1}^{n}h_j\left(x_{ij}\right) = 0 
-\end{equation}
+$$ \frac{1}{n}\sum_{i=1}^{n}h_j\left(x_{ij}\right) = 0 $$
 for each predictor $j$, where $x_{ij}$ for $i=1,\ldots,n$ are the observations. 
 
 ## Question 1b
@@ -47,12 +43,12 @@ This will help with the first question:
 
 Here's a hint: `predict(fit)` gives you the vector $\hat{Y}_1, \ldots, \hat{Y}_n$. Then, `mean` averages them. The question is asking you to indicate why we have
 $$ \frac{1}{n}\sum_{i=1}^{n}\hat{Y}_i = \hat{\beta}_0. $$
-The answer uses Equation \eqref{eq:restrict}.
+The answer uses Equation
 
 The next question asks you to think about how you'd recover an $h$ function. It asks:
 
 > For each $h$ function, write an R function that evaluates the $h$ function over a grid of values, without calling the \code{plot} function on the fit. Show that the function works by evaluating it over a small grid of values.
 
-Suppose you want to evaluate function $\hat{h}_1$ at some generic point $x_0$. You can do this using the `predict` function, and somehow specifying $x_0$ in the `newdata` argument (in place of "predictor 1"). But `predict` will give you all three components of the model, added together: the $\hat{\beta}_0$ part, plus the $\hat{h}_1$ part (evaluated at whatever is in the "predictor 1" column), plus the $\hat{h}_2$ part (evaluated at whatever is in the "predictor 2" column). Your job is to "isolate" the $\hat{h}_1$ part, evaluated at $x_0$. We can subtract out $\hat{\beta}_0$, which is specified in the model output. But you can't just subtract out the $\hat{h}_2$ part, because we don't know it. Your job is to use a property of $\hat{h}_2$ (hint: Equation \eqref{eq:restrict}) to remove it. 
+Suppose you want to evaluate function $\hat{h}_1$ at some generic point $x_0$. You can do this using the `predict` function, and somehow specifying $x_0$ in the `newdata` argument (in place of "predictor 1"). But `predict` will give you all three components of the model, added together: the $\hat{\beta}_0$ part, plus the $\hat{h}_1$ part (evaluated at whatever is in the "predictor 1" column), plus the $\hat{h}_2$ part (evaluated at whatever is in the "predictor 2" column). Your job is to "isolate" the $\hat{h}_1$ part, evaluated at $x_0$. We can subtract out $\hat{\beta}_0$, which is specified in the model output. But you can't just subtract out the $\hat{h}_2$ part, because we don't know it. Your job is to use a property of $\hat{h}_2$ (hint: Equation ) to remove it. 
 
 You can also think of it this way: if `mean(predict(fit))` "zeroes-out" both $h$ functions, how can you modify the prediction data so that one of the $h$ functions *doesn't* zero-out, but instead evaluates at some desired point?

@@ -1,16 +1,6 @@
----
-title: "Mixed Effects Models in R: tutorial"
-author: "Vincenzo Coia"
-date: '2017-01-15'
-output: html_document
----
+# Mixed Effects Models in R: tutorial
 
-```{r, warning=FALSE, echo=FALSE}
-library(knitr)
-opts_chunk$set(warning=FALSE, fig.width=5, fig.height=3, fig.align="center")
-```
-
-## Mixed-Effects Models
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 Two R packages exist for working with mixed effects models: `lme4` and `nlme`. We'll be using the `lme4` package (check out [this](http://stats.stackexchange.com/questions/5344/how-to-choose-nlme-or-lme4-r-library-for-mixed-effects-models) discussion on Cross Validated for a comparison of the two packages).
 

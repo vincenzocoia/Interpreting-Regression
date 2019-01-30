@@ -1,5 +1,7 @@
 # ANOVA
 
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
 (From 2018-2019 DSCI 561 lab1)
 
 Remember that to make a hypothesis test, we need to first come up with some "distance metric" (called the test statistic) to measure discrepency from the null hypothesis. For example, to test whether two groups have different population means, a t-test bases its distance metric / test statistic on the difference between the two sample means -- the further this metric is from 0, the more evidence we have that the null hypothesis is not true.

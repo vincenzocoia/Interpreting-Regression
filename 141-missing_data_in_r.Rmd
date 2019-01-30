@@ -1,12 +1,10 @@
----
-title: "DSCI 562 Tutorial: Missing Data"
-output: pdf_document
----
+# DSCI 562 Tutorial: Missing Data
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
 
 ```{r, warning=FALSE, echo=FALSE}
-suppressPackageStartupMessages(library(knitr))
 suppressPackageStartupMessages(library(tidyverse))
-opts_chunk$set(warning=FALSE, fig.width=5, fig.height=3, fig.align="center")
 ```
 
 Let's take a closer look at mean imputation vs. multiple imputation.

@@ -1,15 +1,8 @@
----
-title: "Splines and Loess Regression"
-output: github_document
----
+# Splines and Loess Regression
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(fig.width=5, fig.height=3, fig.align="center")
-```
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 This tutorial describes spline and loess regression in R.
-
-## Splines
 
 You can think of splines as regression between knots. We'll use the `splines` package to do this.
 

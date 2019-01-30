@@ -1,62 +1,30 @@
----
-title: 'BAIT 509 Class Meeting 08'
-subtitle: "Supervised Learning Beyond the Mean and Mode"
-date: 'January 23, 2019'
-output: 
-    html_document:
-        keep_md: true
-        toc: true
-        toc_depth: 2
-        number_sections: true
-        theme: cerulean
-        toc_float: true
-references:
-- id: gneiting_raftery
-  title: Strictly proper scoring rules, prediction, and estimation
-  author:
-  - family: Gneiting
-    given: Tilmann
-  - family: Raftery
-    given: Adrian
-  volume: 102
-  issue: 477
-  publisher: Journal of the American Statistical Association
-  page: 359-378
-  type: article-journal
-  issued:
-    year: 2007
----
+# Probabilistic Forecasting
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 
 ```{r, warning=FALSE}
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(Lahman))
-suppressPackageStartupMessages(library(knitr))
-opts_chunk$set(warning=FALSE, fig.width=6, fig.height=3, fig.align="center")
 my_accent <- "#d95f02"
 ```
-
-# Outline
-
-- Probabilistic forecasts: how to estimate (plot) predictive distribution densities using subset approaches. 
-
-# Orientation within the Big-Picture of Supervised Learning
 
 Up until now, we've only seen different ways of using a predictor to give us more information the __mean__ and __mode__ of the response. The world holds a huge emphasis on the mean and mode, but these are not always what's important. Two alternatives are:
 
 1. __Probabilistic forecasting__
 2. __Quantile Regression__ (numeric response only)
 
-# Probabilistic Forecasting: What it is
+## Probabilistic Forecasting: What it is
 
 The idea here is to put forth an _entire probability distribution_ as a prediction. 
 
 Let's look at an example. Suppose there are two baseball teams, one that gets 1000 total hits in a year, and another that gets 1500. Using "total hits in a year" as a predictor, we set out to predict the total number of runs of both teams. Here's the top snippet of the data:
 
 ```{r}
-dat <- Teams %>% tbl_df %>% 
-    select(runs=R, hits=H)
-kable(head(dat))
+dat <- Teams %>% #tbl_df %>% 
+  dplyr::rename(runs=R, hits=H)
+  #dplyr::select(runs, hits)
+dat <- dat[, c("runs", "hits")]
 ```
 
 Let's not concern ourselves with the _methods_ yet. Using a standard regression technique, here are our predictions:
@@ -70,9 +38,7 @@ datsub <- filter(dat,
 datsub %>% 
     group_by(approx_hits) %>%
     summarize(expected_runs=round(mean(runs))) %>% 
-    select(hits=approx_hits, expected_runs) %>% 
-    kable(col.names = c("Number of Hits (X)", 
-                        "Expected Number of Runs (E(Y))"))
+    select(hits=approx_hits, expected_runs)
 ```
 
 Using a probabilistic forecast, here are our predictions:
@@ -92,7 +58,7 @@ The probabilistic forecast/prediction contains the most amount of information ab
 
 Predictions/forecasts here are called __predictive distributions__.
 
-From [@gneiting_raftery]:
+From @gneiting_raftery:
 
 > Indeed, over the past two decades, probabilistic forecasting has 
 > become routine in such applications as weather and climate prediction
@@ -101,11 +67,11 @@ From [@gneiting_raftery]:
 > (Garratt, Lee, Pesaran, and Shin 2003; Granger 2006).
 
 
-# Review: Univariate distribution estimates
+## Review: Univariate distribution estimates
 
 Let's review how to estimate a univariate probability density function or probability mass function.
 
-## Continuous response
+### Continuous response
 
 Here's a random sample of 10 continuous variables, ordered from smallest to largest, stored in the variable `x`:
 
@@ -114,9 +80,6 @@ set.seed(43340)
 x <- rnorm(10, sd=10) %>% round(1) %>% sort
 ```
 
-```{r}
-x
-```
 
 Recall that we can use __histograms__ to estimate the density of the data. The idea is:
 
@@ -151,7 +114,7 @@ __Advanced method__: There's a technique called the _kernel density estimate_ th
 qplot(x, geom="density", bw=2.5)
 ```
 
-## Discrete Response
+### Discrete Response
 
 When the response is discrete (this includes categorical), the approach is simpler:
 
@@ -175,7 +138,6 @@ The proportions are as follows:
 props <- tibble(Value=x) %>% 
     group_by(Value) %>% 
     summarize(Proportion=length(Value)/length(x))
-kable(props)
 ```
 
 You can plot these proportions with `qplot`, specifying `geom="col"`:
@@ -199,9 +161,9 @@ qplot(factor(x), mapping=aes(y=..prop..), group=1)
 ```
 
 
-# Probabilistic Forecasts: subset-based learning methods
+## Probabilistic Forecasts: subset-based learning methods
 
-## The techniques
+### The techniques
 
 The local methods and classification/regression trees that we've seen so far can be used to produce probabilistic forecasts. For local methods, let's ignore the complications of kernel weighting and local polynomials. These methods result in a _subset_ of the data, for which we're used to taking the mean or mode. Instead, _use the subsetted data to plot a distribution_.
 
@@ -221,14 +183,14 @@ ggplot(dat, aes(hits, runs)) +
          y="Number of Runs (Y)")
 ```
 
-## Exercise
+### Exercise
 
 1. Install the `Lahman` package, which contains the `Teams` dataset.
 2. Build a null model probabilistic forecast of "number of runs" (`R` column).
 3. Build a probabilistic forecast, using kNN, of "number of runs" for a team that has 1500 hits (`H` column) and 70 wins (`W` column). Don't forget to scale the predictors!
 4. Do the same thing, but using linear regression. What additional assumption(s) is/are needed here?
 
-## Bias-variance tradeoff
+### Bias-variance tradeoff
 
 Let's examine the bias-variance / overfitting-underfitting tradeoff with kNN-based probabilistic forecasts. I'll run a simulation like so:
 
@@ -282,7 +244,7 @@ Notice that:
 
 A similar thing happens with a moving window, with the window width parameter. For tree-based methods, the amount that you partition the predictor space controls the bias-variance tradeoff.
 
-## Evaluating Model Goodness
+### Evaluating Model Goodness
 
 To choose a balance between bias and variance, we need a measure of prediction goodness. When predicting the mean, the MSE works. When predicting the mode, the classification error works. But what works for probabilistic forecasts?
 
@@ -292,7 +254,7 @@ _At the very least_, one should check that the forecast distributions are "calib
 
 For this course, we won't be picky about how you choose your tuning parameters. Just look for a subset that you think has "enough" observations in it so that the distribution starts to take some shape, but not so much that it starts to shift.
 
-# Discussion Points
+## Discussion Points
 
 For (1) and (2) below, you're choosing between two candidates to hire. Discuss the pros and cons of choosing one candidate over the other in the following situations.
 
@@ -349,7 +311,7 @@ ggplot(data.frame(x=c(-3,5)), aes(x)) +
 
 > The forecast is biased, because the actual values are occuring near the upper tail of the distribution -- they _should_ be scattered about the middle, with a higher density of points occuring near 0. If using local methods, we'd have to reduce $k$ or the window width to decrease bias (to remove "further" data that are less relevant); if using a tree-based method, you could grow the tree deeper to lower the bias. 
 
-# When are they not useful?
+## When are they not useful?
 
 Probabilistic forecasts are useful if you're making a small amount of decisions at a time. For example:
 

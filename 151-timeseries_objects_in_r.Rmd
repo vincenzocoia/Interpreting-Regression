@@ -1,7 +1,6 @@
----
-title: "Timeseries objects in R"
-output: github_document
----
+# Timeseries in (base) R
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 __To add__: `times()` function to extract times from a `ts` object. How to deal with the `start` and `end` arguments when declaring a `ts` object.
 
@@ -23,7 +22,7 @@ It's sometimes useful to make an object of type `timeseries`. Do this with the `
 
 You can plot this object too. You'll get a nice looking time series plot:
 
-```{r fig.height=3}
+```{r, fig.height=3}
 plot(datts)
 ```
 

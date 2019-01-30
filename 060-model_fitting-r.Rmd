@@ -1,7 +1,6 @@
----
-title: "Model fitting in R"
-output: html_document
----
+# Model fitting in R 
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 Scratch notes from our in-class activities in Lecture 3. This covers the model-fitting paradigm in R.
 

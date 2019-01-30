@@ -1,13 +1,9 @@
----
-title: "DSCI 562 Lab 4 Tutorial: Robust Regression"
-output: html_document
----
+# DSCI 562 Lab 4 Tutorial: Robust Regression
 
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 ```{r, warning=FALSE, echo=FALSE}
-library(knitr)
 library(ggplot2)
-opts_chunk$set(warning=FALSE, fig.width=5, fig.height=3, fig.align="center")
 ```
 
 

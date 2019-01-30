@@ -1,5 +1,7 @@
 # Simple Linear Regression
 
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
 (From lab2, DSCI 561, 2018-2019)
 
 When a predictor is categorical, it's easy to estimate the mean given a certain predictor value (i.e., given the category): just take the sample average of the data in that group.

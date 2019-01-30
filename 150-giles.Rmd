@@ -1,74 +1,16 @@
-Introduction
-============
+# Spatial
 
-This report focuses on the size of rocks in the bed load of the Middle
-Shuswap River. The scientific objectives being considered are
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
-1.  to quantify the trend of mean rock size along the river;
-
-2.  to describe the mean rock size at different locations along the
-    river;
-
-3.  to determine whether the mean rock size differs immediately below
-    and above five features of the river (the Wilsey dam, three
-    tributaries, and a chute).
-
-To simplify discussions, only the Wilsey Dam is considered, but the same
-methods can be used for each feature individually.
-
-To address these objectives, rocks were sampled at 54 sites along the
+Rocks were sampled at 54 sites along the
 river within a period of two days. The procedure to take one sample
 involves taking an underwater photo at a glide site along the river, and
 by using computer software, obtaining the lengths of the intermediate
 axes of each rock over 8mm in the photo area. To ensure accuracy of
 measurements, 25 photos of the same area are taken and combined.
 
-Section \[subsec:Model\] builds a model for rock size from which
-statistical objectives can be formed as an approach to addressing the
-scientific objectives. But first, some important notes regarding
-interpretation are addressed in Section \[subsec:Limitations on
-Conclusion\].
 
-Important Notes on Interpreting Final Conclusions {#subsec:Limitations on Conclusion}
--------------------------------------------------
-
-Regardless of any analysis that is used to address the scientific
-objectives, it is important to note the following restrictions on any
-final conclusions you end up making from this study:
-
--   Conclusions only apply to the Shuswap river, and can only be
-    extended to other rivers by speculation.
-
-Similarly, conclusions about the Wilsey Dam cannot be generalised to
-other dams. The same goes for the tributaries and the chute. This is
-because no data from other rivers are being used as a comparator.
-
--   Conclusions only apply to rocks larger than 8mm, and not on rocks of
-    all sizes.
-
-This means that, for example, “average rock size” really means the
-average size of those rocks greater than 8mm. This is because no data
-from small rocks are being used. For brevity, “rock size” refers to
-“rock size of those rocks larger than 8mm”.
-
--   Conclusions only apply to rocks at glide sites.
-
-This is because no data from other water flows are being used.
-
--   Conclusions only apply to the river conditions during the
-    sampling period.
-
-This is because no data from other river conditions are being used.
-
--   Rock sizes converted to the Wentworth scale (the “$\phi$-scale”)
-    cannot be approximated by a normal distribution.
-
-This is because the samples do not include rocks smaller than 8mm, which
-would cause an abrupt “edge” to the rock size distribution (and its
-transformation).
-
-A Model for River Rock Size {#subsec:Model}
----------------------------
+## A Model for River Rock Size
 
 The variable $x$ refers to a location of some distance downstream the
 river for example, distance downstream the Meadows campground. For the
@@ -77,11 +19,11 @@ There are three concepts related to rock size.
 
 #### 1. Average rock size:
 
-This is the average[^1] size of sampled rocks at a location, had that
+This is the average size of sampled rocks at a location, had that
 location been sampled. For location $x$, the value of the sample average
 rock size is denoted $m\left(x\right)$. These values are known for 54
 sample sites, which are denoted for brevity as $m_{1},\ldots,m_{54}$,
-represented as the dots in Figure \[fig:sediment size plot\].
+represented as the dots in Figure 
 
 #### 2. Mean rock size:
 
@@ -89,88 +31,61 @@ At a particular river location, this can be thought of as the average
 rock size in the bed load in the hypothetical situation where the river
 flows forever in the same condition as during the sampling period. At
 any location, this quantity is unknown, and will thus be referred to as
-a “mean” instead of an “average” (an average is a known calculable
+a "mean" instead of an "average" (an average is a known calculable
 quantity). At a location $x$, the mean rock size will be denoted
 $M\left(x\right)$, and is represented by the solid line in Figure
-\[fig:sediment size plot\].
+
 
 #### 3. Downstream fining curve:
 
-This can be thought of as an “overall trend” for rock size from upstream
-to downstream. The mean rock size $M\left(x\right)$ should “on average”
+This can be thought of as an "overall trend" for rock size from upstream
+to downstream. The mean rock size $M\left(x\right)$ should "on average"
 follow this curve. For location $x$, the value of the downstream fining
-curve[^2] will be denoted $T\left(x\right)$, represented as the dashed
-line in Figure \[fig:sediment size plot\]. At any location, this is an
+curve will be denoted $T\left(x\right)$, represented as the dashed
+line in Figure . At any location, this is an
 unknown quantity.
 
-Statistical Objectives
-----------------------
+## Statistical Objectives
 
-Using the three concepts of rock size in Section \[subsec:Model\], the
+
+Using the three concepts of rock size in Section, the
 following statistical objectives can be pursued to address the
 scientific objectives:
 
 1.  Estimate the downstream fining curve $T\left(x\right)$ (i.e. the
-    dashed line in Figure \[fig:sediment size plot\]) for the range of
+    dashed line in Figure) for the range of
     the study area;
 
 2.  Estimate the mean rock size $M\left(x\right)$ (i.e. the solid line
-    in Figure \[fig:sediment size plot\]) for the range of the study
-    area, along with confidence bands; and
+    in Figure) for the range of the study
+    area, along with confidence bands
 
-3.  Check for differences in the mean rock size immediately above and
-    below the Wilsey Dam.
+These objectives are addressed in Sections, but first some preliminaries are needed,
+discussed in Section.
 
-These objectives are addressed in Sections \[sec:Downstream Fining
-Trend\]\[sec:Dam Effect\], but first some preliminaries are needed,
-discussed in Section \[sec:Variogram\].
+### Preliminaries: Variance and Correlation
 
-Preliminaries: Variance and Correlation {#sec:Variogram}
-=======================================
-
-Most of the techniques introduced in Sections \[sec:Downstream Fining
-Trend\]\[sec:Dam Effect\] require three descriptions of rock size, which
-are defined in Section \[subsec:Variance-Correlation Definitions\]. The
+Most of the techniques introduced in Sections require three descriptions of rock size, which
+are defined in Section. The
 procedure for fitting these descriptions to the data is discussed in
-Section \[subsec:Estimating Nuisance Parameters\]. For a detailed review
+Section . For a detailed review
 of these concepts, see Chapter 2 in reference @Geostatistics, for
 example.
 
-Three Concepts {#subsec:Variance-Correlation Definitions}
---------------
+## Three Concepts
 
 ### Error Variance $\sigma_{E}^{2}\left(x\right)$
 
 At location $x$, the error variance is the variability of the average
 rock size $m\left(x\right)$ in comparison to the true mean rock size
 $M\left(x\right)$. In other words, it is the variance of
-$\left(m\left(x\right)-M\left(x\right)\right)$. You mention in your
-project summary:
-
-> *At sites with a large number of rocks counted within a relatively
-> small distribution, the mean is likely more accurate than at sites
-> with a small number of rocks counted over a large distribution.*
-
-You are quite right. This is identified here.
-
-By “large” and “small” distributions, you might mean the variance of
-rock size measurements within a site. For a location $x$, denote the
-variance of rock size measurements within a site as
-$\sigma^{2}\left(x\right)$. If $n\left(x\right)$ is the number of rocks
-that would be sampled, had you sampled at location $x$, then the
-variance $\sigma_{E}^{2}\left(x\right)$ of the site average
-$m\left(x\right)$ is
-$$\sigma_{E}^{2}\left(x\right)=\frac{\sigma^{2}\left(x\right)}{n(x)}.$$
-Just as you say, the variance of the site average decreases as
-$n\left(x\right)$ (the number of rocks sampled) increases and
-$\sigma^{2}\left(x\right)$ (the variance of the rock size measurements)
-decreases.
+$\left(m\left(x\right)-M\left(x\right)\right)$. 
 
 ### Mean Variance $\sigma_{M}^{2}$
 
 At location $x$, the mean variance is the variability of the true mean
 $M\left(x\right)$ around the downstream fining curve $T\left(x\right)$
-(i.e. how “tightly” $M\left(x\right)$ follows $T\left(x\right)$). It may
+(i.e. how "tightly" $M\left(x\right)$ follows $T\left(x\right)$). It may
 be reasonable to assume that this variance is constant, unless there is
 evidence that this variability changes significantly throughout the
 study area. In what follows we will make this assumption; denote the
@@ -183,8 +98,7 @@ are at different locations (and equivalently, the average rock sizes at
 those locations). The mean rock sizes at two locations immediately next
 to each other are expected to be closely related, whereas mean rock
 sizes at two locations that are far apart may not be related. A key
-assumption used in Sections \[sec:Downstream Fining Trend\]\[sec:Dam
-Effect\] is *isotropy*, that is, the correlation between mean rock sizes
+assumption used in Sections is *isotropy*, that is, the correlation between mean rock sizes
 at two sites only depends on the distance between the sites, and not on
 the actual locations along the river. This assumption is of course not
 exactly true. For example, the relationship between rocks at sites
@@ -199,23 +113,20 @@ technical terms,
 $\rho\left(d\right)=\text{Corr}\left(M\left(x\right),M\left(x+d\right)\right)$
 for all $x$, $x+d$ in the study area.
 
-Estimation {#subsec:Estimating Nuisance Parameters}
-----------
+## Estimation
 
-The quantities introduced in Section \[subsec:Variance-Correlation
-Definitions\]$\sigma_{E}^{2}\left(x\right)$, $\sigma_{M}^{2}$, and
-$\rho\left(d\right)$are unknown and need to be estimated, because most
-of the techniques in Sections \[sec:Downstream Fining Trend\]\[sec:Dam
-Effect\] use them. There is a relatively simple way to do this
+The quantities introduced in Section $\sigma_{E}^{2}\left(x\right)$, $\sigma_{M}^{2}$, and
+$\rho\left(d\right)$ are unknown and need to be estimated, because most
+of the techniques in Sections use them. There is a relatively simple way to do this
 estimation in the case that the error variance,
 $\sigma_{E}^{2}\left(x\right)$, is constant, which is discussed in
-Section \[subsec:VariogramEstimation - constant sigma\]. To account for
+Section . To account for
 the changing error variance, an estimation technique is suggested in
-Section \[subsec:VariogramEstimation - non constant sigma\], which may
+Section, which may
 require some manual computations depending on the capabilities of the
 software you end up using.
 
-### Constant Error Variance {#subsec:VariogramEstimation - constant sigma}
+### Constant Error Variance
 
 Although the error variance $\sigma_{E}^{2}\left(x\right)$ is influenced
 by sample size $n\left(x\right)$ and distribution variance
@@ -226,33 +137,32 @@ $\sigma_{E}^{2}\left(x\right)$ amongst different locations would be
 minuscule relative to $\sigma_{M}^{2}$. Because your sample sizes are
 quite large (at least 100), the assumption of small error variances
 might be reasonable. However, if that assumption is not close to the
-truth, then the error bars described in Section \[subsec:Confidence
-Intervals\] would be overly wide at locations where the error variance
+truth, then the error bars described in Section would be overly wide at locations where the error variance
 is small (and mean rock size is small), and vice-versa. Since the error
 variance is assumed constant here, we will denote it $\sigma_{E}^{2}$,
 without the $\left(x\right)$, since it is assumed not to change with
 $x$.
 
 One tool that incorporates all the quantities in Section
-\[subsec:Variance-Correlation Definitions\] is the *variogram*, often
+ is the *variogram*, often
 denoted by $\gamma\left(d\right)$. For locations separated by a distance
 of $d$, it is defined as half the variance of the difference of the
 sample averages at those sites. Using symbols, the variogram is defined
 as
 $$\gamma\left(d\right)=\frac{1}{2}\text{Var}\left\{ m\left(x\right)-m\left(x+d\right)\right\} ,$$
-where “Var” means “variance of”. Working out the math, the variogram can
+where "Var" means "variance of". Working out the math, the variogram can
 be expressed as
 $$\gamma\left(d\right)=\sigma_{M}^{2}\left[1-\rho\left(d\right)\right]+\sigma_{E}^{2},\label{eq:Variogram}$$
 which contains all the quantities we need to estimate. Thus, estimating
 $\sigma_{E}^{2}$, $\sigma_{M}^{2}$, and $\rho\left(d\right)$ amounts to
 estimating the variogram. A plot of the variogram against $d$ might look
-something like that in Figure \[fig:Variogram\]. The bottom dashed line
+something like that in Figure . The bottom dashed line
 is called a *nugget*, and the top dashed line is called a *sill*. The
 nugget equals $\sigma_{E}^{2}$ and the difference between the sill and
 the nugget equals $\sigma_{M}^{2}$.
 
 To estimate a variogram, an *empirical variogram* is typically used (a
-“data version” of the variogram). An empirical variogram can be viewed
+"data version" of the variogram). An empirical variogram can be viewed
 as a scatterplot, where one point is plotted for each pair of sample
 sites. In particular, for two different site numbers $i$ and $j$, a
 point is plotted with a vertical value of
@@ -261,37 +171,35 @@ $\left|x_{i}-x_{j}\right|$, where $\left|\cdot\right|$ refers to the
 absolute value. Then nonlinear regression is used to fit a variogram
 model to the data in this scatterplot.
 
-It might be possible to estimate the variogram with arcGIS, or with JMP
-as Reference @variogram_with_JMP discusses. If you are willing to try R,
-the function under the library can do the estimation. In any case, you
-will need to specify the “model type”. The model type refers to the form
+In R, you
+will need to specify the "model type". The model type refers to the form
 of the mean correlation, $\rho\left(d\right)$. In Figure
-\[fig:Variogram\], the form is exponential, but there are many other
+, the form is exponential, but there are many other
 forms one can choose, including gaussian, matern, or spherical (see
 Section 2.5 in Reference @Geostatistics for a discussion of these
-models). There is no such thing as a “correct” model, but some may be
+models). There is no such thing as a "correct" model, but some may be
 good approximations to the truth. You can assess whether a model is a
 good approximation by visually checking whether a plot of the fitted
-variogram is “close” to the empirical (data) variogram. For a more
+variogram is "close" to the empirical (data) variogram. For a more
 formal assessment, you can choose the model that results in the smallest
 Akaike Information Criterion (AIC) value, which quantifies a compromise
 between model simplicity and goodness-of-fit. Yet another option is to
-assess the residual plot, where a “residual” here is the difference
+assess the residual plot, where a "residual" here is the difference
 between a point on the empirical variogram and the theoretical
 variogram. Although this residual plot is slightly different from
-“traditional” residual plots (since the points are not independent),
+"traditional" residual plots (since the points are not independent),
 ensuring the residuals are roughly centered around zero is still useful
-for assessing the model fit (you were wondering where an “analysis of
-residuals” could be used in your analysis this is one place). If several
+for assessing the model fit (you were wondering where an "analysis of
+residuals" could be used in your analysis this is one place). If several
 models seem to be a good approximation, then it is best to choose the
 simplest one (the exponential form is one of the simplest, and most
 popular).
 
-### Non-Constant Error Variance {#subsec:VariogramEstimation - non constant sigma}
+### Non-Constant Error Variance
 
 If you fit a variogram model to your data as discussed in Section
-\[subsec:VariogramEstimation - constant sigma\], and you find that the
-nugget is fairly large[^3] in comparison to the sill, then it is
+, and you find that the
+nugget is fairly large in comparison to the sill, then it is
 probably not realistic to approximate the error variance by a constant.
 This is because the fluctuations in the error variance
 $\sigma_{E}^{2}\left(x\right)$ (which we know exist) would no longer be
@@ -302,12 +210,11 @@ variance, the variogram then depends on the actual locations being
 compared, as opposed to just the distance between the locations. For
 sites $x$ and $y$, the variogram can be expressed as
 
-$$\gamma\left(x,y\right)=\sigma_{M}^{2}\left[1-\rho\left(\left|x-y\right|\right)\right]+\frac{1}{2}\left[\sigma_{E}^{2}\left(x\right)+\sigma_{E}^{2}\left(y\right)\right].\label{eq:Variogram-nonconstant}$$
+$$\gamma\left(x,y\right)=\sigma_{M}^{2}\left[1-\rho\left(\left|x-y\right|\right)\right]+\frac{1}{2}\left[\sigma_{E}^{2}\left(x\right)+\sigma_{E}^{2}\left(y\right)\right].$$
 
-Compared to Equation (\[eq:Variogram\]), the term on the right is no
+Compared to Equation , the term on the right is no
 longer constant. This means that each point in the empirical variogram
-(as described at the end of Section \[subsec:VariogramEstimation -
-constant sigma\]) would have a different nugget and sill; in other
+(as described at the end of Section ) would have a different nugget and sill; in other
 words, they do not come from a common variogram. As such, direct
 regression cannot be used to estimate the parameters. However, if we
 knew the values of $\sigma_{E}^{2}\left(x\right)$ at the sample sites,
@@ -329,126 +236,78 @@ $\rho\left(d\right)$:
     regression);
 
 Nonlinear regression will provide estimates for $\sigma_{M}^{2}$ and
-$\rho\left(d\right)$. As before, an analysis of residuals (as you query
-in your summary) would be useful here to assess the goodness-of-fit of
+$\rho\left(d\right)$. As before, an analysis of residuals would be useful here to assess the goodness-of-fit of
 the regression.
 
 It only remains to estimate $\sigma_{E}^{2}\left(x\right)$ at the sample
 sites. The simplest case is to use the sample variance of the individual
-rock sizes at a site by using the or functions in Excel, then dividing
+rock sizes at a site, then dividing
 by the total number of rocks counted in that sample to get the estimate.
 
 One might believe that the variances of rock size at two sites with
 equal means are approximately equal. If this belief is close to the
 truth, then there is a more efficient way to estimate the error
-variances by “pooling” all of the data. This can be done by simple
+variances by "pooling" all of the data. This can be done by simple
 regression of the sample variances of the individual rock sizes
 (computed by the excel functions or ) against the sample averages. Then
 $\sigma_{E}^{2}\left(x\right)$ can be estimated as the value of the
 regression curve evaluated at $x$, then dividing by the sample size at
 that site.
 
-Statistical Objective 1: Downstream Fining Curve {#sec:Downstream Fining Trend}
-================================================
+## Statistical Objective 1: Downstream Fining Curve
 
-You mentioned in our meeting that you are interested in finding the
-downstream fining curve. This involves regression of
-$m_{1},\ldots,m_{54}$ against $x_{1},\ldots,x_{54}$, similar to how you
-made the straight line in Figure \[fig:Giles Regression\], except using
-the sample averages instead of the sample medians ($D_{50}$). However,
+regression of
+$m_{1},\ldots,m_{54}$ against $x_{1},\ldots,x_{54}$. 
 there are two other things you might want to change in the regression.
 
-Regression Form
----------------
+### Regression Form
 
-In your regression plot (Figure \[fig:Giles Regression\]), you fit a
-straight line through the data. This may be a reasonable approximation
-to the downstream fining curve. However, there might be a theoretical
+there might be a theoretical
 form that more accurately describes the curve, such as an exponential
-model: $$T\left(x\right)=ae^{-bx}.$$ Excel has an option that fits an
-exponential trendline like this. If such a theoretical model exists, you
+model: $$T\left(x\right)=ae^{-bx}.$$  If such a theoretical model exists, you
 may need to consider nonlinear regression, as discussed in Reference
 @Nonlinear [@Regression]. If there is no theoretical form, then using a
 straight line here is probably a reasonable choice as a rough
 approximation.
 
-Fitting the Regression
-----------------------
 
-The regression line in your plot (Figure \[fig:Giles Regression\]) uses
-a technique called “ordinary least squares” (OLS) to estimate the
-downstream fining curve. This technique (no matter what form is chosen)
-provides an estimate that is “on target” with the true underlying curve
-a desirable feature. Also, it does not require knowledge of variance and
-dependence, as described in Section \[sec:Variogram\] but because of
-this, OLS is not very *precise*. To see why, we intuitively know that
-sites that are right next to each other tend to have similar average
-rock size, yet OLS would treat them as being totally independent.
-
-An improvement to OLS is a technique called “generalised least squares”
-(GLS), which considers the variances and correlation of rock size at
-different sites, whose estimation is discussed in Section
-\[sec:Variogram\]. If you are not able to implement GLS using software,
-you may have to resort to manual calculations using matrix algebra.
-Section 1.3 in Reference @MatrixAlgebra provides an explanation of
-matrix algebra.
-
-Separate Curves Above and Below the Dam
----------------------------------------
-
-If you want to obtain separate curves for upstream the dam and
-downstream the dam, you can simply do two separate regressions. That is,
-using the estimates of $\sigma_{E}^{2}\left(x\right)$, $\sigma_{M}^{2}$,
-and $\rho\left(d\right)$ from Section \[sec:Variogram\] (if using GLS),
-first do a regression for above the dam as if you have no data below the
-dam. Second, similarly do a regression for below the dam as if you have
-no data above the dam.
-
-Statistical Objective 2: River Profile
-======================================
+## Statistical Objective 2: River Profile
 
 The goal of this section is to estimate the mean rock size
 $M\left(x\right)$ at a location $x$ along the study site of the river.
-Doing this for all locations in the study site, you can obtain a “river
-profile” of mean rock size.
+Doing this for all locations in the study site, you can obtain a "river
+profile" of mean rock size.
 
 *Kriging* is a method of estimating mean rock size $M\left(x\right)$
 that takes the variances and correlation of the data into consideration.
 In the case when there is no error variance, Kriging will smoothly
-“connect the dots” of your data $m_{1},\ldots,m_{54}$. There are many
+"connect the dots" of your data $m_{1},\ldots,m_{54}$. There are many
 types of Kriging, but there are two that are directly relevant for this
 project Simple Kriging and Universal Kriging. These are discussed in
-Sections \[subsec:Simple-Kriging\] and \[subsec:Universal-Kriging\] when
+Sections  and when
 approximating the error variance $\sigma_{E}^{2}\left(x\right)$ by a
-constant, and in Section \[subsec:Kriging-Nonconstant\] when allowing
+constant, and in Section  when allowing
 the error variance to be non-constant. For a summary of many types of
 Kriging, see Reference @arcGIS_Kriging. For an extensive overview of
 Kriging, see Chapter 3 in Reference @Geostatistics.
 
-Regarding implementation with software, you may need to check whether
-JMP offers the option for Kriging. Another option is to use arcGIS
-Reference @arcGIS_Kriging is a resource that discusses implementation in
-arcGIS. If you are willing to try R, the library allows for Kriging,
-supplemented by the library .
-
 The idea behind ** Kriging is to estimate mean rock size
-$M\left(x\right)$ by using a “weighted average” of
+$M\left(x\right)$ by using a "weighted average" of
 $m_{1},\ldots,m_{54}$. That is, instead of using the regular average
 $\frac{1}{54}m_{1}+\cdots+\frac{1}{54}m_{54}$, Kriging uses
 $w_{1}\left(x\right)m_{1}+\cdots+w_{54}\left(x\right)m_{54}$ to estimate
 $M\left(x\right)$, where the weights
 $w_{1}\left(x\right),\ldots,w_{54}\left(x\right)$ are nonnegative
 numbers adding to 1 that depend on the location $x$. The weights are
-chosen to minimize variability in the estimate (technically, the “mean
-squared error”).
+chosen to minimize variability in the estimate (technically, the "mean
+squared error").
 
-Simple Kriging {#subsec:Simple-Kriging}
---------------
+### Simple Kriging
 
 Simple Kriging is Kriging when the downstream fining curve,
 $T\left(x\right)$, is known. Of course, the downstream fining curve is
 unknown, but you could get an estimate of it, as discussed in Section
-\[sec:Downstream Fining Trend\]. Regarding the implementation of
+. Regarding the implementation of
 Kriging, if you are not prompted to specify $T\left(x\right)$, then
 whichever software you use will likely assume $T\left(x\right)=0$. In
 this case, you would need to adjust for this by subtracting
@@ -456,19 +315,17 @@ $T\left(x_{1}\right),\ldots,T\left(x_{54}\right)$ from your data
 $m_{1},\ldots,m_{54}$ before running the Kriging procedure, then add
 $T\left(x\right)$ to your result.
 
-Universal Kriging {#subsec:Universal-Kriging}
------------------
+### Universal Kriging
 
 Universal Kriging is Kriging when the downstream fining curve,
-$T\left(x\right)$, is a straight line[^4]. In this case, there is no
+$T\left(x\right)$, is a straight line. In this case, there is no
 need to estimate $T\left(x\right)$ separately as in Section
-\[sec:Downstream Fining Trend\] the estimation is “built-in” to the
+ the estimation is "built-in" to the
 procedure. It is best to use Universal Kriging if you choose
 $T\left(x\right)$ to be linear and if you do not estimate
 $T\left(x\right)$ using GLS.
 
-Kriging under Non-Constant Error Variance {#subsec:Kriging-Nonconstant}
------------------------------------------
+### Kriging under Non-Constant Error Variance
 
 To implement Kriging, it is likely that most software would use the
 variogram estimate in place of the estimates of
@@ -478,26 +335,25 @@ $\sigma_{E}^{2}\left(x\right)$ being different for different locations,
 then the Kriging procedure would need to use the individual estimates of
 $\sigma_{E}^{2}\left(x\right)$, $\sigma_{M}^{2}$, and
 $\rho\left(d\right)$ instead of the variogram itself (recall Section
-\[subsec:VariogramEstimation - non constant sigma\] for estimating these
+ for estimating these
 quantities under the non-constant error variance consideration). See
 Chapter 3 in Reference @Geostatistics to find formulas for the Kriging
 estimator.
 
-Confidence Intervals of the River Profile {#subsec:Confidence Intervals}
------------------------------------------
+## Confidence Intervals of the River Profile
 
 Various software that have Kriging capabilities most likely also have
 the ability to construct confidence intervals when prompted. A
 confidence interval at a location $x$ is an interval that covers the
 true mean rock size, $M\left(x\right)$, with approximately some
 pre-specified chance (such as 95%). When the intervals are plotted over
-a range of locations, they form a confidence “band” around the river
+a range of locations, they form a confidence "band" around the river
 profile.
 
 However, be aware that the confidence intervals in the case of Simple
-Kriging will be “too narrow”, unless the estimate of the downstream
-fining curve is quite precise. A confidence interval that is “too
-narrow” has the implication that the amount of confidence you claim
+Kriging will be "too narrow", unless the estimate of the downstream
+fining curve is quite precise. A confidence interval that is "too
+narrow" has the implication that the amount of confidence you claim
 (such as 95%) is actually more than the actual confidence level. This is
 because the Simple Kriging procedure treats the downstream fining curve
 $T\left(x\right)$ as known, and does not incorporate the uncertainty
@@ -506,8 +362,8 @@ involved in estimating $T\left(x\right)$.
 It is likely that the confidence intervals provided by the software are
 based on the assumption that the data are normally distributed. Since
 your data $m_{1},\ldots,m_{54}$ are averages, and there are many rocks
-in each site, this assumption of normality is probably reasonabledue to
-the Central Limit Theoremeven though the original rock size
+in each site, this assumption of normality is probably reasonable due to
+the Central Limit Theorem even though the original rock size
 distributions are not normally distributed. However, this relies on the
 assumption that the presence of each rock from a sampling site is not
 influenced from other rocks (i.e. they are independent). It is not clear
@@ -522,84 +378,6 @@ interval using the variance of the mean estimate (denoting this variance
 as $V\left(x\right)$ and the estimated mean as $\hat{M}\left(x\right)$)
 by $\hat{M}\left(x\right)\pm1.96\sqrt{V\left(x\right)}$.
 
-Statistical Objective 4: Effect of the Wilsey Dam {#sec:Dam Effect}
-=================================================
-
-The goal of this section is to investigate whether the mean size of
-rocks above the Wilsey dam is different from the mean size of rocks
-below the dam. Although there is no “gold standard” technique one can
-use, many methods require that rocks within a sample are not influenced
-by other rocks (i.e. independent). However, it is important to clarify
-what “above the dam” and “below the dam” exactly mean (this is not
-entirely clear).
-
-The simplest approach (that is wasteful of data) is to perform a t-test
-using the rock samples you obtained at the nearest sampling sites
-upstream and downstream the dam. The t-test assess the difference in the
-mean rock sizes of the two sites. In the case that the t-test does not
-indicate a difference in the mean rock sizes at the two sites, it is
-still possible that the *distributions* may be different. If you are
-interested in assessing the difference in the rock size distributions of
-the two sites, then a Kolmogorov-Smirnov test can be carried out using
-the rock samples from those sites. Here, “above the dam” and “below the
-dam” refers to the sampling sites nearest the dam on either side. This
-is an example where a “difference of means test” and a “difference in
-distributions test” can be used in your analysis.
-
-However, including all of the data would make a test stronger in its
-ability to find differences in rock sizes. Fortunately, no new
-techniques are needed to approach this. I first recommend applying
-Kriging above and below the dam separately, which would allow for a
-discontinuity in mean rock size at the dam. Then, obtain the confidence
-intervals for the mean rock size at the location of the dam using the
-above-dam Kriging results, as well as the below-dam Kriging results.
-Here, “above the dam” and “below the dam” can be interpreted as the
-locations *immediately* above and *immediately* below the dam. If the
-confidence intervals do not overlap, then you can reject the null
-hypothesis that the mean rock sizes immediately above and below the dam
-are the same (in other words, the mean rock sizes are different). If the
-confidence intervals overlap, then you will need to analyse further by
-computing a test statistic $T$,
-$$T=\left|\frac{\hat{M}_{below}-\hat{M}_{above}}{\sqrt{KV_{below}+KV_{above}}}\right|.$$
-Here $\hat{M}_{below}$ and $\hat{M}_{above}$ are the Kriging estimates
-of the mean rock size below and above the dam, and $KV_{below}$ and
-$KV_{above}$ are the Kriging variances of the corresponding estimates.
-If the computer software does not give you the Kriging variances, they
-can be found by taking the width of the corresponding confidence
-interval and dividing it by $2z_{\alpha/2}$, where $\alpha$ is the
-significance level and $z_{\alpha/2}$ is the $\alpha/2$ normal quantile
-(typically $\alpha=0.95,$ in which case $z_{\alpha/2}=1.96$
-approximately). If $T$ is larger than $z_{\alpha/2}$, then you can
-reject the null hypothesis. This is called a Wald test a type of
-“difference of means test”.
-
-Although I recommend applying Kriging separatelyabove and below the
-damin this case, it does not mean that the original Kriging results that
-used all of the data are incorrect. This “full-data Kriging” method is
-only a smooth approximation to a rather roughly shaped true mean river
-profile. However, in this section the discontinuity at the dam is
-specifically allowed for to investigate its effect on rock size.
-
-Summary
-=======
-
-To address the scientific objectives using statistical approaches, it is
-important to build a model for rock size, which is done in terms of the
-average rock size $m\left(x\right)$, the mean rock size
-$M\left(x\right)$, and the downstream fining curve $T\left(x\right)$. To
-estimate the downstream fining curve, regression can be used on your
-data $m_{1},\ldots,m_{54}$ against the locations $x_{1},\ldots,x_{54}$.
-Kriging can be used to estimate the mean rock size to create a river
-profile, along with confidence bands. Kriging makes use of the variogram
-to estimate the error variance, mean variance, and mean correlation in
-the case the error variance is constant. When considering the
-non-constant nature of the error variance, Kriging can still be carried
-through, but the implementation requires considerably more care.
-Finally, to compare the mean rock size above and below the Wilsey Dam,
-two separate river profiles can be made using Kriging upstream the dam
-and downstream the dam. The mean rock sizes on either side of the dam
-can be compared through the confidence bands of the two profiles at the
-dam location.
 
 <span>1</span> Chilès, J.P., and Delfiner, P. (2012) Geostatistics:
 Modeling Spatial Uncertainty. Second Edition. Wiley.
@@ -613,24 +391,3 @@ Statistical Tools for Nonlinear Regression: A Practical Guide with
 S-Plus and R Examples. Second Edition. Springer.
 
 Anton, H. (2010) Elementary Linear Algebra. Tenth Edition. Wiley.
-
-[^1]: Recall that an average is computed by adding together all the
-    measured rock sizes at a site, then dividing by the total number of
-    measured rocks at that site. This is different from $D_{50}$, which
-    is the median rock size especially because rock sizes are truncated
-    at 8mm.
-
-[^2]: You mentioned in our meeting that the downstream fining *trend*as
-    referred to by Geomorphologistsmight be summarised by a number. If
-    so, the downstream fining trend might refer to the slope (or some
-    related quantity) of the downstream fining curve if one believes the
-    trend is linear, for example. I define the downstream fining curve
-    as the entire function $T(x)$.
-
-[^3]: Note that there is no standard method of determining what is
-    considered large.
-
-[^4]: Actually, the downstream fining curve could be a polynomial in $x$
-    as well. In technical terms, Universal Kriging can be used whenever
-    $T\left(x\right)=a_{1}f_{1}\left(x\right)+\cdots a_{k}f_{k}\left(x\right)$
-    for known functions $f_{1},\ldots,f_{k}$.

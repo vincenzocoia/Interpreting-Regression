@@ -1,7 +1,6 @@
----
-title: "GLM's in R"
-output: html_document
----
+# GLM's in R 
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
 This document introduces the `glm` function in R for fitting a Generlized Linear Model (GLM). We'll work with the `titanic_train` dataset in the `titanic` package.
 
