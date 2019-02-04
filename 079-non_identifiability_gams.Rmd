@@ -47,7 +47,7 @@ The answer uses Equation
 
 The next question asks you to think about how you'd recover an $h$ function. It asks:
 
-> For each $h$ function, write an R function that evaluates the $h$ function over a grid of values, without calling the \code{plot} function on the fit. Show that the function works by evaluating it over a small grid of values.
+> For each $h$ function, write an R function that evaluates the $h$ function over a grid of values, without calling the `plot` function on the fit. Show that the function works by evaluating it over a small grid of values.
 
 Suppose you want to evaluate function $\hat{h}_1$ at some generic point $x_0$. You can do this using the `predict` function, and somehow specifying $x_0$ in the `newdata` argument (in place of "predictor 1"). But `predict` will give you all three components of the model, added together: the $\hat{\beta}_0$ part, plus the $\hat{h}_1$ part (evaluated at whatever is in the "predictor 1" column), plus the $\hat{h}_2$ part (evaluated at whatever is in the "predictor 2" column). Your job is to "isolate" the $\hat{h}_1$ part, evaluated at $x_0$. We can subtract out $\hat{\beta}_0$, which is specified in the model output. But you can't just subtract out the $\hat{h}_2$ part, because we don't know it. Your job is to use a property of $\hat{h}_2$ (hint: Equation ) to remove it. 
 

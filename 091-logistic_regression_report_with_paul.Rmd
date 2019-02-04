@@ -2,7 +2,6 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
-**Warning: Highly developmental**
 
 The focus of this paper is on medical studies with a binary response,
 such as survival/death or healthy/diseased. Typically, we are more
@@ -25,7 +24,6 @@ baseline (unexposed) risk $\pi_{B}$ are
 3.  the *relative risk*, $\pi_{E}/\pi_{B}$, and
 
 4.  the *odds ratio*,
-    $$\frac{\pi_{E}/\left(1-\pi_{E}\right)}{\pi_{B}/\left(1-\pi_{B}\right)}.$$
 
 These IQ's consider all other factors to be equal.
 
@@ -42,15 +40,13 @@ variables.
 Let $Y$ denote the binary response. It is convenient to express this
 variable as $1$ for the outcome of interest (such as diseased) and $0$
 for the other outcome, because then its expectation is equal to the
-risk. Next, denote $\boldsymbol{X}=\left(X_{1},\ldots,X_{p}\right)^{T}$
-as the vector of covariates. Then we have
-$$Y\left|\boldsymbol{X}=\boldsymbol{x}\right.\sim\text{Bernoulli}\left(\pi\left(\boldsymbol{x}\right)\right),$$
+risk. Then we have
+$$Y|X=x \sim \text{Bernoulli}\left(\pi\left(x\right)\right),$$
 where
-$\pi\left(\boldsymbol{x}\right)={\operatorname{E}}\left(Y\left|\boldsymbol{X}=\boldsymbol{x}\right.\right)$.
+$\pi\left(x\right)=E\left(Y\left|X=x\right.\right)$.
 The difficulty lies in specifying a model for
-$\pi\left(\boldsymbol{x}\right)$. Traditionally, it is modelled using a
-generalized linear model (GLM),
-$$g\left(\pi\left(\boldsymbol{x}\right)\right)=\beta_{0}+\boldsymbol{x}^{T}\boldsymbol{\beta}=:\eta\left(\boldsymbol{x}\right),$$
+$\pi\left(x\right)$. Traditionally, it is modelled using a
+generalized linear model (GLM), (EQUATION),
 where $g$ is some increasing function known as the link function, and
 $\boldsymbol{\beta}=\left(\beta_{1},\ldots,\beta_{p}\right)^{T}$ is a
 vector of regression parameters. Note that for our purposes it is more
@@ -58,11 +54,7 @@ convenient to keep the absolute term $\beta_{0}$ separate from the
 vector $\boldsymbol{\beta}$. We will discuss two GLM models in Section
 2, then discuss the LEXPIT approach of Kovalchik and others (2013) in
 Section 3. Section 4 is reserved for an appraisal of the LEXPIT method,
-and a simulation in Section 5 evaluates the LEXPIT model empirically. In
-all cases that follow, we will assume that we are given an independent
-sample
-$\left(Y_{1},\boldsymbol{X}_{1}\right),\ldots,\left(Y_{n},\boldsymbol{X_{n}}\right)$
-of outcomes and covariates.
+and a simulation in Section 5 evaluates the LEXPIT model empirically. 
 
 ## The Traditional Approach
 
@@ -70,8 +62,7 @@ of outcomes and covariates.
 
 A first inclination may be to model the mean as one would in the case of
 multiple linear regression that is, as a linear combination of the
-covariates. The link function $g$ is the identity, and the model becomes
-$$\pi\left(\boldsymbol{x}\right)=\beta_{0}+\boldsymbol{x}^{T}\boldsymbol{\beta}.\label{eq:Model 1 - LPM}$$
+covariates. The link function $g$ is the identity, and the model becomes (EQUATION).
 Kovalchik and others (2013) refer to this as the "Binomial Linear
 Model", or BLM, though it is more commonly known as the "Linear
 Probability Model", or LPM (see, for example, Aldrich and Nelson, 1984;
@@ -80,18 +71,16 @@ referred to as the LPM.
 
 Before proceeding with any further discussion, the validity of this
 model must be enforced. The Bernoulli distribution requires
-$0\leq\pi\left(\boldsymbol{x}\right)\leq1$ for all
-$\boldsymbol{x}\in\mathcal{X}$ to be a valid distribution, where
-$\mathcal{X}\subseteq\mathbb{R}^{p}$ is the covariate space. Validity
+$0\leq\pi(X)\leq1$ for all $x$
+$\boldsymbol{x}\in XX$ to be a valid distribution. Validity
 can be ensured by restricting the parameter space of
-$\left(\beta_{0},\boldsymbol{\beta}\right)$ to
-$\mathcal{F}=\left\{ \left(\beta_{0},\boldsymbol{\beta}\right):\mbox{0\ensuremath{\leq\beta_{0}}+\ensuremath{\boldsymbol{x}^{T}\boldsymbol{\beta}\leq}1,\,\ensuremath{\boldsymbol{x}\in\mathcal{X}}}\right\} $.
+$\left(\beta_{0},\boldsymbol{\beta}\right)$ to .
 However, the parameter space can be severely restricted depending on the
-covariate space $\mathcal{X}$. For example, if component $k$ of
-$\mathcal{X}$ is unbounded, then the only allowable value for
+covariate space. For example, if predictor $k$ of
+is unbounded, then the only allowable value for
 $\beta_{k}$ is zero. In other words, any covariate in the LPM that has
 an unbounded range cannot technically be included in the LPM. Further,
-even if component $k$ of $\mathcal{X}$ is bounded, if it has a large
+even if component $k$ is bounded, if it has a large
 range, then the slope is restricted to be small.
 
 One reason why the LPM is used, despite the above restrictions, is for
@@ -104,14 +93,12 @@ covariates.
 
 Since the LPM is just a multiple linear regression model, the regression
 parameters can be estimated without bias by ordinary least squares
-(OLS). However, we do not necessarily have homoskedastic errors, since
-${\operatorname{Var}}\left(Y\left|\boldsymbol{X}=\boldsymbol{x}\right.\right)=\pi\left(\boldsymbol{x}\right)\left(1-\pi\left(\boldsymbol{x}\right)\right)=:\sigma^{2}\left(\boldsymbol{x}\right)$
+(OLS). However, we do not necessarily have homoskedastic errors, since $Var(Y|X=x)$
 differs with the covariates. As such, the efficiency of the OLS
 estimator can be improved by the weighted least squares estimator with
 weights $1/\sigma\left(\boldsymbol{x}\right)$. Since these weights are
 unknown, an iterative algorithm is used, which calculates weights using
 the fitted probabilities
-$\hat{\pi}\left(\boldsymbol{x}\right)=\hat{\beta}_{0}+\boldsymbol{x}^{T}\hat{\boldsymbol{\beta}}$
 from parameter estimates of the previous step to compute a new
 "re-weighted" estimator. Iterating this beginning with the OLS estimator
 converges to the *iteratively re-weighted least squares* (IRLS)
@@ -120,17 +107,11 @@ maximum likelihood estimator (MLE).
 
 An alternative model which is sometimes confused for the LPM (for
 example, see Horrace and Oaxaca, 2006) is to allow for an arbitrary
-parameter space $\mathcal{F}$ (unrestricted by $\mathcal{X}$) by taking
-$\pi\left(\boldsymbol{x}\right)$ to be zero when $\eta$ is less than
+parameter space by taking
+$\pi(x)$ to be zero when $\eta$ is less than
 zero, and unity otherwise. This model, which I call the "truncated LPM"
-(TLPM), is
-$$\pi\left(\boldsymbol{x}\right)=T\left(\beta_{0}+\boldsymbol{x}^{T}\boldsymbol{\beta}\right),\label{eq:Model 1b - TLPM}$$
-where the inverse-link function $T$ is the ramp function
-$$T\left(u\right)=\left\{ \begin{array}{cc}
-0, & u<0;\\
-u, & 0\leq u\leq1;\\
-1, & u>1
-\end{array}\right.\label{eq:ramp function/link}$$ (actually, $T$ is not
+(TLPM), is (EQUATION)
+where the inverse-link function $T$ is the ramp function (actually, $T$ is not
 quite an inverse-link function because it is non-invertible, but this is
 unimportant). However, as one can see by the differing link function,
 this is not the LPM, although it is often mistaken for the LPM. Horrace
@@ -142,33 +123,24 @@ considered.
 
 ### The Logistic Model
 
-To rid the parameter space $\mathcal{F}$ of restrictions, one may
-consider link functions similar to the ramp function of (\[eq:ramp
-function/link\]) (preferably smooth) to ensure
-$0\leq\pi\left(\boldsymbol{x}\right)\leq1$. Popular choices are
-${\operatorname{logit}}\left(u\right)=u/\left(1-u\right)$, the inverse
-Gaussian distribution function $\Phi^{-1}\left(u\right)$ (or
-$\text{probit}$), the inverse Gumbel distribution function
-$-\log\left(-\log\left(u\right)\right)$, or the angular function
-$\sin^{-1}\left(\sqrt{u}\right)$ (Cox and Snell, 1989). Each of these
+To rid the parameter space of restrictions, one may
+consider link functions similar to the ramp function (preferably smooth) to ensure
+$0\leq\pi(x)\leq1$. Popular choices are logit, probit, the inverse Gumbel distribution function, or the angular function (Cox and Snell, 1989). Each of these
 link functions ensures a valid probability for an arbitrary parameter
-space $\mathcal{F}\subset\mathbb{R}^{p+1}$. The ${\operatorname{logit}}$
+space. The logit
 link function is a popular choice because it has the best
 interpretability. It models the log-odds as a linear function of the
-covariates that is,
-$$\log\frac{\pi\left(\boldsymbol{x}\right)}{1-\pi\left(\boldsymbol{x}\right)}=\beta_{0}+\boldsymbol{x}^{T}\boldsymbol{\beta}.\label{eq:Model 2 - Logistic}$$
+covariates that is, (EQUATION).
 This model is known as the logistic regression model, and can be written
-equivalently as
-$\pi\left(\boldsymbol{x}\right)={\operatorname{expit}}\left(\beta_{0}+\boldsymbol{x}^{T}\boldsymbol{\beta}\right)$,
-where
-${\operatorname{expit}}\left(u\right)=\left(1+\exp\left(-u\right)\right)^{-1}$
-is the inverse ${\operatorname{logit}}$ function. The logistic model
+equivalently as ,
+where 
+is the inverse logit function. The logistic model
 stands out over models with other link functions because a constant IQ
 can be obtained from it the odds ratio by increasing $X_{k}$ by one unit
 is simply $\exp\left(\beta_{k}\right)$. However, of the interpretable
 quantities discussed in Section 1, the odds ratio is the most difficult
 to interpret. Though, if both risks are smallthe "rare disease
-assumption" with risks under $0.1$then the odds ratio is a good
+assumption" with risks under $0.1$ then the odds ratio is a good
 approximation to the relative risk, which is easier to interpret. The
 lack of an easy interpretable constant IQ is why some researchers will
 opt for the LPM instead of the logistic model when the rare disease
@@ -179,10 +151,7 @@ Kovalchik and others.
 
 Conveniently, the log odds appears in the likelihood of the logistic
 model, which simplifies some computations. This leads to the MLE which
-solves the equation
-$\sum_{i}\left(Y_{i}-\hat{\pi}\left(\boldsymbol{X}_{i}\right)\right)\boldsymbol{X}_{i}=\boldsymbol{0}$,
-where
-$\hat{\pi}\left(\boldsymbol{x}\right)={\operatorname{expit}}\left(\hat{\beta}_{0}+\boldsymbol{x}^{T}\hat{\boldsymbol{\beta}}\right)$.
+solves the equation .
 However, occasionally it is possible that no MLE exists when there is a
 $\left(b_{0},\boldsymbol{b}\right)\in\mathcal{F}$ such that
 $b_{0}+\boldsymbol{x}_{i}^{T}\boldsymbol{b}>0$ has $Y_{i}=1$ and
@@ -190,5 +159,5 @@ $b_{0}+\boldsymbol{x}_{i}^{T}\boldsymbol{b}<0$ has $Y_{i}=0$ for each
 $i=1,\ldots,n$ (Albert and Anderson, 1984). This is called the case of
 "complete separation", and the likelihood has no maximum, so a "perfect
 fit" is made by infinitely pushing the covariate data to the tails of
-the ${\operatorname{expit}}$ curve. This is not an issue with the LPM
+the expit curve. This is not an issue with the LPM
 model.

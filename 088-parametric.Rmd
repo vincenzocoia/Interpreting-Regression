@@ -1,0 +1,52 @@
+---
+title: The Types and Value of Parametric Assumptions
+output: github_document
+---
+
+
+## The types of parametric assumptions
+
+A model can be _parametric_ (i.e., containing parameters) in roughly two ways:
+
+### 1\. When defining a __model function__.
+
+For example, in linear regression, we assume that the model function is linear. We might also make assumptions about the conditional variance.
+
+This tends to be the meaning of "parametric" in Computer Science.
+
+### 2\. When defining __probability distributions__. 
+
+For example, we might assume that residuals are Gaussian, or perhaps some other distribution.
+
+This tends to be the meaning of "parametric" in Statistics.
+
+## The value of making parametric assumptions
+
+There are arguably two reasons one might bother making a parametric assumption. They are:
+
+1. Reduced error.
+2. Interpretability.
+
+### Value \#1: Reduced Error
+
+One value of making parametric assumptions is that we _might_ achieve reduced error. As long as we don't introduce as many parameters as there are observations (or more), here's what generally happens when we make an assumption:
+
+1. __The model variance decreases__. You can think of the reason behind this in two ways:
+    - we're adding information to our data set; or
+    - we don't need to estimate as many quantities. 
+2. __The bias increases the "more incorrect" your assumption is__.
+    - This is because we're identifying a framework that is almost surely not true.
+
+Recall that mean squared error has both (squared) bias and model variance as components. The hope is that your model is "correct enough" so that the increase in bias is small in comparison to the decrease in variance, resulting in an overall decrease in error.
+
+Challenge: run a simulation to convince yourself of this -- first in the univariate setting (where bias and variance are more interpretable), then in the regression setting.
+
+For more information on the bias-variance tradeoff, check out Section 2.2.2 of the [ISLR book](http://www-bcf.usc.edu/~gareth/ISL/).
+
+### Value \#2: Interpretation
+
+Sometimes making a parametric assumption does not reduce the overall error by much, even when the assumption is true. This would not be appealing if all you care about is prediction performance. But if you want to gain some insight into relationships between your predictors and response, then introducing a parameter __so that it has meaning__ will help with this task.
+
+For example, assuming the mean response is linear in the predictors gives us meaning behind the slope parameter, as it corresponds to the expected change in response associated with a difference of 1 unit of the corresponding predictor.  
+
+The bonus here is that we don't always need to think of the parameters as being strictly correct. Your assumptions will never hold exactly, so as long as the assumption is not completely unreasonable, the parameters at least give you a sense of what's going on in your data. 

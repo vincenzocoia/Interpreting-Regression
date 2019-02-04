@@ -1,23 +1,16 @@
-# DSCI 562 Lab 4 Tutorial: Robust Regression
+# Robust Regression in R
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
-```{r, warning=FALSE, echo=FALSE}
-library(ggplot2)
-```
-
-
-## Robust Regression
+DSCI 562 Lab 4 Tutorial
 
 There are many R packages out there to assist with robust estimation. It depends on the task at hand. We'll go over a few.
 
-### Robust Regression
-
 For robust linear regression, there are a few options. 
 
-There's the `rlm` function in the `MASS` package. It works in a similar way as the `lm` function. Can also use the functions `predict`, `residuals`, `coefficients`, etc. on the output. I like this option because it allows for different $\psi$ functions besides the Huber.
+There's the `rlm` function in the `MASS` package. It works in a similar way as the `lm` function. Can also use the functions `predict`, `residuals`, `coefficients`, etc. on the output. I like this option because it allows for different psi functions besides the Huber.
 
-```{r}
+```
 library(MASS)
 (fit6 <- rlm(mpg ~ disp + wt, data=mtcars))
 (fit7 <- rlm(mpg ~ disp + wt, data=mtcars, psi=psi.bisquare))

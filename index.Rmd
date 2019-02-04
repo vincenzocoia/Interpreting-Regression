@@ -19,16 +19,21 @@ description: "My tutorials for regression analysis, in the form of a bookdown bo
 
 Currently, much of the book is a stitching together of previous pieces of my writing that I think might be relevant to this book. These chapters will be updated to consider the different context, audience, and content organization that's best for this book.
 
-## The two main tasks that regression tries to solve
+## Tasks that motivate Regression
 
-prediction and interpretation
+Real world problems for which regression is an appropriate tool generally fall into two categories:
 
-Example 1: (Basic numeric example, perhaps with y in R)
+1. Prediction: Predicting the response of a new unit/individual, sometimes also describing uncertainty in the prediction.
+2. Interpretation: Interpreting how predictors influence the response.
 
-Example 2: (Another numeric example, perhaps with y being a count)
-
-Example 3: (binary response) There's a 5% that a person will get pregnant through an in-vivo insemination procedure. It's well-know that age is an important factor. It also depends on how long after the leutenizing hormone (LH) first spiked.
+For example, consider a person undergoing artificial insemination.
 
 - Prediction: Given the person's age, what is the chance of pregnancy?
-- Interpretation: How does age influence the chance of pregnancy? What about LH? What about LH for people over 40?
+- Interpretation: How does age influence the chance of pregnancy? How does time of insemination after a spike in Luteinizing hormone affect the chance of pregnancy, and how is this different for people over 40?
 
+This book does not focus on optimizing predictions, but focusses on the other tasks. This means:
+
+1. describing the uncertainty in predictions, or estimates in general, and
+2. interpreting how predictors influence the response.
+
+Why not focus on optimizing predictions? This is the objective of _supervised learning_, an entire discipline in itself. The scope of this book would just be too big to include this, too.
