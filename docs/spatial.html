@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 25 Spatial | Interpreting Regression</title>
+  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 25 Spatial | Interpreting Regression" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 25 Spatial | Interpreting Regression" />
+  
+  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  
+
+<meta name="author" content="Vincenzo Coia">
+
+
+<meta name="date" content="2019-02-16">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="dsci-562-tutorial-missing-data.html">
+<link rel="next" href="timeseries-in-base-r.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Interpreting Regression</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preamble</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#caution"><i class="fa fa-check"></i><b>1.1</b> Caution</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#tasks-that-motivate-regression"><i class="fa fa-check"></i><b>1.2</b> Tasks that motivate Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="distributions.html"><a href="distributions.html"><i class="fa fa-check"></i><b>2</b> Distributions</a><ul>
+<li class="chapter" data-level="2.1" data-path="distributions.html"><a href="distributions.html#probabilistic-quantities"><i class="fa fa-check"></i><b>2.1</b> Probabilistic Quantities</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>3</b> Estimation</a><ul>
+<li class="chapter" data-level="3.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>3.1</b> Estimation of Probabilistic Quantities</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="writing-the-sample-mean-as-an-optimization-problem.html"><a href="writing-the-sample-mean-as-an-optimization-problem.html"><i class="fa fa-check"></i><b>4</b> Writing the sample mean as an optimization problem</a></li>
+<li class="chapter" data-level="5" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html"><i class="fa fa-check"></i><b>5</b> Probabilistic Forecasting</a><ul>
+<li class="chapter" data-level="5.1" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#probabilistic-forecasting-what-it-is"><i class="fa fa-check"></i><b>5.1</b> Probabilistic Forecasting: What it is</a></li>
+<li class="chapter" data-level="5.2" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#review-univariate-distribution-estimates"><i class="fa fa-check"></i><b>5.2</b> Review: Univariate distribution estimates</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#continuous-response"><i class="fa fa-check"></i><b>5.2.1</b> Continuous response</a></li>
+<li class="chapter" data-level="5.2.2" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#discrete-response"><i class="fa fa-check"></i><b>5.2.2</b> Discrete Response</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#probabilistic-forecasts-subset-based-learning-methods"><i class="fa fa-check"></i><b>5.3</b> Probabilistic Forecasts: subset-based learning methods</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#the-techniques"><i class="fa fa-check"></i><b>5.3.1</b> The techniques</a></li>
+<li class="chapter" data-level="5.3.2" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#exercise"><i class="fa fa-check"></i><b>5.3.2</b> Exercise</a></li>
+<li class="chapter" data-level="5.3.3" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>5.3.3</b> Bias-variance tradeoff</a></li>
+<li class="chapter" data-level="5.3.4" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#evaluating-model-goodness"><i class="fa fa-check"></i><b>5.3.4</b> Evaluating Model Goodness</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#discussion-points"><i class="fa fa-check"></i><b>5.4</b> Discussion Points</a></li>
+<li class="chapter" data-level="5.5" data-path="probabilistic-forecasting.html"><a href="probabilistic-forecasting.html#when-are-they-not-useful"><i class="fa fa-check"></i><b>5.5</b> When are they not useful?</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="quantile-regression.html"><a href="quantile-regression.html"><i class="fa fa-check"></i><b>6</b> Quantile Regression</a><ul>
+<li class="chapter" data-level="6.1" data-path="quantile-regression.html"><a href="quantile-regression.html#what-is-the-mean-anyway"><i class="fa fa-check"></i><b>6.1</b> What is the mean, anyway?</a></li>
+<li class="chapter" data-level="6.2" data-path="quantile-regression.html"><a href="quantile-regression.html#linear-quantile-regression"><i class="fa fa-check"></i><b>6.2</b> Linear Quantile Regression</a></li>
+<li class="chapter" data-level="6.3" data-path="quantile-regression.html"><a href="quantile-regression.html#exercise-1"><i class="fa fa-check"></i><b>6.3</b> Exercise</a></li>
+<li class="chapter" data-level="6.4" data-path="quantile-regression.html"><a href="quantile-regression.html#problem-crossing-quantiles"><i class="fa fa-check"></i><b>6.4</b> Problem: Crossing quantiles</a></li>
+<li class="chapter" data-level="6.5" data-path="quantile-regression.html"><a href="quantile-regression.html#problem-upper-quantiles"><i class="fa fa-check"></i><b>6.5</b> Problem: Upper quantiles</a></li>
+<li class="chapter" data-level="6.6" data-path="quantile-regression.html"><a href="quantile-regression.html#evaluating-model-goodness-1"><i class="fa fa-check"></i><b>6.6</b> Evaluating Model Goodness</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html"><i class="fa fa-check"></i><b>7</b> Introduction to Machine Learning</a><ul>
+<li class="chapter" data-level="7.1" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#what-machine-learning-is"><i class="fa fa-check"></i><b>7.1</b> What machine learning is</a></li>
+<li class="chapter" data-level="7.2" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#variable-terminology"><i class="fa fa-check"></i><b>7.2</b> Variable terminology</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#variable-types"><i class="fa fa-check"></i><b>7.2.1</b> Variable types</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#types-of-supervised-learning"><i class="fa fa-check"></i><b>7.3</b> Types of Supervised Learning</a></li>
+<li class="chapter" data-level="7.4" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#together-linear-regression-example"><i class="fa fa-check"></i><b>7.4</b> Together: Linear Regression Example</a></li>
+<li class="chapter" data-level="7.5" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#irreducible-error"><i class="fa fa-check"></i><b>7.5</b> Irreducible Error</a></li>
+<li class="chapter" data-level="7.6" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#in-class-exercises-irreducible-error"><i class="fa fa-check"></i><b>7.6</b> In-class Exercises: Irreducible Error</a><ul>
+<li class="chapter" data-level="7.6.1" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#oracle-regression"><i class="fa fa-check"></i><b>7.6.1</b> Oracle regression</a></li>
+<li class="chapter" data-level="7.6.2" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#oracle-classification"><i class="fa fa-check"></i><b>7.6.2</b> Oracle classification</a></li>
+<li class="chapter" data-level="7.6.3" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#bonus-random-prediction"><i class="fa fa-check"></i><b>7.6.3</b> (BONUS) Random prediction</a></li>
+<li class="chapter" data-level="7.6.4" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#bonus-a-more-non-standard-regression"><i class="fa fa-check"></i><b>7.6.4</b> (BONUS) A more non-standard regression</a></li>
+<li class="chapter" data-level="7.6.5" data-path="introduction-to-machine-learning.html"><a href="introduction-to-machine-learning.html#bonus-oracle-mse"><i class="fa fa-check"></i><b>7.6.5</b> (BONUS) Oracle MSE</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html"><i class="fa fa-check"></i><b>8</b> Regression in the context of problem solving</a><ul>
+<li class="chapter" data-level="8.1" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#communicating-distillation-3-4"><i class="fa fa-check"></i><b>8.1</b> Communicating (Distillation 3-4)</a></li>
+<li class="chapter" data-level="8.2" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#modelling-distillation-2-3"><i class="fa fa-check"></i><b>8.2</b> Modelling (Distillation 2-3)</a></li>
+<li class="chapter" data-level="8.3" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#asking-useful-statistical-questions-distillation-1-2"><i class="fa fa-check"></i><b>8.3</b> Asking useful statistical questions (Distillation 1-2)</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#business-objectives-examples"><i class="fa fa-check"></i><b>8.3.1</b> Business objectives: examples</a></li>
+<li class="chapter" data-level="8.3.2" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#statistical-objectives-refining"><i class="fa fa-check"></i><b>8.3.2</b> Statistical objectives: refining</a></li>
+<li class="chapter" data-level="8.3.3" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#statistical-objectives-examples"><i class="fa fa-check"></i><b>8.3.3</b> Statistical objectives: examples</a></li>
+<li class="chapter" data-level="8.3.4" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#statistical-questions-are-not-the-full-picture"><i class="fa fa-check"></i><b>8.3.4</b> Statistical questions are not the full picture</a></li>
+<li class="chapter" data-level="8.3.5" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#statistical-objectives-unrelated-to-supervised-learning"><i class="fa fa-check"></i><b>8.3.5</b> Statistical objectives unrelated to supervised learning</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#prerequisites-to-an-analysis"><i class="fa fa-check"></i><b>8.4</b> Prerequisites to an analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="local-regression.html"><a href="local-regression.html"><i class="fa fa-check"></i><b>9</b> Local Regression</a><ul>
+<li class="chapter" data-level="9.1" data-path="local-regression.html"><a href="local-regression.html#knn"><i class="fa fa-check"></i><b>9.1</b> kNN</a></li>
+<li class="chapter" data-level="9.2" data-path="local-regression.html"><a href="local-regression.html#loess"><i class="fa fa-check"></i><b>9.2</b> loess</a></li>
+<li class="chapter" data-level="9.3" data-path="local-regression.html"><a href="local-regression.html#in-class-exercises"><i class="fa fa-check"></i><b>9.3</b> In-Class Exercises</a><ul>
+<li class="chapter" data-level="9.3.1" data-path="local-regression.html"><a href="local-regression.html#exercise-1-mean-at-x0"><i class="fa fa-check"></i><b>9.3.1</b> Exercise 1: Mean at <span class="math inline">\(X=0\)</span></a></li>
+<li class="chapter" data-level="9.3.2" data-path="local-regression.html"><a href="local-regression.html#exercise-2-regression-curve"><i class="fa fa-check"></i><b>9.3.2</b> Exercise 2: Regression Curve</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="local-regression.html"><a href="local-regression.html#hyperparameters-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>9.4</b> Hyperparameters and the bias/variance tradeoff</a></li>
+<li class="chapter" data-level="9.5" data-path="local-regression.html"><a href="local-regression.html#extensions-to-knn-and-loess"><i class="fa fa-check"></i><b>9.5</b> Extensions to kNN and loess</a><ul>
+<li class="chapter" data-level="9.5.1" data-path="local-regression.html"><a href="local-regression.html#kernel-weighting"><i class="fa fa-check"></i><b>9.5.1</b> Kernel weighting</a></li>
+<li class="chapter" data-level="9.5.2" data-path="local-regression.html"><a href="local-regression.html#local-polynomials"><i class="fa fa-check"></i><b>9.5.2</b> Local polynomials</a></li>
+<li class="chapter" data-level="9.5.3" data-path="local-regression.html"><a href="local-regression.html#combination"><i class="fa fa-check"></i><b>9.5.3</b> Combination</a></li>
+<li class="chapter" data-level="9.5.4" data-path="local-regression.html"><a href="local-regression.html#other-distances"><i class="fa fa-check"></i><b>9.5.4</b> Other distances</a></li>
+<li class="chapter" data-level="9.5.5" data-path="local-regression.html"><a href="local-regression.html#scaling"><i class="fa fa-check"></i><b>9.5.5</b> Scaling</a></li>
+<li class="chapter" data-level="9.5.6" data-path="local-regression.html"><a href="local-regression.html#demonstration"><i class="fa fa-check"></i><b>9.5.6</b> Demonstration</a></li>
+</ul></li>
+<li class="chapter" data-level="9.6" data-path="local-regression.html"><a href="local-regression.html#model-assumptions-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>9.6</b> Model assumptions and the bias/variance tradeoff</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="reducible-error.html"><a href="reducible-error.html"><i class="fa fa-check"></i><b>10</b> Reducible Error</a><ul>
+<li class="chapter" data-level="10.1" data-path="reducible-error.html"><a href="reducible-error.html#classification-exercise-do-together"><i class="fa fa-check"></i><b>10.1</b> Classification Exercise: Do Together</a></li>
+<li class="chapter" data-level="10.2" data-path="reducible-error.html"><a href="reducible-error.html#training-error-vs.generalization-error"><i class="fa fa-check"></i><b>10.2</b> Training Error vs. Generalization Error</a></li>
+<li class="chapter" data-level="10.3" data-path="reducible-error.html"><a href="reducible-error.html#model-complexity"><i class="fa fa-check"></i><b>10.3</b> Model complexity</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="reducible-error.html"><a href="reducible-error.html#activity"><i class="fa fa-check"></i><b>10.3.1</b> Activity</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="reducible-error.html"><a href="reducible-error.html#reducible-error-1"><i class="fa fa-check"></i><b>10.4</b> Reducible Error</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="reducible-error.html"><a href="reducible-error.html#what-is-it"><i class="fa fa-check"></i><b>10.4.1</b> What is it?</a></li>
+<li class="chapter" data-level="10.4.2" data-path="reducible-error.html"><a href="reducible-error.html#example"><i class="fa fa-check"></i><b>10.4.2</b> Example</a></li>
+<li class="chapter" data-level="10.4.3" data-path="reducible-error.html"><a href="reducible-error.html#bias-and-variance"><i class="fa fa-check"></i><b>10.4.3</b> Bias and Variance</a></li>
+<li class="chapter" data-level="10.4.4" data-path="reducible-error.html"><a href="reducible-error.html#reducing-reducible-error"><i class="fa fa-check"></i><b>10.4.4</b> Reducing reducible error</a></li>
+<li class="chapter" data-level="10.4.5" data-path="reducible-error.html"><a href="reducible-error.html#error-decomposition"><i class="fa fa-check"></i><b>10.4.5</b> Error decomposition</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="model-selection.html"><a href="model-selection.html"><i class="fa fa-check"></i><b>11</b> Model Selection</a><ul>
+<li class="chapter" data-level="11.1" data-path="model-selection.html"><a href="model-selection.html#exercise-cv"><i class="fa fa-check"></i><b>11.1</b> Exercise: CV</a></li>
+<li class="chapter" data-level="11.2" data-path="model-selection.html"><a href="model-selection.html#out-of-sample-error"><i class="fa fa-check"></i><b>11.2</b> Out-of-sample Error</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="model-selection.html"><a href="model-selection.html#the-fundamental-problem"><i class="fa fa-check"></i><b>11.2.1</b> The fundamental problem</a></li>
+<li class="chapter" data-level="11.2.2" data-path="model-selection.html"><a href="model-selection.html#solution-1-use-a-hold-out-set."><i class="fa fa-check"></i><b>11.2.2</b> Solution 1: Use a hold-out set.</a></li>
+<li class="chapter" data-level="11.2.3" data-path="model-selection.html"><a href="model-selection.html#solution-2-cross-validation"><i class="fa fa-check"></i><b>11.2.3</b> Solution 2: Cross-validation</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="model-selection.html"><a href="model-selection.html#alternative-measures-of-model-goodness"><i class="fa fa-check"></i><b>11.3</b> Alternative measures of model goodness</a></li>
+<li class="chapter" data-level="11.4" data-path="model-selection.html"><a href="model-selection.html#feature-and-model-selection-setup"><i class="fa fa-check"></i><b>11.4</b> Feature and model selection: setup</a></li>
+<li class="chapter" data-level="11.5" data-path="model-selection.html"><a href="model-selection.html#model-selection-1"><i class="fa fa-check"></i><b>11.5</b> Model selection</a></li>
+<li class="chapter" data-level="11.6" data-path="model-selection.html"><a href="model-selection.html#feature-predictor-selection"><i class="fa fa-check"></i><b>11.6</b> Feature (predictor) selection</a><ul>
+<li class="chapter" data-level="11.6.1" data-path="model-selection.html"><a href="model-selection.html#specialized-metrics-for-feature-selection"><i class="fa fa-check"></i><b>11.6.1</b> Specialized metrics for feature selection</a></li>
+<li class="chapter" data-level="11.6.2" data-path="model-selection.html"><a href="model-selection.html#greedy-selection"><i class="fa fa-check"></i><b>11.6.2</b> Greedy Selection</a></li>
+<li class="chapter" data-level="11.6.3" data-path="model-selection.html"><a href="model-selection.html#regularization"><i class="fa fa-check"></i><b>11.6.3</b> Regularization</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="splines-and-loess-regression.html"><a href="splines-and-loess-regression.html"><i class="fa fa-check"></i><b>12</b> Splines and Loess Regression</a><ul>
+<li class="chapter" data-level="12.1" data-path="splines-and-loess-regression.html"><a href="splines-and-loess-regression.html#loess-1"><i class="fa fa-check"></i><b>12.1</b> Loess</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="splines-and-loess-regression.html"><a href="splines-and-loess-regression.html#the-moving-window"><i class="fa fa-check"></i><b>12.1.1</b> The “Moving Window”</a></li>
+<li class="chapter" data-level="12.1.2" data-path="splines-and-loess-regression.html"><a href="splines-and-loess-regression.html#ggplot2"><i class="fa fa-check"></i><b>12.1.2</b> <code>ggplot2</code></a></li>
+<li class="chapter" data-level="12.1.3" data-path="splines-and-loess-regression.html"><a href="splines-and-loess-regression.html#manual-method"><i class="fa fa-check"></i><b>12.1.3</b> Manual method</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="model-fitting-in-r.html"><a href="model-fitting-in-r.html"><i class="fa fa-check"></i><b>13</b> Model fitting in R</a><ul>
+<li class="chapter" data-level="13.1" data-path="model-fitting-in-r.html"><a href="model-fitting-in-r.html#broom-package"><i class="fa fa-check"></i><b>13.1</b> <code>broom</code> package</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="simple-linear-regression.html"><a href="simple-linear-regression.html"><i class="fa fa-check"></i><b>14</b> Simple Linear Regression</a><ul>
+<li class="chapter" data-level="14.1" data-path="simple-linear-regression.html"><a href="simple-linear-regression.html#model-specification"><i class="fa fa-check"></i><b>14.1</b> Model Specification</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="linear-models-in-general.html"><a href="linear-models-in-general.html"><i class="fa fa-check"></i><b>15</b> Linear models in general</a></li>
+<li class="chapter" data-level="16" data-path="reference-treatment-parameterization.html"><a href="reference-treatment-parameterization.html"><i class="fa fa-check"></i><b>16</b> reference-treatment parameterization</a><ul>
+<li class="chapter" data-level="16.1" data-path="reference-treatment-parameterization.html"><a href="reference-treatment-parameterization.html#more-than-one-category-lab-2"><i class="fa fa-check"></i><b>16.1</b> More than one category (Lab 2)</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="non-identifiability-in-gams.html"><a href="non-identifiability-in-gams.html"><i class="fa fa-check"></i><b>17</b> Non-identifiability in GAMS</a><ul>
+<li class="chapter" data-level="17.1" data-path="non-identifiability-in-gams.html"><a href="non-identifiability-in-gams.html#non-identifiability"><i class="fa fa-check"></i><b>17.1</b> Non-identifiability</a></li>
+<li class="chapter" data-level="17.2" data-path="non-identifiability-in-gams.html"><a href="non-identifiability-in-gams.html#question-1b"><i class="fa fa-check"></i><b>17.2</b> Question 1b</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>18</b> ANOVA</a><ul>
+<li class="chapter" data-level="18.1" data-path="anova.html"><a href="anova.html#the-types-of-parametric-assumptions"><i class="fa fa-check"></i><b>18.1</b> The types of parametric assumptions</a><ul>
+<li class="chapter" data-level="18.1.1" data-path="anova.html"><a href="anova.html#when-defining-a-model-function."><i class="fa fa-check"></i><b>18.1.1</b> 1. When defining a <strong>model function</strong>.</a></li>
+<li class="chapter" data-level="18.1.2" data-path="anova.html"><a href="anova.html#when-defining-probability-distributions."><i class="fa fa-check"></i><b>18.1.2</b> 2. When defining <strong>probability distributions</strong>.</a></li>
+</ul></li>
+<li class="chapter" data-level="18.2" data-path="anova.html"><a href="anova.html#the-value-of-making-parametric-assumptions"><i class="fa fa-check"></i><b>18.2</b> The value of making parametric assumptions</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="anova.html"><a href="anova.html#value-1-reduced-error"><i class="fa fa-check"></i><b>18.2.1</b> Value #1: Reduced Error</a></li>
+<li class="chapter" data-level="18.2.2" data-path="anova.html"><a href="anova.html#value-2-interpretation"><i class="fa fa-check"></i><b>18.2.2</b> Value #2: Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="anova.html"><a href="anova.html#problems"><i class="fa fa-check"></i><b>18.3</b> Problems</a></li>
+<li class="chapter" data-level="18.4" data-path="anova.html"><a href="anova.html#solutions"><i class="fa fa-check"></i><b>18.4</b> Solutions</a><ul>
+<li class="chapter" data-level="18.4.1" data-path="anova.html"><a href="anova.html#solution-1-transformations"><i class="fa fa-check"></i><b>18.4.1</b> Solution 1: Transformations</a></li>
+<li class="chapter" data-level="18.4.2" data-path="anova.html"><a href="anova.html#solution-2-link-functions"><i class="fa fa-check"></i><b>18.4.2</b> Solution 2: Link Functions</a></li>
+<li class="chapter" data-level="18.4.3" data-path="anova.html"><a href="anova.html#solution-3-scientifically-backed-functions"><i class="fa fa-check"></i><b>18.4.3</b> Solution 3: Scientifically-backed functions</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="glms-in-r.html"><a href="glms-in-r.html"><i class="fa fa-check"></i><b>19</b> GLM’s in R</a><ul>
+<li class="chapter" data-level="19.0.1" data-path="glms-in-r.html"><a href="glms-in-r.html#broomaugment"><i class="fa fa-check"></i><b>19.0.1</b> <code>broom::augment()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="logistic-regression-paper-with-paul.html"><a href="logistic-regression-paper-with-paul.html"><i class="fa fa-check"></i><b>20</b> Logistic Regression paper with Paul</a><ul>
+<li class="chapter" data-level="20.1" data-path="logistic-regression-paper-with-paul.html"><a href="logistic-regression-paper-with-paul.html#the-traditional-approach"><i class="fa fa-check"></i><b>20.1</b> The Traditional Approach</a><ul>
+<li class="chapter" data-level="20.1.1" data-path="logistic-regression-paper-with-paul.html"><a href="logistic-regression-paper-with-paul.html#the-linear-probability-model"><i class="fa fa-check"></i><b>20.1.1</b> The Linear Probability Model</a></li>
+<li class="chapter" data-level="20.1.2" data-path="logistic-regression-paper-with-paul.html"><a href="logistic-regression-paper-with-paul.html#the-logistic-model"><i class="fa fa-check"></i><b>20.1.2</b> The Logistic Model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="21" data-path="robust-regression-in-r.html"><a href="robust-regression-in-r.html"><i class="fa fa-check"></i><b>21</b> Robust Regression in R</a><ul>
+<li class="chapter" data-level="21.0.1" data-path="robust-regression-in-r.html"><a href="robust-regression-in-r.html#heavy-tailed-regression"><i class="fa fa-check"></i><b>21.0.1</b> Heavy Tailed Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="22" data-path="from-linear-regression-to-mixed-effects-models.html"><a href="from-linear-regression-to-mixed-effects-models.html"><i class="fa fa-check"></i><b>22</b> From Linear Regression to Mixed Effects Models</a><ul>
+<li class="chapter" data-level="22.1" data-path="from-linear-regression-to-mixed-effects-models.html"><a href="from-linear-regression-to-mixed-effects-models.html#motivation-for-lme"><i class="fa fa-check"></i><b>22.1</b> Motivation for LME</a></li>
+<li class="chapter" data-level="22.2" data-path="from-linear-regression-to-mixed-effects-models.html"><a href="from-linear-regression-to-mixed-effects-models.html#definition"><i class="fa fa-check"></i><b>22.2</b> Definition</a></li>
+<li class="chapter" data-level="22.3" data-path="from-linear-regression-to-mixed-effects-models.html"><a href="from-linear-regression-to-mixed-effects-models.html#r-tools-for-fitting"><i class="fa fa-check"></i><b>22.3</b> R Tools for Fitting</a></li>
+</ul></li>
+<li class="chapter" data-level="23" data-path="mixed-effects-models-in-r-tutorial.html"><a href="mixed-effects-models-in-r-tutorial.html"><i class="fa fa-check"></i><b>23</b> Mixed Effects Models in R: tutorial</a></li>
+<li class="chapter" data-level="24" data-path="dsci-562-tutorial-missing-data.html"><a href="dsci-562-tutorial-missing-data.html"><i class="fa fa-check"></i><b>24</b> DSCI 562 Tutorial: Missing Data</a><ul>
+<li class="chapter" data-level="24.1" data-path="dsci-562-tutorial-missing-data.html"><a href="dsci-562-tutorial-missing-data.html#mean-imputation"><i class="fa fa-check"></i><b>24.1</b> Mean Imputation</a></li>
+<li class="chapter" data-level="24.2" data-path="dsci-562-tutorial-missing-data.html"><a href="dsci-562-tutorial-missing-data.html#multiple-imputation"><i class="fa fa-check"></i><b>24.2</b> Multiple Imputation</a><ul>
+<li class="chapter" data-level="24.2.1" data-path="dsci-562-tutorial-missing-data.html"><a href="dsci-562-tutorial-missing-data.html#patterns"><i class="fa fa-check"></i><b>24.2.1</b> Patterns</a></li>
+<li class="chapter" data-level="24.2.2" data-path="dsci-562-tutorial-missing-data.html"><a href="dsci-562-tutorial-missing-data.html#multiple-imputation-1"><i class="fa fa-check"></i><b>24.2.2</b> Multiple Imputation</a></li>
+<li class="chapter" data-level="24.2.3" data-path="dsci-562-tutorial-missing-data.html"><a href="dsci-562-tutorial-missing-data.html#pooling"><i class="fa fa-check"></i><b>24.2.3</b> Pooling</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="spatial.html"><a href="spatial.html"><i class="fa fa-check"></i><b>25</b> Spatial</a><ul>
+<li class="chapter" data-level="25.1" data-path="spatial.html"><a href="spatial.html#a-model-for-river-rock-size"><i class="fa fa-check"></i><b>25.1</b> A Model for River Rock Size</a></li>
+<li class="chapter" data-level="25.2" data-path="spatial.html"><a href="spatial.html#statistical-objectives"><i class="fa fa-check"></i><b>25.2</b> Statistical Objectives</a><ul>
+<li class="chapter" data-level="25.2.1" data-path="spatial.html"><a href="spatial.html#preliminaries-variance-and-correlation"><i class="fa fa-check"></i><b>25.2.1</b> Preliminaries: Variance and Correlation</a></li>
+</ul></li>
+<li class="chapter" data-level="25.3" data-path="spatial.html"><a href="spatial.html#three-concepts"><i class="fa fa-check"></i><b>25.3</b> Three Concepts</a><ul>
+<li class="chapter" data-level="25.3.1" data-path="spatial.html"><a href="spatial.html#error-variance-sigma_e2leftxright"><i class="fa fa-check"></i><b>25.3.1</b> Error Variance <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span></a></li>
+<li class="chapter" data-level="25.3.2" data-path="spatial.html"><a href="spatial.html#mean-variance-sigma_m2"><i class="fa fa-check"></i><b>25.3.2</b> Mean Variance <span class="math inline">\(\sigma_{M}^{2}\)</span></a></li>
+<li class="chapter" data-level="25.3.3" data-path="spatial.html"><a href="spatial.html#mean-correlation-rholeftdright"><i class="fa fa-check"></i><b>25.3.3</b> Mean Correlation <span class="math inline">\(\rho\left(d\right)\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="25.4" data-path="spatial.html"><a href="spatial.html#estimation-1"><i class="fa fa-check"></i><b>25.4</b> Estimation</a><ul>
+<li class="chapter" data-level="25.4.1" data-path="spatial.html"><a href="spatial.html#constant-error-variance"><i class="fa fa-check"></i><b>25.4.1</b> Constant Error Variance</a></li>
+<li class="chapter" data-level="25.4.2" data-path="spatial.html"><a href="spatial.html#non-constant-error-variance"><i class="fa fa-check"></i><b>25.4.2</b> Non-Constant Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="25.5" data-path="spatial.html"><a href="spatial.html#statistical-objective-1-downstream-fining-curve"><i class="fa fa-check"></i><b>25.5</b> Statistical Objective 1: Downstream Fining Curve</a><ul>
+<li class="chapter" data-level="25.5.1" data-path="spatial.html"><a href="spatial.html#regression-form"><i class="fa fa-check"></i><b>25.5.1</b> Regression Form</a></li>
+</ul></li>
+<li class="chapter" data-level="25.6" data-path="spatial.html"><a href="spatial.html#statistical-objective-2-river-profile"><i class="fa fa-check"></i><b>25.6</b> Statistical Objective 2: River Profile</a><ul>
+<li class="chapter" data-level="25.6.1" data-path="spatial.html"><a href="spatial.html#simple-kriging"><i class="fa fa-check"></i><b>25.6.1</b> Simple Kriging</a></li>
+<li class="chapter" data-level="25.6.2" data-path="spatial.html"><a href="spatial.html#universal-kriging"><i class="fa fa-check"></i><b>25.6.2</b> Universal Kriging</a></li>
+<li class="chapter" data-level="25.6.3" data-path="spatial.html"><a href="spatial.html#kriging-under-non-constant-error-variance"><i class="fa fa-check"></i><b>25.6.3</b> Kriging under Non-Constant Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="25.7" data-path="spatial.html"><a href="spatial.html#confidence-intervals-of-the-river-profile"><i class="fa fa-check"></i><b>25.7</b> Confidence Intervals of the River Profile</a></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="timeseries-in-base-r.html"><a href="timeseries-in-base-r.html"><i class="fa fa-check"></i><b>26</b> Timeseries in (base) R</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/vincenzocoia/Interpreting-Regression" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Interpreting Regression</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="spatial" class="section level1">
+<h1><span class="header-section-number">Chapter 25</span> Spatial</h1>
+<p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<p>Rocks were sampled at 54 sites along the river within a period of two days. The procedure to take one sample involves taking an underwater photo at a glide site along the river, and by using computer software, obtaining the lengths of the intermediate axes of each rock over 8mm in the photo area. To ensure accuracy of measurements, 25 photos of the same area are taken and combined.</p>
+<div id="a-model-for-river-rock-size" class="section level2">
+<h2><span class="header-section-number">25.1</span> A Model for River Rock Size</h2>
+<p>The variable <span class="math inline">\(x\)</span> refers to a location of some distance downstream the river for example, distance downstream the Meadows campground. For the 54 sample sites, the locations are denoted by <span class="math inline">\(x_{1},\ldots,x_{54}\)</span>. There are three concepts related to rock size.</p>
+<div id="average-rock-size" class="section level4">
+<h4><span class="header-section-number">25.1.0.1</span> 1. Average rock size:</h4>
+<p>This is the average size of sampled rocks at a location, had that location been sampled. For location <span class="math inline">\(x\)</span>, the value of the sample average rock size is denoted <span class="math inline">\(m\left(x\right)\)</span>. These values are known for 54 sample sites, which are denoted for brevity as <span class="math inline">\(m_{1},\ldots,m_{54}\)</span>, represented as the dots in Figure</p>
+</div>
+<div id="mean-rock-size" class="section level4">
+<h4><span class="header-section-number">25.1.0.2</span> 2. Mean rock size:</h4>
+<p>At a particular river location, this can be thought of as the average rock size in the bed load in the hypothetical situation where the river flows forever in the same condition as during the sampling period. At any location, this quantity is unknown, and will thus be referred to as a “mean” instead of an “average” (an average is a known calculable quantity). At a location <span class="math inline">\(x\)</span>, the mean rock size will be denoted <span class="math inline">\(M\left(x\right)\)</span>, and is represented by the solid line in Figure</p>
+</div>
+<div id="downstream-fining-curve" class="section level4">
+<h4><span class="header-section-number">25.1.0.3</span> 3. Downstream fining curve:</h4>
+<p>This can be thought of as an “overall trend” for rock size from upstream to downstream. The mean rock size <span class="math inline">\(M\left(x\right)\)</span> should “on average” follow this curve. For location <span class="math inline">\(x\)</span>, the value of the downstream fining curve will be denoted <span class="math inline">\(T\left(x\right)\)</span>, represented as the dashed line in Figure . At any location, this is an unknown quantity.</p>
+</div>
+</div>
+<div id="statistical-objectives" class="section level2">
+<h2><span class="header-section-number">25.2</span> Statistical Objectives</h2>
+<p>Using the three concepts of rock size in Section, the following statistical objectives can be pursued to address the scientific objectives:</p>
+<ol style="list-style-type: decimal">
+<li><p>Estimate the downstream fining curve <span class="math inline">\(T\left(x\right)\)</span> (i.e. the dashed line in Figure) for the range of the study area;</p></li>
+<li><p>Estimate the mean rock size <span class="math inline">\(M\left(x\right)\)</span> (i.e. the solid line in Figure) for the range of the study area, along with confidence bands</p></li>
+</ol>
+<p>These objectives are addressed in Sections, but first some preliminaries are needed, discussed in Section.</p>
+<div id="preliminaries-variance-and-correlation" class="section level3">
+<h3><span class="header-section-number">25.2.1</span> Preliminaries: Variance and Correlation</h3>
+<p>Most of the techniques introduced in Sections require three descriptions of rock size, which are defined in Section. The procedure for fitting these descriptions to the data is discussed in Section . For a detailed review of these concepts, see Chapter 2 in reference <span class="citation">@Geostatistics</span>, for example.</p>
+</div>
+</div>
+<div id="three-concepts" class="section level2">
+<h2><span class="header-section-number">25.3</span> Three Concepts</h2>
+<div id="error-variance-sigma_e2leftxright" class="section level3">
+<h3><span class="header-section-number">25.3.1</span> Error Variance <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span></h3>
+<p>At location <span class="math inline">\(x\)</span>, the error variance is the variability of the average rock size <span class="math inline">\(m\left(x\right)\)</span> in comparison to the true mean rock size <span class="math inline">\(M\left(x\right)\)</span>. In other words, it is the variance of <span class="math inline">\(\left(m\left(x\right)-M\left(x\right)\right)\)</span>.</p>
+</div>
+<div id="mean-variance-sigma_m2" class="section level3">
+<h3><span class="header-section-number">25.3.2</span> Mean Variance <span class="math inline">\(\sigma_{M}^{2}\)</span></h3>
+<p>At location <span class="math inline">\(x\)</span>, the mean variance is the variability of the true mean <span class="math inline">\(M\left(x\right)\)</span> around the downstream fining curve <span class="math inline">\(T\left(x\right)\)</span> (i.e. how “tightly” <span class="math inline">\(M\left(x\right)\)</span> follows <span class="math inline">\(T\left(x\right)\)</span>). It may be reasonable to assume that this variance is constant, unless there is evidence that this variability changes significantly throughout the study area. In what follows we will make this assumption; denote the variance of the true mean rock size as <span class="math inline">\(\sigma_{M}^{2}\)</span>.</p>
+</div>
+<div id="mean-correlation-rholeftdright" class="section level3">
+<h3><span class="header-section-number">25.3.3</span> Mean Correlation <span class="math inline">\(\rho\left(d\right)\)</span></h3>
+<p>The mean correlation measures how closely related two mean rock sizes are at different locations (and equivalently, the average rock sizes at those locations). The mean rock sizes at two locations immediately next to each other are expected to be closely related, whereas mean rock sizes at two locations that are far apart may not be related. A key assumption used in Sections is <em>isotropy</em>, that is, the correlation between mean rock sizes at two sites only depends on the distance between the sites, and not on the actual locations along the river. This assumption is of course not exactly true. For example, the relationship between rocks at sites upstream and downstream the dam should be different than the relationship between two equally-spaced sites located without the dam between them. However, the assumption of isotropy should be viewed as an approximation to reality.</p>
+<p>If <span class="math inline">\(d\)</span> is the distance between two sites, then <span class="math inline">\(\rho\left(d\right)\)</span> denotes the correlation between mean rock sizes at those sites. In technical terms, <span class="math inline">\(\rho\left(d\right)=\text{Corr}\left(M\left(x\right),M\left(x+d\right)\right)\)</span> for all <span class="math inline">\(x\)</span>, <span class="math inline">\(x+d\)</span> in the study area.</p>
+</div>
+</div>
+<div id="estimation-1" class="section level2">
+<h2><span class="header-section-number">25.4</span> Estimation</h2>
+<p>The quantities introduced in Section <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span>, <span class="math inline">\(\sigma_{M}^{2}\)</span>, and <span class="math inline">\(\rho\left(d\right)\)</span> are unknown and need to be estimated, because most of the techniques in Sections use them. There is a relatively simple way to do this estimation in the case that the error variance, <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span>, is constant, which is discussed in Section . To account for the changing error variance, an estimation technique is suggested in Section, which may require some manual computations depending on the capabilities of the software you end up using.</p>
+<div id="constant-error-variance" class="section level3">
+<h3><span class="header-section-number">25.4.1</span> Constant Error Variance</h3>
+<p>Although the error variance <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span> is influenced by sample size <span class="math inline">\(n\left(x\right)\)</span> and distribution variance <span class="math inline">\(\sigma^{2}\left(x\right)\)</span>, approximating the error variance as a constant should be acceptable if the error variances are small compared to the mean variance, <span class="math inline">\(\sigma_{M}^{2}\)</span>. Then, any differences in <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span> amongst different locations would be minuscule relative to <span class="math inline">\(\sigma_{M}^{2}\)</span>. Because your sample sizes are quite large (at least 100), the assumption of small error variances might be reasonable. However, if that assumption is not close to the truth, then the error bars described in Section would be overly wide at locations where the error variance is small (and mean rock size is small), and vice-versa. Since the error variance is assumed constant here, we will denote it <span class="math inline">\(\sigma_{E}^{2}\)</span>, without the <span class="math inline">\(\left(x\right)\)</span>, since it is assumed not to change with <span class="math inline">\(x\)</span>.</p>
+<p>One tool that incorporates all the quantities in Section is the <em>variogram</em>, often denoted by <span class="math inline">\(\gamma\left(d\right)\)</span>. For locations separated by a distance of <span class="math inline">\(d\)</span>, it is defined as half the variance of the difference of the sample averages at those sites. Using symbols, the variogram is defined as <span class="math display">\[\gamma\left(d\right)=\frac{1}{2}\text{Var}\left\{ m\left(x\right)-m\left(x+d\right)\right\} ,\]</span> where “Var” means “variance of”. Working out the math, the variogram can be expressed as <span class="math display">\[\gamma\left(d\right)=\sigma_{M}^{2}\left[1-\rho\left(d\right)\right]+\sigma_{E}^{2},\label{eq:Variogram}\]</span> which contains all the quantities we need to estimate. Thus, estimating <span class="math inline">\(\sigma_{E}^{2}\)</span>, <span class="math inline">\(\sigma_{M}^{2}\)</span>, and <span class="math inline">\(\rho\left(d\right)\)</span> amounts to estimating the variogram. A plot of the variogram against <span class="math inline">\(d\)</span> might look something like that in Figure . The bottom dashed line is called a <em>nugget</em>, and the top dashed line is called a <em>sill</em>. The nugget equals <span class="math inline">\(\sigma_{E}^{2}\)</span> and the difference between the sill and the nugget equals <span class="math inline">\(\sigma_{M}^{2}\)</span>.</p>
+<p>To estimate a variogram, an <em>empirical variogram</em> is typically used (a “data version” of the variogram). An empirical variogram can be viewed as a scatterplot, where one point is plotted for each pair of sample sites. In particular, for two different site numbers <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, a point is plotted with a vertical value of <span class="math inline">\(0.5\left(m_{i}-m_{j}\right)^{2}\)</span> and a horizontal value of <span class="math inline">\(\left|x_{i}-x_{j}\right|\)</span>, where <span class="math inline">\(\left|\cdot\right|\)</span> refers to the absolute value. Then nonlinear regression is used to fit a variogram model to the data in this scatterplot.</p>
+<p>In R, you will need to specify the “model type”. The model type refers to the form of the mean correlation, <span class="math inline">\(\rho\left(d\right)\)</span>. In Figure , the form is exponential, but there are many other forms one can choose, including gaussian, matern, or spherical (see Section 2.5 in Reference <span class="citation">@Geostatistics</span> for a discussion of these models). There is no such thing as a “correct” model, but some may be good approximations to the truth. You can assess whether a model is a good approximation by visually checking whether a plot of the fitted variogram is “close” to the empirical (data) variogram. For a more formal assessment, you can choose the model that results in the smallest Akaike Information Criterion (AIC) value, which quantifies a compromise between model simplicity and goodness-of-fit. Yet another option is to assess the residual plot, where a “residual” here is the difference between a point on the empirical variogram and the theoretical variogram. Although this residual plot is slightly different from “traditional” residual plots (since the points are not independent), ensuring the residuals are roughly centered around zero is still useful for assessing the model fit (you were wondering where an “analysis of residuals” could be used in your analysis this is one place). If several models seem to be a good approximation, then it is best to choose the simplest one (the exponential form is one of the simplest, and most popular).</p>
+</div>
+<div id="non-constant-error-variance" class="section level3">
+<h3><span class="header-section-number">25.4.2</span> Non-Constant Error Variance</h3>
+<p>If you fit a variogram model to your data as discussed in Section , and you find that the nugget is fairly large in comparison to the sill, then it is probably not realistic to approximate the error variance by a constant. This is because the fluctuations in the error variance <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span> (which we know exist) would no longer be small relative to the mean variance <span class="math inline">\(\sigma_{M}^{2}\)</span>.</p>
+<p>In the case that you would like to account for the differences in error variance, the variogram then depends on the actual locations being compared, as opposed to just the distance between the locations. For sites <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>, the variogram can be expressed as</p>
+<p><span class="math display">\[\gamma\left(x,y\right)=\sigma_{M}^{2}\left[1-\rho\left(\left|x-y\right|\right)\right]+\frac{1}{2}\left[\sigma_{E}^{2}\left(x\right)+\sigma_{E}^{2}\left(y\right)\right].\]</span></p>
+<p>Compared to Equation , the term on the right is no longer constant. This means that each point in the empirical variogram (as described at the end of Section ) would have a different nugget and sill; in other words, they do not come from a common variogram. As such, direct regression cannot be used to estimate the parameters. However, if we knew the values of <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span> at the sample sites, then you could follow these steps to estimate <span class="math inline">\(\sigma_{M}^{2}\)</span> and <span class="math inline">\(\rho\left(d\right)\)</span>:</p>
+<ol style="list-style-type: decimal">
+<li><p>For all (different) pairs of sites <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>, create a modified empirical variogram with dependent variable <span class="math inline">\(0.5\left(m_{i}-m_{j}\right)^{2}-0.5\left[\sigma_{E}^{2}\left(x_{i}\right)-\sigma_{E}^{2}\left(x_{j}\right)\right]\)</span> and independent variable <span class="math inline">\(\left|x_{i}-x_{j}\right|\)</span> ;</p></li>
+<li><p>Choose a form for <span class="math inline">\(\rho\left(d\right)\)</span> this could be exponential, gaussian, etc. (see Section 2.5 in Reference <span class="citation">@Geostatistics</span> for a discussion of these models);</p></li>
+<li><p>Fit a nonlinear regression model using the mean structure <span class="math inline">\(\gamma\left(d\right)=\sigma_{M}^{2}\left[1-\rho\left(d\right)\right]\)</span> (see Reference <span class="citation">@Nonlinear [@Regression]</span> for details on nonlinear regression);</p></li>
+</ol>
+<p>Nonlinear regression will provide estimates for <span class="math inline">\(\sigma_{M}^{2}\)</span> and <span class="math inline">\(\rho\left(d\right)\)</span>. As before, an analysis of residuals would be useful here to assess the goodness-of-fit of the regression.</p>
+<p>It only remains to estimate <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span> at the sample sites. The simplest case is to use the sample variance of the individual rock sizes at a site, then dividing by the total number of rocks counted in that sample to get the estimate.</p>
+<p>One might believe that the variances of rock size at two sites with equal means are approximately equal. If this belief is close to the truth, then there is a more efficient way to estimate the error variances by “pooling” all of the data. This can be done by simple regression of the sample variances of the individual rock sizes (computed by the excel functions or ) against the sample averages. Then <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span> can be estimated as the value of the regression curve evaluated at <span class="math inline">\(x\)</span>, then dividing by the sample size at that site.</p>
+</div>
+</div>
+<div id="statistical-objective-1-downstream-fining-curve" class="section level2">
+<h2><span class="header-section-number">25.5</span> Statistical Objective 1: Downstream Fining Curve</h2>
+<p>regression of <span class="math inline">\(m_{1},\ldots,m_{54}\)</span> against <span class="math inline">\(x_{1},\ldots,x_{54}\)</span>. there are two other things you might want to change in the regression.</p>
+<div id="regression-form" class="section level3">
+<h3><span class="header-section-number">25.5.1</span> Regression Form</h3>
+<p>there might be a theoretical form that more accurately describes the curve, such as an exponential model: <span class="math display">\[T\left(x\right)=ae^{-bx}.\]</span> If such a theoretical model exists, you may need to consider nonlinear regression, as discussed in Reference <span class="citation">@Nonlinear [@Regression]</span>. If there is no theoretical form, then using a straight line here is probably a reasonable choice as a rough approximation.</p>
+</div>
+</div>
+<div id="statistical-objective-2-river-profile" class="section level2">
+<h2><span class="header-section-number">25.6</span> Statistical Objective 2: River Profile</h2>
+<p>The goal of this section is to estimate the mean rock size <span class="math inline">\(M\left(x\right)\)</span> at a location <span class="math inline">\(x\)</span> along the study site of the river. Doing this for all locations in the study site, you can obtain a “river profile” of mean rock size.</p>
+<p><em>Kriging</em> is a method of estimating mean rock size <span class="math inline">\(M\left(x\right)\)</span> that takes the variances and correlation of the data into consideration. In the case when there is no error variance, Kriging will smoothly “connect the dots” of your data <span class="math inline">\(m_{1},\ldots,m_{54}\)</span>. There are many types of Kriging, but there are two that are directly relevant for this project Simple Kriging and Universal Kriging. These are discussed in Sections and when approximating the error variance <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span> by a constant, and in Section when allowing the error variance to be non-constant. For a summary of many types of Kriging, see Reference <span class="citation">@arcGIS_Kriging</span>. For an extensive overview of Kriging, see Chapter 3 in Reference <span class="citation">@Geostatistics</span>.</p>
+<p>The idea behind ** Kriging is to estimate mean rock size <span class="math inline">\(M\left(x\right)\)</span> by using a “weighted average” of <span class="math inline">\(m_{1},\ldots,m_{54}\)</span>. That is, instead of using the regular average <span class="math inline">\(\frac{1}{54}m_{1}+\cdots+\frac{1}{54}m_{54}\)</span>, Kriging uses <span class="math inline">\(w_{1}\left(x\right)m_{1}+\cdots+w_{54}\left(x\right)m_{54}\)</span> to estimate <span class="math inline">\(M\left(x\right)\)</span>, where the weights <span class="math inline">\(w_{1}\left(x\right),\ldots,w_{54}\left(x\right)\)</span> are nonnegative numbers adding to 1 that depend on the location <span class="math inline">\(x\)</span>. The weights are chosen to minimize variability in the estimate (technically, the “mean squared error”).</p>
+<div id="simple-kriging" class="section level3">
+<h3><span class="header-section-number">25.6.1</span> Simple Kriging</h3>
+<p>Simple Kriging is Kriging when the downstream fining curve, <span class="math inline">\(T\left(x\right)\)</span>, is known. Of course, the downstream fining curve is unknown, but you could get an estimate of it, as discussed in Section . Regarding the implementation of Kriging, if you are not prompted to specify <span class="math inline">\(T\left(x\right)\)</span>, then whichever software you use will likely assume <span class="math inline">\(T\left(x\right)=0\)</span>. In this case, you would need to adjust for this by subtracting <span class="math inline">\(T\left(x_{1}\right),\ldots,T\left(x_{54}\right)\)</span> from your data <span class="math inline">\(m_{1},\ldots,m_{54}\)</span> before running the Kriging procedure, then add <span class="math inline">\(T\left(x\right)\)</span> to your result.</p>
+</div>
+<div id="universal-kriging" class="section level3">
+<h3><span class="header-section-number">25.6.2</span> Universal Kriging</h3>
+<p>Universal Kriging is Kriging when the downstream fining curve, <span class="math inline">\(T\left(x\right)\)</span>, is a straight line. In this case, there is no need to estimate <span class="math inline">\(T\left(x\right)\)</span> separately as in Section the estimation is “built-in” to the procedure. It is best to use Universal Kriging if you choose <span class="math inline">\(T\left(x\right)\)</span> to be linear and if you do not estimate <span class="math inline">\(T\left(x\right)\)</span> using GLS.</p>
+</div>
+<div id="kriging-under-non-constant-error-variance" class="section level3">
+<h3><span class="header-section-number">25.6.3</span> Kriging under Non-Constant Error Variance</h3>
+<p>To implement Kriging, it is likely that most software would use the variogram estimate in place of the estimates of <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span>, <span class="math inline">\(\sigma_{M}^{2}\)</span>, and <span class="math inline">\(\rho\left(d\right)\)</span>. However, if you want to account for <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span> being different for different locations, then the Kriging procedure would need to use the individual estimates of <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span>, <span class="math inline">\(\sigma_{M}^{2}\)</span>, and <span class="math inline">\(\rho\left(d\right)\)</span> instead of the variogram itself (recall Section for estimating these quantities under the non-constant error variance consideration). See Chapter 3 in Reference <span class="citation">@Geostatistics</span> to find formulas for the Kriging estimator.</p>
+</div>
+</div>
+<div id="confidence-intervals-of-the-river-profile" class="section level2">
+<h2><span class="header-section-number">25.7</span> Confidence Intervals of the River Profile</h2>
+<p>Various software that have Kriging capabilities most likely also have the ability to construct confidence intervals when prompted. A confidence interval at a location <span class="math inline">\(x\)</span> is an interval that covers the true mean rock size, <span class="math inline">\(M\left(x\right)\)</span>, with approximately some pre-specified chance (such as 95%). When the intervals are plotted over a range of locations, they form a confidence “band” around the river profile.</p>
+<p>However, be aware that the confidence intervals in the case of Simple Kriging will be “too narrow”, unless the estimate of the downstream fining curve is quite precise. A confidence interval that is “too narrow” has the implication that the amount of confidence you claim (such as 95%) is actually more than the actual confidence level. This is because the Simple Kriging procedure treats the downstream fining curve <span class="math inline">\(T\left(x\right)\)</span> as known, and does not incorporate the uncertainty involved in estimating <span class="math inline">\(T\left(x\right)\)</span>.</p>
+<p>It is likely that the confidence intervals provided by the software are based on the assumption that the data are normally distributed. Since your data <span class="math inline">\(m_{1},\ldots,m_{54}\)</span> are averages, and there are many rocks in each site, this assumption of normality is probably reasonable due to the Central Limit Theorem even though the original rock size distributions are not normally distributed. However, this relies on the assumption that the presence of each rock from a sampling site is not influenced from other rocks (i.e. they are independent). It is not clear whether this is true, but the influence from other rocks might be small enough to make independence a reasonable assumption.</p>
+<p>As usual, if you decide to account for the non-constant nature of the error variance <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span>, then you may need to compute the variance of the mean estimate. These formulas are found in Chapter 3 of Reference <span class="citation">@Geostatistics</span>. You can compute a 95% confidence interval using the variance of the mean estimate (denoting this variance as <span class="math inline">\(V\left(x\right)\)</span> and the estimated mean as <span class="math inline">\(\hat{M}\left(x\right)\)</span>) by <span class="math inline">\(\hat{M}\left(x\right)\pm1.96\sqrt{V\left(x\right)}\)</span>.</p>
+<p><span>1</span> Chilès, J.P., and Delfiner, P. (2012) Geostatistics: Modeling Spatial Uncertainty. Second Edition. Wiley.</p>
+<p><a href="http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html\#//00310000003q000000" class="uri">http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html\#//00310000003q000000</a></p>
+<p><a href="http://www2.sas.com/proceedings/sugi27/p213-27.pdf" class="uri">http://www2.sas.com/proceedings/sugi27/p213-27.pdf</a></p>
+<p>Huet, S., Bouvier, A., Poursat, M.-A., and Jolivet, E. (2003) Statistical Tools for Nonlinear Regression: A Practical Guide with S-Plus and R Examples. Second Edition. Springer.</p>
+<p>Anton, H. (2010) Elementary Linear Algebra. Tenth Edition. Wiley.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="dsci-562-tutorial-missing-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="timeseries-in-base-r.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/vincenzocoia/Interpreting-Regression/edit/master/150-giles.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
