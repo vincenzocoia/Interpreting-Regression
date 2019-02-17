@@ -5,16 +5,14 @@
 ```{r, warning=FALSE}
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(Lahman))
-my_accent <- "#d95f02"
 ```
-
 
 It's common to "default" to using the mean to make decisions. But, the mean is not always appropriate (I wrote a [blog post](https://vincenzocoia.github.io/20180218-mean/) about this):
 
-- Sometimes there are outliers, in which case the median is a more robust measure of central tendency.
-    - For example, there was a very large flu outbreak in 2009.
+- Sometimes it makes sense to relate the outcome to a coin toss.
+    - For example, find an amount for which next month's expenditures will either exceed or be under with a 50% chance. 
 - Sometimes a conservative/liberal estimate is wanted.
-    - For example, the bus company wants conservative estimates so that _most_ busses fall within the estimated travel time. 
+    - For example, a bus company wants conservative estimates so that _most_ busses fall within the estimated travel time. 
 
 In these cases, we care about _quantiles_, not the mean. Estimating them is called __quantile regression__ (as opposed to __mean regression__).
 
@@ -22,9 +20,14 @@ Recall what quantiles are: the $\tau$-quantile (for $\tau$ between 0 and 1) is t
 
 $\tau$ is referred to as the _quantile level_, or sometimes the _quantile index_. 
 
-For example, the bus company might want to predict the 0.8-quantile of transit time -- 80% of busses will get to their destination within that time.
+For example, a bus company might want to predict the 0.8-quantile of transit time -- 80% of busses will get to their destination within that time.
 
-__Be warned__: you may have a hard time convincing people that quantiles are actually what they care about, because the world is trained to think about the mean. Quantiles aside from the median are also harder to interpret.
+## What is the mean, anyway?
+
+Imagine trying to predict your total expenses for the next two years. You have monthly expenses listed for the past 12 months. What's one simple way of making your prediction? Calculate the average expense from the past 12 months, and multiply that by 24.
+
+In general, a mean (or expected value) can be interpreted as the _long-run average_. However, the mean tends to be interpreted as a _measure of central tendency_, which has a more nebulous interpretation as a "typical" outcome, or an outcome for which most of the data will be "nearest".
+
 
 ## Linear Quantile Regression
 
@@ -36,7 +39,7 @@ Here are the 0.25-, 0.5-, and 0.75-quantile regression lines for the baseball da
 
 ```{r}
 ggplot(dat, aes(hits, runs)) +
-    geom_point(alpha=0.1, colour=my_accent) +
+    geom_point(alpha=0.1, colour="orange") +
     geom_quantile(colour="black") +
     theme_bw() +
     labs(x="Number of Hits (X)",
@@ -75,7 +78,7 @@ Because each quantile is allowed to have its own line, some of these lines might
 
 ```{r, warning=FALSE}
 ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
-    geom_point(alpha=0.25, colour=my_accent) +
+    geom_point(alpha=0.25, colour="orange") +
     geom_quantile(aes(colour="0.2"), quantiles=0.2) +
     geom_quantile(aes(colour="0.3"), quantiles=0.3) +
     scale_colour_discrete("Quantile\nLevel") +
