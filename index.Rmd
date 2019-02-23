@@ -19,6 +19,27 @@ description: "My tutorials for regression analysis, in the form of a bookdown bo
 
 Currently, much of the book is a stitching together of previous pieces of my writing that I think might be relevant to this book. These chapters will be updated to consider the different context, audience, and content organization that's best for this book.
 
+## Purpose of the book
+
+There is a ton of statistical methodology out there, and many resources available to help make this framework accessible to readers. While this book also aims to teach statistics, it's focus is on the following.
+
+1. Challenging the boundaries of existing methodology
+
+You'll often here that we "can't" apply some technique if some feature is present in your data. Multicollinearity or non-Gaussian data? "Can't" use least squares. Count data? "Can't" use linear regression. Instead of using this terminology, this book investigates the consequences of choosing a methodology. More generally, we'll investigate the value and risk behind making assumptions when modelling, and the risks behind not using all the information contained in your data. 
+
+2. Taking a problem-first approach
+
+Many real-world data analytic problems can be broken down to a prediction task, or an inference/interpretation task. Tools will be examined with respect to their usefulness for these two tasks. 
+
+This book is called "Interpreting Regression" because of its focus on the _why_ behind statistics, and what the numbers we get from an analysis actually mean. 
+
+What this book is not:
+
+- A book on mathematical statistics. Intro calculus and algebra will be plenty.
+
+The audience of this book is quite wide. Because of the unique "spin" of this book, those well-versed in statistics would find the content valueable. Those aiming to apply statistical methodology to their work would find the problem-based roots of this book useful. Those who are just starting to learn statistics would find this valuable to understand where each statistical method lies within existing statistical framework.
+
+
 ## Tasks that motivate Regression
 
 Real world problems for which regression is an appropriate tool generally fall into two categories:
