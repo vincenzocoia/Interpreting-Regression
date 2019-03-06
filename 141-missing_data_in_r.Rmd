@@ -89,8 +89,6 @@ md.pattern(airquality)
 
 A "1" indicates that an observation is present, and a "0" indicates absense. The periphery of the matrix are counts: to the right, are the number of `NA`s in the row; at the bottom, are the number of `NA`s in each column; to the left, are the number of observations having a missing data pattern indicated in the matrix. 
 
-Caution: you can't always trust the `md.pattern` function. Try it on the titanic dataset, for instance.
-
 So we can see that there are 7 missing Solar Radiation observations, and 37 missing Ozone observations. We could check that in another way as follows:
 
 ```{r}
