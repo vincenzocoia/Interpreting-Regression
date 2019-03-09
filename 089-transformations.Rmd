@@ -77,9 +77,9 @@ This has the added advantage that we do not need to be able to transform the res
 Two common examples of link functions:
 
 - $\log$, for positive response values.
-    - Parameter interpretation: a difference of one unit in the predictor is associated with an $\exp(\beta)$ times increase in the response, where $\beta$ is the slope parameter.
+    - Parameter interpretation: an increase of one unit in the predictor is associated with an $\exp(\beta)$ times increase in the mean response, where $\beta$ is the slope parameter.
 - $\text{logit}(x)=\log(x/(1-x))$, for binary response values.
-    - Parameter interpretation: a difference of one unit in the predictor is associated with an $\exp(\beta)$ times increase in the _odds_ of "success", where $\beta$ is the slope parameter, and odds is the ratio of success to failure probabilities.
+    - Parameter interpretation: an increase of one unit in the predictor is associated with an $\exp(\beta)$ times increase in the odds of "success", where $\beta$ is the slope parameter, and odds is the ratio of success to failure probabilities.
 
 ### Solution 3: Scientifically-backed functions
 

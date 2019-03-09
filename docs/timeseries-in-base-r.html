@@ -25,7 +25,7 @@
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-03-05">
+<meta name="date" content="2019-03-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -369,7 +369,7 @@ dat &lt;-<span class="st"> </span><span class="dv">100</span> <span class="op">+
 ## [197] 110.89959 108.96857 110.89486 115.03567</code></pre>
 <p>You can plot this object too. You’ll get a nice looking time series plot:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(datts)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-109-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-110-1.png" width="672" /></p>
 <p>And now you can decompose the trend, seasonal component, and error terms with <code>stl</code>. Note that <code>stl</code> requires a <code>timeseries</code> object! Be sure to put <code>s.window=&quot;periodic&quot;</code> in the <code>stl</code> function to use the periodicity of the <code>timeseries</code> object. Notice that there are options to change the bandwidths of the loess estimation, along with the degree of the local polynomial, with the <code>_.degree</code> and <code>_.window</code> arguments.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">stl</span>(datts, <span class="dt">s.window=</span><span class="st">&quot;periodic&quot;</span>)</code></pre></div>
 <p>The estimates are contained in the <code>$time.series</code> part of the output:</p>

@@ -25,7 +25,7 @@
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-03-05">
+<meta name="date" content="2019-03-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -340,7 +340,7 @@ dat &lt;-<span class="st"> </span>esoph
 p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(ncontrols, ncases)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">colour=</span>agegp), <span class="dt">height=</span><span class="fl">0.25</span>)
 p</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-88-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-89-1.png" width="672" /></p>
 <p>Since the response is a count variable, we’ll go ahead with a Poisson regression – a Generalized Linear Mixed-Effects Model. The model is <span class="math display">\[ Y_{ij} \mid X_{ij} = x_{ij} \sim \text{Poisson}\left(\lambda_{ij}\right) \]</span> for each observation <span class="math inline">\(i\)</span> on the <span class="math inline">\(j\)</span>’th age group, where <span class="math inline">\(Y_{ij}\)</span> is the number of cases, <span class="math inline">\(X_{ij}\)</span> is the number of controls, and <span class="math inline">\(\lambda_{ij}\)</span> is the conditional mean of <span class="math inline">\(Y_{ij}.\)</span> We model <span class="math inline">\(\lambda_{ij}\)</span> as <span class="math display">\[ \log\left(\lambda_{ij}\right) = \left(\beta_0 + b_{0j}\right) + \left(\beta_1 + b_{1j}\right) x_{ij}, \]</span> where <span class="math inline">\(b_{0j}\)</span> and <span class="math inline">\(b_{1j}\)</span> are joint (bivariate) normally distributed with zero mean.</p>
 <p>What does this model mean? First, it means that the mean is exponential in the explanatory variable, since we chose a <span class="math inline">\(\log\)</span> link function. Second, each age group (<span class="math inline">\(j\)</span>) gets its own mean curve, via its own linear predictor. But we’re saying that these linear predictors are related: the collection of slopes and intercepts across age groups are centered around <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> (respectively, called the <em>fixed effects</em>), and the slope and intercept of each age group departs from this center according to some Gaussian random noise (the <span class="math inline">\(b\)</span> terms, called the <em>random effects</em>).</p>
 <p>Let’s fit the model. Then we’ll go through the formula, and the output.</p>
@@ -393,10 +393,10 @@ p <span class="op">+</span><span class="st"> </span><span class="kw">stat_functi
 <span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;55-64&quot;</span>), <span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">exp</span>(coef_fit[<span class="dv">4</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_fit[<span class="dv">4</span>,<span class="dv">2</span>]<span class="op">*</span>x)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;65-74&quot;</span>), <span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">exp</span>(coef_fit[<span class="dv">5</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_fit[<span class="dv">5</span>,<span class="dv">2</span>]<span class="op">*</span>x)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;75+&quot;</span>),   <span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">exp</span>(coef_fit[<span class="dv">6</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_fit[<span class="dv">6</span>,<span class="dv">2</span>]<span class="op">*</span>x))</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-90-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-91-1.png" width="672" /></p>
 <p>A (response-) residual plot is somewhat sensible to look at here:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(fit)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-91-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-92-1.png" width="672" /></p>
 <p>Looks fairly centered at zero, so the shape of the mean curves are satisfactory.</p>
 
 </div>

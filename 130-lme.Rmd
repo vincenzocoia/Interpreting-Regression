@@ -33,7 +33,52 @@ dat %>%
 
 __Question__: can we borrow information across groups to strengthen regression, while still allowing each group to have its own regression line?
 
-Yes -- we can use _Linear Mixed Effects_ (LME) models. An LME model is just a linear regression model for each group, with different slopes and intercepts, but the collection of slopes and intercepts _is assumed to come from some normal distribution_.
+Here's another scenario: suppose we want to know the effect of `ncontrols` on the average person. Then, we would only include one common slope parameter for all individuals. Even if each individual "has their own unique slope", this model is still sensible because the common slope can be interpreted as the _average effect_. The problem with this model is that the typical estimates of standard error on our regression coefficients will be artificially small due to correlation in the data induced by the grouping.
+
+Here is a simulation that compares the "actual" SE (or at least an approximation of it) and the SE reported by `lm`:
+
+```{r, cache=TRUE}
+# library(tidyverse)
+# library(broom)
+# set.seed(1000)
+# ## Number of groups
+# g <- 10
+# ## Number of observations per group
+# ng <- 10
+# ## Initiate slope and SE estimates
+# beta1hat <- numeric(0)
+# se <- numeric(0)
+# for (i in 1:1000) {
+#   ## Generate intercept and slope from a joint Normal distribution
+#   beta0 <- rnorm(g)
+#   beta1 <- 1 + beta0 + rnorm(g)
+#   ## Generate iid data from within each group
+#   dat <- tibble(group=LETTERS[1:g], beta0, beta1) %>%
+#     mutate(x = map(beta0, ~ rnorm(ng))) %>%
+#     unnest() %>%
+#     group_by(group) %>%
+#     mutate(eps = rnorm(length(x)),
+#            y = beta0 + beta1 * x + eps)
+#   ## Fit a linear regression, forcing a common slope
+#   fit <- lm(y ~ x + group, data=dat) %>%
+#     tidy()
+#   beta1hat[i] <- fit$estimate[2]
+#   se[i] <- fit$std.error[2]
+# }
+# ## Actual SE:
+# sd(beta1hat)
+# ## SE given from the lm fit:
+# mean(se)
+# 
+# ## Here's a plot of the last sample generated:
+# ggplot(dat, aes(x, y)) +
+#   geom_point(aes(colour=group), alpha=0.5) +
+#   theme_bw()
+```
+
+__Question__: How can we account for the dependence in the data?
+
+Both questions can be addressed using a _Linear Mixed Effects_ (LME) model. An LME model is just a linear regression model for each group, with different slopes and intercepts, but the collection of slopes and intercepts _is assumed to come from some normal distribution_.
 
 ## Definition
 

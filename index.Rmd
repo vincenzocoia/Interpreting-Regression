@@ -15,30 +15,30 @@ description: "My tutorials for regression analysis, in the form of a bookdown bo
 
 ## Caution {#caution}
 
-**This book is in its very preliminary stages**. Content will be moving around.
+**This book is in its very preliminary stages**. Content will be moving around and updated.
 
 Currently, much of the book is a stitching together of previous pieces of my writing that I think might be relevant to this book. These chapters will be updated to consider the different context, audience, and content organization that's best for this book.
 
 ## Purpose of the book
 
-There is a ton of statistical methodology out there, and many resources available to help make this framework accessible to readers. While this book also aims to teach statistics, it's focus is on the following.
+There's a vast and powerful statistical framework out there. This book takes a modularized approach to making this framework accessible, so that as a problem solver, the reader can make a sequences of decisions to build models that are best suited to address the problem. 
 
-1. Challenging the boundaries of existing methodology
+Regression analysis can help solve two main types of problems:
 
-You'll often here that we "can't" apply some technique if some feature is present in your data. Multicollinearity or non-Gaussian data? "Can't" use least squares. Count data? "Can't" use linear regression. Instead of using this terminology, this book investigates the consequences of choosing a methodology. More generally, we'll investigate the value and risk behind making assumptions when modelling, and the risks behind not using all the information contained in your data. 
+1. Interpreting the relationship between variables.
+2. Predicting a new outcome.
 
-2. Taking a problem-first approach
+This book primarily focusses on models for interpretation, and often references these two competing needs. The prediction problem is still discussed to some extent: once a model suited for interpretation is developed, it is still important to be able to use it to make predictions. For those interested primarily in prediction, check out resources on _supervised learning_, which aims to optimize predictions. 
 
-Many real-world data analytic problems can be broken down to a prediction task, or an inference/interpretation task. Tools will be examined with respect to their usefulness for these two tasks. 
+There is another layer to interpretation that this book adopts, in terms of describing and understanding the motivation and inner workings behind each method. This is in contrast to a purely mathematical presentation of statistical methods. This book presents both an interpretation of a the high-level idea behind amethod, as well as a mathematical presentation to make these concepts precise. For example, the Kaplan-Meier estimate of the survival function is explained both intuitively and mathematically. 
 
-This book is called "Interpreting Regression" because of its focus on the _why_ behind statistics, and what the numbers we get from an analysis actually mean. 
+Most statistical methods are built on a foundation of assumptions imposed on the data. But an assumption is almost never _exactly_ true; so we instead explore consequences based on "how close" an assumption is to being true. In some cases, we even find that an anticipated assumption is not required at all, depending on how we would like to interpret the model -- an example being the "requirement" of linear data in linear regression. Consequenty, one aim of this book is to discourage the thinking that a method either "can" or "cannot" be applied, instead thinking about pros and cons of various methods.
 
-What this book is not:
+The audience of this book is quite wide, with the aspects of __modularization__, __interpretation__, and __non-binary view of assumptions__ perhaps appealing to various readers:
 
-- A book on mathematical statistics. Intro calculus and algebra will be plenty.
-
-The audience of this book is quite wide. Because of the unique "spin" of this book, those well-versed in statistics would find the content valueable. Those aiming to apply statistical methodology to their work would find the problem-based roots of this book useful. Those who are just starting to learn statistics would find this valuable to understand where each statistical method lies within existing statistical framework.
-
+1. Practitioners may find the modularization useful when making decisions when fitting models, the non-binary view of assumptions useful when evaluating the trustworthiness of their models, and the interpretation of their model useful when communicating their results.
+2. Experts in the field of Statistics might benefit from the unique modularized framework of the field, as they find well-used notions such as the expected value being challenged and expanded upon.
+3. Learners may find the modularization useful for compartmentalizing concepts, and the interpretation of methods useful for understanding concepts.
 
 ## Tasks that motivate Regression
 

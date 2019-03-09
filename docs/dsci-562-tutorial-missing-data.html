@@ -25,7 +25,7 @@
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-03-05">
+<meta name="date" content="2019-03-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -382,7 +382,7 @@ y[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>] 
 p</code></pre></div>
 <pre><code>## Warning: Removed 10 rows containing non-finite values (stat_smooth).</code></pre>
 <pre><code>## Warning: Removed 10 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-95-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-96-1.png" width="672" /></p>
 <p>The mean imputation method replaces the <code>NA</code>’s with an estimate for the mean of <span class="math inline">\(Y\)</span>. The simplest case is to use the sample average of the response. The imputed observations are shown in red, and the resulting <code>lm</code> fit is also in red.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ybar &lt;-<span class="st"> </span><span class="kw">mean</span>(y, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)
 datrm &lt;-<span class="st"> </span><span class="kw">na.omit</span>(<span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y))
@@ -391,7 +391,7 @@ p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point<
 <span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span><span class="kw">rbind</span>(datrm, datimp), <span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)</code></pre></div>
 <pre><code>## Warning: Removed 10 rows containing non-finite values (stat_smooth).</code></pre>
 <pre><code>## Warning: Removed 10 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-96-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-97-1.png" width="672" /></p>
 <p>Notice that the new regression line is flatter.</p>
 <p>Another mean-imputation method is to replace the <code>NA</code>’s with an alternative mean estimate: the regression predictions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x, <span class="dt">na.action=</span>na.omit)
@@ -401,7 +401,7 @@ p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point<
 <span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span><span class="kw">rbind</span>(datrm, datimp2), <span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">colour=</span><span class="st">&quot;red&quot;</span>, <span class="dt">size=</span><span class="fl">0.5</span>)</code></pre></div>
 <pre><code>## Warning: Removed 10 rows containing non-finite values (stat_smooth).</code></pre>
 <pre><code>## Warning: Removed 10 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-97-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-98-1.png" width="672" /></p>
 <p>The regression line has not changed. This method seems smarter, but it still has consequences, since the imputed data suggests that the dataset is bound closer to the regression line than reality. So the residual variance is biased to be smaller.</p>
 <p>These are both mean imputation methods. So, in your Lab 2 assignment, you can use any mean imputation method – your explanation of the comparison will just depend on what you choose.</p>
 </div>
@@ -415,17 +415,8 @@ p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point<
 <li>Pools multiple analyses into one.</li>
 </ul>
 <p>We’ll look at the <code>airquality</code> dataset in R.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mice)</code></pre></div>
-<pre><code>## Loading required package: lattice</code></pre>
-<pre><code>## 
-## Attaching package: &#39;mice&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
-## 
-##     complete</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     cbind, rbind</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(airquality)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mice)
+<span class="kw">head</span>(airquality)</code></pre></div>
 <pre><code>##   Ozone Solar.R Wind Temp Month Day
 ## 1    41     190  7.4   67     5   1
 ## 2    36     118  8.0   72     5   2
@@ -437,7 +428,7 @@ p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point<
 <h3><span class="header-section-number">24.2.1</span> Patterns</h3>
 <p>Where are the <code>NA</code>s?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">md.pattern</span>(airquality)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-99-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-100-1.png" width="672" /></p>
 <pre><code>##     Wind Temp Month Day Solar.R Ozone   
 ## 111    1    1     1   1       1     1  0
 ## 35     1    1     1   1       1     0  1
