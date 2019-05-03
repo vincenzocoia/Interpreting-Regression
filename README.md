@@ -5,18 +5,23 @@ You can find the preview of this example at https://bookdown.org/yihui/bookdown-
 
 # Interpreting Regression
 
-My tutorials for regression analysis, in the form of a bookdown book.
-
 0. Preamble
 	- Audience
 	- Goals / Problems that we're focussing on solving in this book
+	- Motivating problems and data
 
 Part 1: Univariate Inference
 
 1. Distributions
 	- What is a Distribution?
-	- Parametric Distributions
 	- Probabilistic Quantities
+		- Mean
+		- Mode
+		- Median
+		- Quantiles
+		- Prediction Intervals
+		- Variance
+	- Parametric Distributions
 2. Estimation
 	- What is an estimator?
 	- The Sampling Distribution

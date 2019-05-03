@@ -34,6 +34,8 @@ There is another layer to interpretation that this book adopts, in terms of desc
 
 Most statistical methods are built on a foundation of assumptions imposed on the data. But an assumption is almost never _exactly_ true; so we instead explore consequences based on "how close" an assumption is to being true. In some cases, we even find that an anticipated assumption is not required at all, depending on how we would like to interpret the model -- an example being the "requirement" of linear data in linear regression. Consequenty, one aim of this book is to discourage the thinking that a method either "can" or "cannot" be applied, instead thinking about pros and cons of various methods.
 
+Methods are demonstrated using the R statistical software. This is because R has an extensive selection of packages available for statistical analysis, and the `tidyverse` and `tidymodels` meta-packages make data analysis readable and organized. Since this book does not focus on optimally flexing a model function to conform to data (non-parametric supervised learning), languages better suited for this task, such as python, are not considered.
+
 The audience of this book is quite wide, with the aspects of __modularization__, __interpretation__, and __non-binary view of assumptions__ perhaps appealing to various readers:
 
 1. Practitioners may find the modularization useful when making decisions when fitting models, the non-binary view of assumptions useful when evaluating the trustworthiness of their models, and the interpretation of their model useful when communicating their results.
