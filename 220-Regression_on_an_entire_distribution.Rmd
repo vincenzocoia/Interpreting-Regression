@@ -29,7 +29,8 @@ datsub <- filter(baseball,
 datsub %>% 
     group_by(approx_hits) %>%
     summarize(expected_runs=round(mean(runs))) %>% 
-    select(hits=approx_hits, expected_runs)
+    rename(hits=approx_hits) %>% 
+    select(hits, expected_runs)
 ```
 
 Using a probabilistic forecast, here are our predictions:

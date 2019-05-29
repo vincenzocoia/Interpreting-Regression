@@ -72,9 +72,9 @@ Why not focus on optimizing predictions? This is the objective of _supervised le
 
 ```{r}
 library(tidyverse)
-library(ISLR)
-suppressPackageStartupMessages(library(Lahman))
-baseball <- Teams %>% tbl_df %>% 
+Wage <- ISLR::Wage
+NCI60 <- ISLR::NCI60
+baseball <- Lahman::Teams %>% tbl_df %>% 
   select(runs=R, hits=H)
 cow <- suppressMessages(read_csv("data/milk_fat.csv"))
 ```
