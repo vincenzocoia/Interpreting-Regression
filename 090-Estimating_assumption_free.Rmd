@@ -1,0 +1,67 @@
+# Estimating assumption-free: the world of supervised learning techniques
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
+## What machine learning is
+
+What is Machine Learning (ML) (or Statistical Learning)? As the [ISLR book](http://www-bcf.usc.edu/~gareth/ISL/) puts it, it's a "vast set of tools for understanding data". Before we explain more, we need to consider the two main types of ML:
+
+- __Supervised learning__. (_This is the focus of BAIT 509_). Consider a "black box" that accepts some input(s), and returns some type of output. Feed it a variety of input, and write down the output each time (to obtain a _data set_). _Supervised learning_ attempts to learn from these data to re-construct this black box. That is, it's a way of building a forecaster/prediction tool. 
+
+You've already seen examples throughout MBAN. For example, consider trying to predict someone's wage (output) based on their age (input). Using the `Wage` data set from the `ISLR` R package, here are examples of inputs and outputs:
+
+```{r, echo=FALSE}
+Wage %>%
+    select(age, wage) %>%
+    head %>%
+    magrittr::set_rownames(1:6)
+```
+
+We try to model the relationship between age and wage so that we can predict the salary of a new individual, given their age. 
+
+An example supervised learning technique is _linear regression_, which you've seen before in BABS 507/508. For an age `x`, let's use linear regression to make a prediction that's quadratic in `x`. Here's the fit:
+
+```{r, echo=FALSE}
+ggplot(Wage, aes(age, wage)) +
+    geom_point(alpha=0.2) +
+    geom_smooth(method="lm", se=FALSE,
+                formula=y~poly(x,2)) +
+    ylab("Wage (1000s of USD)") +
+    xlab("Age") +
+    theme_bw()
+```
+
+The blue curve represents our attempt to "re-construct" the black box by learning from the existing data. So, for a new individual aged 70, we would predict a salary of about \$100,000. A 50-year-old, about \$125,000.
+
+
+- __Unsupervised learning__. (_BAIT 509 will not focus on this_). Sometimes we can't see the output of the black box. _Unsupervised learning_ attempts to find structure in the data without any output. 
+
+For example, consider the following two gene expression measurements (actually two principal components). Are there groups that we can identify here?
+
+```{r, echo=FALSE}
+NCI60[[1]] %>% 
+    prcomp() %>% 
+    `[[`("x") %>% 
+    as_tibble() %>% 
+    select(PC1, PC2) %>% 
+    ggplot(aes(PC1, PC2)) +
+    geom_point(alpha=0.5) +
+    ggtitle("Gene expression data") +
+    theme_bw()
+```
+
+You've seen methods for doing this in BABS 507/508, such as k-means. 
+
+
+
+## Types of Supervised Learning
+
+There are two main types of supervised learning methods -- determined entirely by the type of response variable.
+
+- __Regression__ is supervised learning when the response is numeric.
+- __Classification__ is supervised learning when the response is categorical. 
+
+We'll examine both equally in this course. 
+
+Note: Don't confuse classification with _clustering_! The latter is an unsupervised learning method.
+
