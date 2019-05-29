@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 22 Regression under many groups: mixed effects models | Interpreting Regression</title>
+  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 22 Regression under many groups: mixed effects models | Interpreting Regression" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 22 Regression under many groups: mixed effects models | Interpreting Regression" />
+  
+  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  
+
+<meta name="author" content="Vincenzo Coia">
+
+
+<meta name="date" content="2019-05-28">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="regression-when-data-are-missing-multiple-imputation.html">
+<link rel="next" href="regression-on-an-entire-distribution-probabilistic-forecasting.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Interpreting Regression</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preamble</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#caution"><i class="fa fa-check"></i><b>1.1</b> Caution</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#purpose-of-the-book"><i class="fa fa-check"></i><b>1.2</b> Purpose of the book</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#tasks-that-motivate-regression"><i class="fa fa-check"></i><b>1.3</b> Tasks that motivate Regression</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#examples"><i class="fa fa-check"></i><b>1.4</b> Examples</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="an-outcome-on-its-own.html"><a href="an-outcome-on-its-own.html"><i class="fa fa-check"></i>An outcome on its own</a></li>
+<li class="chapter" data-level="2" data-path="distributions-uncertainty-is-worth-explaining.html"><a href="distributions-uncertainty-is-worth-explaining.html"><i class="fa fa-check"></i><b>2</b> Distributions: Uncertainty is worth explaining</a></li>
+<li class="chapter" data-level="3" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html"><i class="fa fa-check"></i><b>3</b> Explaining an uncertain outcome: interpretable quantities</a><ul>
+<li class="chapter" data-level="3.1" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#probabilistic-quantities"><i class="fa fa-check"></i><b>3.1</b> Probabilistic Quantities</a></li>
+<li class="chapter" data-level="3.2" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#what-is-the-mean-anyway"><i class="fa fa-check"></i><b>3.2</b> What is the mean, anyway?</a></li>
+<li class="chapter" data-level="3.3" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#quantiles"><i class="fa fa-check"></i><b>3.3</b> Quantiles</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="data-versions-of-interpretable-quantities.html"><a href="data-versions-of-interpretable-quantities.html"><i class="fa fa-check"></i><b>4</b> Data versions of interpretable quantities</a><ul>
+<li class="chapter" data-level="4.1" data-path="data-versions-of-interpretable-quantities.html"><a href="data-versions-of-interpretable-quantities.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>4.1</b> Estimation of Probabilistic Quantities</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="sampling-distributions-another-layer-of-uncertainty-added-from-estimation.html"><a href="sampling-distributions-another-layer-of-uncertainty-added-from-estimation.html"><i class="fa fa-check"></i><b>5</b> Sampling distributions: Another layer of uncertainty added from estimation</a></li>
+<li class="chapter" data-level="6" data-path="improving-estimator-quality-by-parametric-distributional-assumptions-and-mle.html"><a href="improving-estimator-quality-by-parametric-distributional-assumptions-and-mle.html"><i class="fa fa-check"></i><b>6</b> Improving estimator quality by parametric distributional assumptions and MLE</a></li>
+<li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
+<li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a></li>
+<li class="chapter" data-level="8" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html"><i class="fa fa-check"></i><b>8</b> The signal: model functions</a><ul>
+<li class="chapter" data-level="8.1" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#linear-quantile-regression"><i class="fa fa-check"></i><b>8.1</b> Linear Quantile Regression</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#exercise"><i class="fa fa-check"></i><b>8.1.1</b> Exercise</a></li>
+<li class="chapter" data-level="8.1.2" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#problem-crossing-quantiles"><i class="fa fa-check"></i><b>8.1.2</b> Problem: Crossing quantiles</a></li>
+<li class="chapter" data-level="8.1.3" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#problem-upper-quantiles"><i class="fa fa-check"></i><b>8.1.3</b> Problem: Upper quantiles</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html"><i class="fa fa-check"></i><b>9</b> Estimating parametric model functions</a><ul>
+<li class="chapter" data-level="9.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#writing-the-sample-mean-as-an-optimization-problem"><i class="fa fa-check"></i><b>9.1</b> Writing the sample mean as an optimization problem</a></li>
+<li class="chapter" data-level="9.2" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#evaluating-model-goodness-quantiles"><i class="fa fa-check"></i><b>9.2</b> Evaluating Model Goodness: Quantiles</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><i class="fa fa-check"></i><b>10</b> Estimating assumption-free: the world of supervised learning techniques</a></li>
+<li class="chapter" data-level="11" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html"><i class="fa fa-check"></i><b>11</b> Overfitting: The problem with adding too many parameters</a></li>
+<li class="chapter" data-level="" data-path="describing-relationships.html"><a href="describing-relationships.html"><i class="fa fa-check"></i>Describing Relationships</a></li>
+<li class="chapter" data-level="12" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html"><i class="fa fa-check"></i><b>12</b> There’s meaning in parameters</a></li>
+<li class="chapter" data-level="13" data-path="the-meaning-of-interaction.html"><a href="the-meaning-of-interaction.html"><i class="fa fa-check"></i><b>13</b> The meaning of interaction</a></li>
+<li class="chapter" data-level="14" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html"><i class="fa fa-check"></i><b>14</b> Scales and the restricted range problem</a></li>
+<li class="chapter" data-level="15" data-path="improving-estimation-through-distributional-assumptions.html"><a href="improving-estimation-through-distributional-assumptions.html"><i class="fa fa-check"></i><b>15</b> Improving estimation through distributional assumptions</a></li>
+<li class="chapter" data-level="16" data-path="when-we-only-want-interpretation-on-some-predictors.html"><a href="when-we-only-want-interpretation-on-some-predictors.html"><i class="fa fa-check"></i><b>16</b> When we only want interpretation on some predictors</a></li>
+<li class="chapter" data-level="" data-path="special-cases.html"><a href="special-cases.html"><i class="fa fa-check"></i>Special cases</a></li>
+<li class="chapter" data-level="17" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html"><i class="fa fa-check"></i><b>17</b> Regression when data are censored: survival analysis</a></li>
+<li class="chapter" data-level="18" data-path="regression-in-the-presence-of-outliers-robust-regression.html"><a href="regression-in-the-presence-of-outliers-robust-regression.html"><i class="fa fa-check"></i><b>18</b> Regression in the presence of outliers: robust regression</a></li>
+<li class="chapter" data-level="19" data-path="regression-in-the-presence-of-extremes-extreme-value-regression.html"><a href="regression-in-the-presence-of-extremes-extreme-value-regression.html"><i class="fa fa-check"></i><b>19</b> Regression in the presence of extremes: extreme value regression</a></li>
+<li class="chapter" data-level="20" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html"><i class="fa fa-check"></i><b>20</b> Regression when data are ordinal</a></li>
+<li class="chapter" data-level="21" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html"><i class="fa fa-check"></i><b>21</b> Regression when data are missing: multiple imputation</a></li>
+<li class="chapter" data-level="22" data-path="regression-under-many-groups-mixed-effects-models.html"><a href="regression-under-many-groups-mixed-effects-models.html"><i class="fa fa-check"></i><b>22</b> Regression under many groups: mixed effects models</a></li>
+<li class="chapter" data-level="23" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html"><i class="fa fa-check"></i><b>23</b> Regression on an entire distribution: Probabilistic Forecasting</a><ul>
+<li class="chapter" data-level="23.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasting-what-it-is"><i class="fa fa-check"></i><b>23.1</b> Probabilistic Forecasting: What it is</a></li>
+<li class="chapter" data-level="23.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#review-univariate-distribution-estimates"><i class="fa fa-check"></i><b>23.2</b> Review: Univariate distribution estimates</a><ul>
+<li class="chapter" data-level="23.2.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#continuous-response"><i class="fa fa-check"></i><b>23.2.1</b> Continuous response</a></li>
+<li class="chapter" data-level="23.2.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discrete-response"><i class="fa fa-check"></i><b>23.2.2</b> Discrete Response</a></li>
+</ul></li>
+<li class="chapter" data-level="23.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasts-subset-based-learning-methods"><i class="fa fa-check"></i><b>23.3</b> Probabilistic Forecasts: subset-based learning methods</a><ul>
+<li class="chapter" data-level="23.3.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#the-techniques"><i class="fa fa-check"></i><b>23.3.1</b> The techniques</a></li>
+<li class="chapter" data-level="23.3.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#exercise-1"><i class="fa fa-check"></i><b>23.3.2</b> Exercise</a></li>
+<li class="chapter" data-level="23.3.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>23.3.3</b> Bias-variance tradeoff</a></li>
+<li class="chapter" data-level="23.3.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#evaluating-model-goodness"><i class="fa fa-check"></i><b>23.3.4</b> Evaluating Model Goodness</a></li>
+</ul></li>
+<li class="chapter" data-level="23.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discussion-points"><i class="fa fa-check"></i><b>23.4</b> Discussion Points</a></li>
+<li class="chapter" data-level="23.5" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#when-are-they-not-useful"><i class="fa fa-check"></i><b>23.5</b> When are they not useful?</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/vincenzocoia/Interpreting-Regression" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Interpreting Regression</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="regression-under-many-groups-mixed-effects-models" class="section level1">
+<h1><span class="header-section-number">Chapter 22</span> Regression under many groups: mixed effects models</h1>
+
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="regression-when-data-are-missing-multiple-imputation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="regression-on-an-entire-distribution-probabilistic-forecasting.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/vincenzocoia/Interpreting-Regression/edit/master/210-Regression_under_many_groups.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

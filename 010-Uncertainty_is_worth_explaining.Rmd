@@ -1,5 +1,5 @@
 # An outcome on its own {-}
 
-How can we get a handle on an outcome that seems random? Although the score of a Canucks game, a stock price, or the flow of a river is uncertain, this does not mean that it's futile to predict or describe. This part of the book describes how, using only observations on a single outcome -- a study that's commonly called univariate analysis. 
+How can we get a handle on an outcome that seems random? Although the score of a Canucks game, a stock price, or river flow is uncertain, this does not mean that these quantities are futile to predict or describe. This part of the book describes how to do just that, using only observations on a single outcome, by shedding light on concepts of probability and univariate analysis as they apply to data science. 
 
 # Distributions: Uncertainty is worth explaining

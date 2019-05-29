@@ -1,0 +1,3 @@
+# Scales and the restricted range problem
+
+link functions and alternative parameter interpretations (categorical data too)

@@ -1,0 +1,77 @@
+# Estimating parametric model functions
+
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
+## Writing the sample mean as an optimization problem
+
+
+(DSCI 561 lab2, 2018-2019)
+
+It's important to know that the sample mean can also be calculated by finding the value that minimizes the sum of squared errors with respect to that value. We'll explore that here.
+
+Store some numbers in the vector y.
+Calculate the sample mean of the data, stored in mu_y.
+This is not worth any marks, but having it as its own question jibes better with the autograder.
+
+We've defined sse() below, a function that takes some number and returns the sum of squared "errors" of all values of y with respect to the inputted number. An "error" is defined as the difference between two values.
+
+We've also generated a quick plot of this function for you.
+
+```
+sse <- Vectorize(function(m) sum((y - m)^2))
+curve(sse, mu_y - 2*sd(y), mu_y + 2*sd(y))
+```
+
+Your task: use the optimize() function to find the value that minimizes the sum of squared errors. 
+
+Hint: for the interval argument, specify an interval that contains the sample mean.
+
+Important points:
+
+You should recognize that the sample mean minimizes this function!
+You'll be seeing the sum of squared errors a lot through the program (mean squared error and R^2 are based on it). This is because the mean is a very popular quantity to model and use as a prediction.
+If you're not convinced, play with different numbers to see for yourself.
+
+
+## Evaluating Model Goodness: Quantiles
+
+The question here is: if we have two or more models that predicts the $\tau$-quantile, which model is best? We'll need some way to score different models to do things such as:
+
+- Choose which predictors to include in a model;
+- Choose optimal hyperparameters;
+- Estimate parameters in a quantile regression model.
+
+\*\*__NOTE__\*\*: __Mean Squared Error is not appropriate here!!__ This is very important to remember. 
+
+The reason is technical -- the MSE is not a _proper scoring rule_ for quantiles. In other words, the MSE does not elicit an honest prediction.
+
+If we're predicting the __median__, then the _mean absolute error_ works. This is like the MSE, but instead of _squaring_ the errors, we take the _absolute value_.
+
+In general, a "correct" scoring rule for the $\tau$-quantile is as follows:
+$$ S = \sum_{i=1}^{n} \rho_{\tau}(Y_i - \hat{Q}_i(\tau)), $$
+where $Y_i$ for $i=1,\ldots,n$ is the response data, $\hat{Q}_i(\tau)$ are the $\tau$-quantile estimates, and $\rho_{\tau}$ is the __check function__ (also known as the _absolute asymmetric deviation function_ or _tick function_), given by
+$$ \rho_{\tau}(s) = (\tau - I(s<0))s $$
+for real $s$. This scoring rule is __negatively oriented__, meaning the lower the score, the better. It cannot be below 0. 
+
+Here is a plot of various check functions. Notice that, when $\tau=0.5$ (corresponding to the median), this is proportional to the absolute value:
+
+```{r, fig.width=8, fig.height=3}
+base <- ggplot(data.frame(x=c(-2,2)), aes(x)) + 
+    theme_bw() +
+    labs(y=expression(rho)) +
+    theme(axis.title.y=element_text(angle=0, vjust=0.5)) +
+    ylim(c(0, 1.5))
+rho <- function(tau) function(x) (tau - (x<0))*x
+cowplot::plot_grid(
+    base + stat_function(fun=rho(0.2)) + 
+        ggtitle(expression(paste(tau, "=0.2"))),
+    base + stat_function(fun=rho(0.5)) + 
+        ggtitle(expression(paste(tau, "=0.5"))),
+    base + stat_function(fun=rho(0.8)) + 
+        ggtitle(expression(paste(tau, "=0.8"))),
+    ncol=3
+)
+```
+
+For quantile regression __estimation__, we minimize the sum of scores instead of the sum of squared residuals, as in the usual (mean) linear regression.

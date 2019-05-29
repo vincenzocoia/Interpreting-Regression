@@ -1,0 +1,41 @@
+# Regression in the presence of extremes: extreme value regression
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
+The problem with estimating extreme quantiles in the "usual" sense: 
+
+Here is a histogram of 100 observations generated from a Student's _t_(1) distribution (it's heavy-tailed):
+
+```{r}
+set.seed(4)
+y <- rt(100, df=1)
+qplot(y) + theme_bw()
+```
+
+Here are estimates of high and low quantiles, compared to the actual. You can see the discrepency grows quickly. __Extreme-low quantiles are too high__, whereas __extreme-high quantiles are too low__. 
+
+
+```{r, fig.width=8, echo=FALSE}
+p1 <- ggplot(data.frame(x=c(0,0.05)), aes(x)) + 
+    stat_function(aes(colour="Estimated"),
+                  fun=function(x) quantile(y, probs=x, type=1)) +
+    stat_function(aes(colour="Actual"),
+                  fun=function(x) qt(x, df=1)) +
+    scale_colour_discrete(guide=FALSE) +
+    labs(x=expression(paste("Quantile level (", tau, ")")),
+         y="Quantile") +
+    theme_bw()
+p2 <- ggplot(data.frame(x=c(0.95,1)), aes(x)) + 
+    stat_function(aes(colour="Estimated"),
+                  fun=function(x) quantile(y, probs=x, type=1)) +
+    stat_function(aes(colour="Actual"),
+                  fun=function(x) qt(x, df=1)) +
+    scale_colour_discrete("Type") +
+    labs(x=expression(paste("Quantile level (", tau, ")")),
+         y="Quantile") +
+    theme_bw()
+cowplot::plot_grid(p1, p2, ncol=2)
+```
+
+
+As a rule of thumb, it's best to stay below $\tau=0.95$ or above $\tau=0.05$. If you really want estimates of these extreme quantiles, you'll need to turn to __Extreme Value Theory__ to make an assumption on the tail of the distribution of the data. One common approach is to fit a generalized Pareto distribution to the upper portion of the data, after which you can extract high quantiles. 
