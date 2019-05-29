@@ -1,0 +1,5 @@
+# An outcome on its own {-}
+
+How can we get a handle on an outcome that seems random? Although the score of a Canucks game, a stock price, or the flow of a river is uncertain, this does not mean that it's futile to predict or describe. This part of the book describes how, using only observations on a single outcome -- a study that's commonly called univariate analysis. 
+
+# Distributions: Uncertainty is worth explaining
