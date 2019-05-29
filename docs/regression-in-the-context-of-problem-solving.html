@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Chapter 14 The meaning of interaction | Interpreting Regression</title>
+  <title>Chapter 2 Regression in the context of problem solving | Interpreting Regression</title>
   <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Chapter 14 The meaning of interaction | Interpreting Regression" />
+  <meta property="og:title" content="Chapter 2 Regression in the context of problem solving | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 14 The meaning of interaction | Interpreting Regression" />
+  <meta name="twitter:title" content="Chapter 2 Regression in the context of problem solving | Interpreting Regression" />
   
   <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
   
@@ -32,8 +32,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="theres-meaning-in-parameters.html">
-<link rel="next" href="scales-and-the-restricted-range-problem.html">
+<link rel="prev" href="index.html">
+<link rel="next" href="an-outcome-on-its-own.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -244,18 +244,137 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="the-meaning-of-interaction" class="section level1">
-<h1><span class="header-section-number">Chapter 14</span> The meaning of interaction</h1>
-<p>Interaction terms, and when relationships change given a variable.</p>
+<div id="regression-in-the-context-of-problem-solving" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Regression in the context of problem solving</h1>
+<p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<p>(BAIT 509 Class Meeting 06)</p>
+<p>Today, we’re going to take a break from supervised learning methods, and look at the process involved to use machine learning to address a question/problem faced by an organization.</p>
+<p>Generally, there are four parts of a machine learning analysis. In order from high to low level:</p>
+<ol style="list-style-type: decimal">
+<li>The Business Question/Objective</li>
+<li>The Statistical Question(s)/Objective(s)</li>
+<li>The data and model</li>
+<li>The data product</li>
+</ol>
+<p>Doing an analysis is about distilling from the highest level to the lowest level. As such, there are three distillations to keep in mind: 1-2, 2-3, and 3-4:</p>
+<ul>
+<li>1-2 is about asking the right questions.
+<ul>
+<li>Our focus today.</li>
+</ul></li>
+<li>2-3 is about building a useful model.
+<ul>
+<li>Our focus for much of the course.</li>
+</ul></li>
+<li>3-4 is about communicating the results.</li>
+</ul>
+<p>An analysis isn’t (<em>and shouldn’t be</em>) a linear progression through these as if they’re “steps”; rather, the process is iterative, revisiting any of the distillations at any point after embarking on the project. This is because <em>none of the components are independent</em>. Making progress on any of the three distillations gives you more information as to what the problem is.</p>
+<p>In all of this, it’s most beneficial to consider developing your analysis through small, simple steps. Always start with a basic approach, and gradually tweak the various components. Right off the bat, strive to get some sort of crude end product that resembles what your final product might look like. Not only is it more useful to have a “working version” of your product right away, but it gives you more information about the project, and will inform other distillations.</p>
+<p>We’ll look at these in turn, in reverse order.</p>
+<div id="communicating-distillation-3-4" class="section level2">
+<h2><span class="header-section-number">2.1</span> Communicating (Distillation 3-4)</h2>
+<p>Once you have a model, it needs to be delivered and used by others. (And if you are truly the only one who will use the model, then you still need to package it up as if it will be used by others, because it will – the “other” person here is future-you!)</p>
+<p>This is typically called the “data product”, because it can consist of a variety of things:</p>
+<ul>
+<li>a report</li>
+<li>a presentation</li>
+<li>an app</li>
+<li>a software package/pipeline</li>
+</ul>
+<p>…and any combination of these things. These almost always (or at least, almost always <em>should</em>) contain data visualizations.</p>
+<p>Your client might request this outright, but their suggestion might not be the best option. Perhaps they request a report and presentation communicating your findings, when a more appropriate product also includes an interactive app that allows them to explore your findings for themselves.</p>
+<p>Either way, the key here is communication. The challenges here include:</p>
+<ul>
+<li>Communication with language: understanding your audience, and tailoring your language for them. This usually means no jargon allowed. The key is to talk more about the output and the general idea of your model(s), but not machine learning or statistical jargon.</li>
+<li>Communication with visual design: this is about choosing what visuals are the most effective for communicating (called design choice).</li>
+</ul>
+<p>It’s key when you’re developing a first draft to not fret about details. For example, there’s no use interpreting the results of an analysis if you know the analysis will change. The idea is to set up a framework. For a report, this means outlining what you intend to write about, and where.</p>
+<p>Having this, and showing it to your client is useful as a sanity check to see that you’re about to produce something that the client currently sees as being potentially useful.</p>
+<p>This course is not about developing a data product. This is a topic that can be a discipline on its own, so we will not dwell any more on this.</p>
+</div>
+<div id="modelling-distillation-2-3" class="section level2">
+<h2><span class="header-section-number">2.2</span> Modelling (Distillation 2-3)</h2>
+<p>This involves things like kNN, loess, classification/regression trees, etc. – things that the bulk of this course is focussed on. As such, I won’t dwell here.</p>
+<p>One thing I will say, though, is that there is temptation here to jump immediately into a complex analysis. Resist the temptation. Always start with a very basic approach – perhaps just linear regression, for example. The amount of complex approaches far exceeds the amount of simple ones, and starting with a simple one will help you end up in an appropriate complex analysis, if one is required.</p>
+</div>
+<div id="asking-useful-statistical-questions-distillation-1-2" class="section level2">
+<h2><span class="header-section-number">2.3</span> Asking useful statistical questions (Distillation 1-2)</h2>
+<p>Usually, a company is not served up a machine learning problem, complete with data and a description of the response and predictors. Instead, they’re faced with some high-level objective/question that we’ll call the <strong>business question/objective</strong>, which needs refining to a <strong>statistical question/objective</strong> – one that is directly addressable by machine learning.</p>
+<div id="business-objectives-examples" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Business objectives: examples</h3>
+<p>Examples of business objectives (for which machine learning is a relevant approach) (more examples at <a href="https://www.altexsoft.com/blog/business/supervised-learning-use-cases-low-hanging-fruit-in-data-science-for-businesses/">this altexsoft blog post</a>):</p>
+<ul>
+<li>Reduce the amount of spam email received</li>
+<li>Early prediction of product failure</li>
+<li>Find undervalued mines</li>
+<li>Make a transit system more efficient</li>
+<li>Hire efficient staff</li>
+</ul>
+</div>
+<div id="statistical-objectives-refining" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Statistical objectives: refining</h3>
+<p>Statistical objectives should be <em>specific</em>. For some business objectives, the distillation is not dramatic; for others, it is. Because supervised learning is about predicting a response <span class="math inline">\(Y\)</span> from predictors <span class="math inline">\(X_1, \ldots, X_p\)</span>, identifying a statistical objective involves:</p>
+<ul>
+<li>Most importantly, identifying what response is the most valuable/aligned with the business objective.</li>
+<li>Identifying the cases that will be used for learning, and what cases you’ll be predicting on.</li>
+<li>What predictors you plan on using, or at least where we’ll be looking for these.
+<ul>
+<li>Note: half of this is the task of <em>feature selection</em> – a topic we may cover last in the course – but, largely, this is a human decision based on what we think is more informative, so is important to include in your supervised learning question/objective.</li>
+</ul></li>
+</ul>
+</div>
+<div id="statistical-objectives-examples" class="section level3">
+<h3><span class="header-section-number">2.3.3</span> Statistical objectives: examples</h3>
+<p>Statistical objectives corresponding to the above business objective examples might be:</p>
+<ul>
+<li>Predict monthly sales (response) from a personality test (predictors), issued to our current employees (learning cases) and prospective employees (prediction cases).</li>
+<li>Obtain individual-specific classifications of email spam (response) based on features present in the name and body of an email (predictors). Cases of spam will be gathered over time, as the employee manually identifies mistakes in classification (prediction cases become learning cases after emails are viewed).</li>
+<li>Classify a device as either faulty or not (response) based on predictors chosen by expert advice (predictors). Of those predicted faulty, check their performance for one hour (predictors, round 2) to predict lifetime of the device (response, round 2). Sample cases from our test facility will be used (learning cases) to make predictions on items sent to the shelf.</li>
+<li>Predict total volume of gold and silver at a site (response) based on concentrations of various minerals found in drill samples (predictors). Use cases where total volume is known (learning cases) to make predictions on mines where total volume is not known or uncertain (prediction cases).</li>
+<li>Predict the time it takes a bus to travel between set stops (responses), based on time factors such as time of the day, time of the week, and time of the year (predictors). Use data from the server, available for the past 8 years (learning cases) to make predictions for 2019 (prediction cases).</li>
+</ul>
+</div>
+<div id="statistical-questions-are-not-the-full-picture" class="section level3">
+<h3><span class="header-section-number">2.3.4</span> Statistical questions are not the full picture</h3>
+<p>Almost (?) always, the business objective is more complex than the statistical objective. By refining a business objective to a statistical one, we lose part of the essence of the business objective.</p>
+<p>It’s important to have a sense of the ways in which your statistical objective falls short, and the ways in which it’s on the mark, so that you keep a sense of the big picture. For instance, you’ll better understand how your machine learning model(s) fit into the big picture of the business question, and how you might ask a different statistical question to gain different insight.</p>
+</div>
+<div id="statistical-objectives-unrelated-to-supervised-learning" class="section level3">
+<h3><span class="header-section-number">2.3.5</span> Statistical objectives unrelated to supervised learning</h3>
+<p>Naturally, for this course, we’ll focus on statistical questions that require supervised learning. But in reality, you should consider other cases too. Let’s look at other branches of data analysis that you might wish to consider (though, not for this course), through an example.</p>
+<p><em>Business objective</em>: To gain insight into the productivity of two branches of a company.</p>
+<p>Examples of statistical questions:</p>
+<ul>
+<li><em>Hypothesis testing</em>. Is the mean number of sick days per employee different between two branches of a company?
+<ul>
+<li>Supervised learning doesn’t cover testing for differences.</li>
+</ul></li>
+<li><em>Unsupervised learning</em>. What is the mean sentiment of the internal discussion channels from both branches?
+<ul>
+<li>There are no records of the response here, as required by supervised learning (by definition).</li>
+</ul></li>
+<li><em>Statistical inference</em>. Estimate the mean difference in monthly revenue generated by both branches, along with how certain you are with that estimate.
+<ul>
+<li>Supervised learning typically isn’t concerned about communicating how certain your estimate is.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="prerequisites-to-an-analysis" class="section level2">
+<h2><span class="header-section-number">2.4</span> Prerequisites to an analysis</h2>
+<p>Before going into any analysis, you need to know what data are available, and what state they’re in.</p>
+<p><strong>Why</strong>: The statistical questions you form will depend on the data that are available. For example, you can’t form a statistical question about the performance of a division of your business if there are no data available on that division, or if the data you collected aren’t indicators of performance.</p>
+<p><strong>How</strong>: Always make exploratory plots to get a feel for the data – and keep doing so to explore other aspects of the data, as you learn more about the data set by doing your analysis. This is often called <em>Exploratory Data Analysis</em> (or EDA).</p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="theres-meaning-in-parameters.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="scales-and-the-restricted-range-problem.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="an-outcome-on-its-own.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -285,7 +404,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/vincenzocoia/Interpreting-Regression/edit/master/120-The_meaning_of_interaction.Rmd",
+"link": "https://github.com/vincenzocoia/Interpreting-Regression/edit/master/000-problem_solving_flow.Rmd",
 "text": "Edit"
 },
 "history": {

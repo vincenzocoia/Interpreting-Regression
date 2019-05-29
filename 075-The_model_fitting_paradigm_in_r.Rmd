@@ -1,4 +1,4 @@
-# Model fitting in R 
+# The Model-Fitting Paradigm in R
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 

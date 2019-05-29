@@ -1,6 +1,46 @@
-# Spatial
+# Regression when order matters: time series and spatial analysis
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
+## Timeseries in (base) R
+
+__To add__: `times()` function to extract times from a `ts` object. How to deal with the `start` and `end` arguments when declaring a `ts` object. `tsibble`.
+
+This tutorial demonstrates `timeseries` objects, and `stl` decomposition.
+
+Let's make a periodic time series with a trend. The data can be contained in a vector:
+
+```{r}
+p <- 10
+n <- 20*p
+dat <- 100 + sqrt(1:n) + 5*sin(1:n * 2*pi/p) + rnorm(n)
+```
+
+It's sometimes useful to make an object of type `timeseries`. Do this with the `ts` function in R. But, if there's a cycle, we'll need to indicate that in the `frequency` argument, which is the number of observations per cycle. In this case, the period is `r p`. 
+
+```{r}
+(datts <- ts(dat, frequency = p))
+```
+
+You can plot this object too. You'll get a nice looking time series plot:
+
+```{r, fig.height=3}
+plot(datts)
+```
+
+And now you can decompose the trend, seasonal component, and error terms with `stl`. Note that `stl` requires a `timeseries` object! Be sure to put `s.window="periodic"` in the `stl` function to use the periodicity of the `timeseries` object. Notice that there are options to change the bandwidths of the loess estimation, along with the degree of the local polynomial, with the `_.degree` and `_.window` arguments.  
+
+```{r}
+fit <- stl(datts, s.window="periodic")
+```
+
+The estimates are contained in the `$time.series` part of the output:
+
+```{r}
+head(fit$time.series)
+```
+
+## Spatial Example
 
 Rocks were sampled at 54 sites along the
 river within a period of two days. The procedure to take one sample
@@ -17,7 +57,7 @@ river for example, distance downstream the Meadows campground. For the
 54 sample sites, the locations are denoted by $x_{1},\ldots,x_{54}$.
 There are three concepts related to rock size.
 
-#### 1. Average rock size:
+### 1. Average rock size:
 
 This is the average size of sampled rocks at a location, had that
 location been sampled. For location $x$, the value of the sample average
@@ -25,7 +65,7 @@ rock size is denoted $m\left(x\right)$. These values are known for 54
 sample sites, which are denoted for brevity as $m_{1},\ldots,m_{54}$,
 represented as the dots in Figure 
 
-#### 2. Mean rock size:
+### 2. Mean rock size:
 
 At a particular river location, this can be thought of as the average
 rock size in the bed load in the hypothetical situation where the river
@@ -36,7 +76,7 @@ quantity). At a location $x$, the mean rock size will be denoted
 $M\left(x\right)$, and is represented by the solid line in Figure
 
 
-#### 3. Downstream fining curve:
+### 3. Downstream fining curve:
 
 This can be thought of as an "overall trend" for rock size from upstream
 to downstream. The mean rock size $M\left(x\right)$ should "on average"
@@ -391,3 +431,4 @@ Statistical Tools for Nonlinear Regression: A Practical Guide with
 S-Plus and R Examples. Second Edition. Springer.
 
 Anton, H. (2010) Elementary Linear Algebra. Tenth Edition. Wiley.
+

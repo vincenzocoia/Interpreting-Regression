@@ -2,11 +2,6 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
-```{r, warning=FALSE}
-suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(Lahman))
-my_accent <- "#d95f02"
-```
 
 Up until now, we've only seen different ways of using a predictor to give us more information the __mean__ and __mode__ of the response. The world holds a huge emphasis on the mean and mode, but these are not always what's important. Two alternatives are:
 
@@ -20,15 +15,14 @@ The idea here is to put forth an _entire probability distribution_ as a predicti
 Let's look at an example. Suppose there are two baseball teams, one that gets 1000 total hits in a year, and another that gets 1500. Using "total hits in a year" as a predictor, we set out to predict the total number of runs of both teams. Here's the top snippet of the data:
 
 ```{r}
-dat <- Teams %>% tbl_df %>% 
-  select(runs=R, hits=H)
+baseball
 ```
 
 Let's not concern ourselves with the _methods_ yet. Using a standard regression technique, here are our predictions:
 
 ```{r}
 r <- 20
-datsub <- filter(dat,
+datsub <- filter(baseball,
                  (hits>=1000-r & hits<=1000+r) |
                      (hits>=1500-r & hits<=1500+r)) %>% 
     mutate(approx_hits = if_else(hits>=1000-r & hits<=1000+r, 1000, 1500))
@@ -90,7 +84,7 @@ Recall that we can use __histograms__ to estimate the density of the data. The i
 ```{r}
 ggplot(data.frame(x=x), aes(x)) +
     geom_histogram(binwidth=10, center=min(x)+5,
-                   fill=my_accent, colour="black") +
+                   fill="orange", colour="black") +
     theme_bw()
 ```
 
@@ -171,8 +165,8 @@ The local methods and classification/regression trees that we've seen so far can
 The above baseball example used a moving window with a radius of ```r r``` hits. Visually, you can see the data that I subsetted within these two narrow windows, for hits of 1000 and 1500:
 
 ```{r}
-ggplot(dat, aes(hits, runs)) +
-    geom_point(colour=my_accent, alpha=0.1) +
+ggplot(baseball, aes(hits, runs)) +
+    geom_point(colour="orange", alpha=0.1) +
     geom_vline(xintercept=c(1000+c(-r,r), 1500+c(-r,r)),
                linetype="dashed") +
     theme_bw() +
@@ -230,7 +224,7 @@ ggplot(estimates, aes(x=y)) +
     facet_wrap(~k) +
     geom_density(aes(group=iter)) +
     geom_vline(data=means, mapping=aes(xintercept=mean),
-               linetype="dashed", colour=my_accent) +
+               linetype="dashed", colour="orange") +
     theme_bw()
 ```
 

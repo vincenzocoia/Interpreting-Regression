@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Chapter 8 The signal: model functions | Interpreting Regression</title>
+  <title>Chapter 9 The signal: model functions | Interpreting Regression</title>
   <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Chapter 8 The signal: model functions | Interpreting Regression" />
+  <meta property="og:title" content="Chapter 9 The signal: model functions | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 8 The signal: model functions | Interpreting Regression" />
+  <meta name="twitter:title" content="Chapter 9 The signal: model functions | Interpreting Regression" />
   
   <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
   
@@ -25,7 +25,7 @@
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-28">
+<meta name="date" content="2019-05-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -110,60 +110,119 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#tasks-that-motivate-regression"><i class="fa fa-check"></i><b>1.3</b> Tasks that motivate Regression</a></li>
 <li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#examples"><i class="fa fa-check"></i><b>1.4</b> Examples</a></li>
 </ul></li>
+<li class="chapter" data-level="2" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html"><i class="fa fa-check"></i><b>2</b> Regression in the context of problem solving</a><ul>
+<li class="chapter" data-level="2.1" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#communicating-distillation-3-4"><i class="fa fa-check"></i><b>2.1</b> Communicating (Distillation 3-4)</a></li>
+<li class="chapter" data-level="2.2" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#modelling-distillation-2-3"><i class="fa fa-check"></i><b>2.2</b> Modelling (Distillation 2-3)</a></li>
+<li class="chapter" data-level="2.3" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#asking-useful-statistical-questions-distillation-1-2"><i class="fa fa-check"></i><b>2.3</b> Asking useful statistical questions (Distillation 1-2)</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#business-objectives-examples"><i class="fa fa-check"></i><b>2.3.1</b> Business objectives: examples</a></li>
+<li class="chapter" data-level="2.3.2" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#statistical-objectives-refining"><i class="fa fa-check"></i><b>2.3.2</b> Statistical objectives: refining</a></li>
+<li class="chapter" data-level="2.3.3" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#statistical-objectives-examples"><i class="fa fa-check"></i><b>2.3.3</b> Statistical objectives: examples</a></li>
+<li class="chapter" data-level="2.3.4" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#statistical-questions-are-not-the-full-picture"><i class="fa fa-check"></i><b>2.3.4</b> Statistical questions are not the full picture</a></li>
+<li class="chapter" data-level="2.3.5" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#statistical-objectives-unrelated-to-supervised-learning"><i class="fa fa-check"></i><b>2.3.5</b> Statistical objectives unrelated to supervised learning</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="regression-in-the-context-of-problem-solving.html"><a href="regression-in-the-context-of-problem-solving.html#prerequisites-to-an-analysis"><i class="fa fa-check"></i><b>2.4</b> Prerequisites to an analysis</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="an-outcome-on-its-own.html"><a href="an-outcome-on-its-own.html"><i class="fa fa-check"></i>An outcome on its own</a></li>
-<li class="chapter" data-level="2" data-path="distributions-uncertainty-is-worth-explaining.html"><a href="distributions-uncertainty-is-worth-explaining.html"><i class="fa fa-check"></i><b>2</b> Distributions: Uncertainty is worth explaining</a></li>
-<li class="chapter" data-level="3" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html"><i class="fa fa-check"></i><b>3</b> Explaining an uncertain outcome: interpretable quantities</a><ul>
-<li class="chapter" data-level="3.1" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#probabilistic-quantities"><i class="fa fa-check"></i><b>3.1</b> Probabilistic Quantities</a></li>
-<li class="chapter" data-level="3.2" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#what-is-the-mean-anyway"><i class="fa fa-check"></i><b>3.2</b> What is the mean, anyway?</a></li>
-<li class="chapter" data-level="3.3" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#quantiles"><i class="fa fa-check"></i><b>3.3</b> Quantiles</a></li>
+<li class="chapter" data-level="3" data-path="distributions-uncertainty-is-worth-explaining.html"><a href="distributions-uncertainty-is-worth-explaining.html"><i class="fa fa-check"></i><b>3</b> Distributions: Uncertainty is worth explaining</a></li>
+<li class="chapter" data-level="4" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html"><i class="fa fa-check"></i><b>4</b> Explaining an uncertain outcome: interpretable quantities</a><ul>
+<li class="chapter" data-level="4.1" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#probabilistic-quantities"><i class="fa fa-check"></i><b>4.1</b> Probabilistic Quantities</a></li>
+<li class="chapter" data-level="4.2" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#what-is-the-mean-anyway"><i class="fa fa-check"></i><b>4.2</b> What is the mean, anyway?</a></li>
+<li class="chapter" data-level="4.3" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#quantiles"><i class="fa fa-check"></i><b>4.3</b> Quantiles</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="data-versions-of-interpretable-quantities.html"><a href="data-versions-of-interpretable-quantities.html"><i class="fa fa-check"></i><b>4</b> Data versions of interpretable quantities</a><ul>
-<li class="chapter" data-level="4.1" data-path="data-versions-of-interpretable-quantities.html"><a href="data-versions-of-interpretable-quantities.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>4.1</b> Estimation of Probabilistic Quantities</a></li>
+<li class="chapter" data-level="5" data-path="data-versions-of-interpretable-quantities.html"><a href="data-versions-of-interpretable-quantities.html"><i class="fa fa-check"></i><b>5</b> Data versions of interpretable quantities</a><ul>
+<li class="chapter" data-level="5.1" data-path="data-versions-of-interpretable-quantities.html"><a href="data-versions-of-interpretable-quantities.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="sampling-distributions-another-layer-of-uncertainty-added-from-estimation.html"><a href="sampling-distributions-another-layer-of-uncertainty-added-from-estimation.html"><i class="fa fa-check"></i><b>5</b> Sampling distributions: Another layer of uncertainty added from estimation</a></li>
-<li class="chapter" data-level="6" data-path="improving-estimator-quality-by-parametric-distributional-assumptions-and-mle.html"><a href="improving-estimator-quality-by-parametric-distributional-assumptions-and-mle.html"><i class="fa fa-check"></i><b>6</b> Improving estimator quality by parametric distributional assumptions and MLE</a></li>
+<li class="chapter" data-level="6" data-path="sampling-distributions-another-layer-of-uncertainty-added-from-estimation.html"><a href="sampling-distributions-another-layer-of-uncertainty-added-from-estimation.html"><i class="fa fa-check"></i><b>6</b> Sampling distributions: Another layer of uncertainty added from estimation</a></li>
+<li class="chapter" data-level="7" data-path="improving-estimator-quality-by-parametric-distributional-assumptions-and-mle.html"><a href="improving-estimator-quality-by-parametric-distributional-assumptions-and-mle.html"><i class="fa fa-check"></i><b>7</b> Improving estimator quality by parametric distributional assumptions and MLE</a></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
-<li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a></li>
-<li class="chapter" data-level="8" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html"><i class="fa fa-check"></i><b>8</b> The signal: model functions</a><ul>
-<li class="chapter" data-level="8.1" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#linear-quantile-regression"><i class="fa fa-check"></i><b>8.1</b> Linear Quantile Regression</a><ul>
-<li class="chapter" data-level="8.1.1" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#exercise"><i class="fa fa-check"></i><b>8.1.1</b> Exercise</a></li>
-<li class="chapter" data-level="8.1.2" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#problem-crossing-quantiles"><i class="fa fa-check"></i><b>8.1.2</b> Problem: Crossing quantiles</a></li>
-<li class="chapter" data-level="8.1.3" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#problem-upper-quantiles"><i class="fa fa-check"></i><b>8.1.3</b> Problem: Upper quantiles</a></li>
+<li class="chapter" data-level="8" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>8</b> Reducing uncertainty of the outcome: including predictors</a><ul>
+<li class="chapter" data-level="8.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>8.1</b> Variable terminology</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-types"><i class="fa fa-check"></i><b>8.1.1</b> Variable types</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#irreducible-error"><i class="fa fa-check"></i><b>8.2</b> Irreducible Error</a></li>
+<li class="chapter" data-level="8.3" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#in-class-exercises-irreducible-error"><i class="fa fa-check"></i><b>8.3</b> In-class Exercises: Irreducible Error</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#oracle-regression"><i class="fa fa-check"></i><b>8.3.1</b> Oracle regression</a></li>
+<li class="chapter" data-level="8.3.2" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#oracle-classification"><i class="fa fa-check"></i><b>8.3.2</b> Oracle classification</a></li>
+<li class="chapter" data-level="8.3.3" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#bonus-random-prediction"><i class="fa fa-check"></i><b>8.3.3</b> (BONUS) Random prediction</a></li>
+<li class="chapter" data-level="8.3.4" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#bonus-a-more-non-standard-regression"><i class="fa fa-check"></i><b>8.3.4</b> (BONUS) A more non-standard regression</a></li>
+<li class="chapter" data-level="8.3.5" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#bonus-oracle-mse"><i class="fa fa-check"></i><b>8.3.5</b> (BONUS) Oracle MSE</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html"><i class="fa fa-check"></i><b>9</b> Estimating parametric model functions</a><ul>
-<li class="chapter" data-level="9.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#writing-the-sample-mean-as-an-optimization-problem"><i class="fa fa-check"></i><b>9.1</b> Writing the sample mean as an optimization problem</a></li>
-<li class="chapter" data-level="9.2" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#evaluating-model-goodness-quantiles"><i class="fa fa-check"></i><b>9.2</b> Evaluating Model Goodness: Quantiles</a></li>
+<li class="chapter" data-level="9" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html"><i class="fa fa-check"></i><b>9</b> The signal: model functions</a><ul>
+<li class="chapter" data-level="9.1" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#linear-quantile-regression"><i class="fa fa-check"></i><b>9.1</b> Linear Quantile Regression</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#exercise"><i class="fa fa-check"></i><b>9.1.1</b> Exercise</a></li>
+<li class="chapter" data-level="9.1.2" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#problem-crossing-quantiles"><i class="fa fa-check"></i><b>9.1.2</b> Problem: Crossing quantiles</a></li>
+<li class="chapter" data-level="9.1.3" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#problem-upper-quantiles"><i class="fa fa-check"></i><b>9.1.3</b> Problem: Upper quantiles</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><i class="fa fa-check"></i><b>10</b> Estimating assumption-free: the world of supervised learning techniques</a></li>
-<li class="chapter" data-level="11" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html"><i class="fa fa-check"></i><b>11</b> Overfitting: The problem with adding too many parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html"><i class="fa fa-check"></i><b>10</b> Estimating parametric model functions</a><ul>
+<li class="chapter" data-level="10.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#writing-the-sample-mean-as-an-optimization-problem"><i class="fa fa-check"></i><b>10.1</b> Writing the sample mean as an optimization problem</a></li>
+<li class="chapter" data-level="10.2" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#evaluating-model-goodness-quantiles"><i class="fa fa-check"></i><b>10.2</b> Evaluating Model Goodness: Quantiles</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><i class="fa fa-check"></i><b>11</b> Estimating assumption-free: the world of supervised learning techniques</a><ul>
+<li class="chapter" data-level="11.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#what-machine-learning-is"><i class="fa fa-check"></i><b>11.1</b> What machine learning is</a></li>
+<li class="chapter" data-level="11.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#types-of-supervised-learning"><i class="fa fa-check"></i><b>11.2</b> Types of Supervised Learning</a></li>
+<li class="chapter" data-level="11.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#local-regression"><i class="fa fa-check"></i><b>11.3</b> Local Regression</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#knn"><i class="fa fa-check"></i><b>11.3.1</b> kNN</a></li>
+<li class="chapter" data-level="11.3.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess"><i class="fa fa-check"></i><b>11.3.2</b> loess</a></li>
+<li class="chapter" data-level="11.3.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#in-class-exercises"><i class="fa fa-check"></i><b>11.3.3</b> In-Class Exercises</a></li>
+<li class="chapter" data-level="11.3.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#hyperparameters-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>11.3.4</b> Hyperparameters and the bias/variance tradeoff</a></li>
+<li class="chapter" data-level="11.3.5" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#extensions-to-knn-and-loess"><i class="fa fa-check"></i><b>11.3.5</b> Extensions to kNN and loess</a></li>
+<li class="chapter" data-level="11.3.6" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#model-assumptions-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>11.3.6</b> Model assumptions and the bias/variance tradeoff</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#splines-and-loess-regression"><i class="fa fa-check"></i><b>11.4</b> Splines and Loess Regression</a><ul>
+<li class="chapter" data-level="11.4.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess-1"><i class="fa fa-check"></i><b>11.4.1</b> Loess</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html"><i class="fa fa-check"></i><b>12</b> Overfitting: The problem with adding too many parameters</a><ul>
+<li class="chapter" data-level="12.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#classification-exercise-do-together"><i class="fa fa-check"></i><b>12.1</b> Classification Exercise: Do Together</a></li>
+<li class="chapter" data-level="12.2" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#training-error-vs.generalization-error"><i class="fa fa-check"></i><b>12.2</b> Training Error vs. Generalization Error</a></li>
+<li class="chapter" data-level="12.3" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#model-complexity"><i class="fa fa-check"></i><b>12.3</b> Model complexity</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#activity"><i class="fa fa-check"></i><b>12.3.1</b> Activity</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#reducible-error"><i class="fa fa-check"></i><b>12.4</b> Reducible Error</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#what-is-it"><i class="fa fa-check"></i><b>12.4.1</b> What is it?</a></li>
+<li class="chapter" data-level="12.4.2" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#example"><i class="fa fa-check"></i><b>12.4.2</b> Example</a></li>
+<li class="chapter" data-level="12.4.3" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#bias-and-variance"><i class="fa fa-check"></i><b>12.4.3</b> Bias and Variance</a></li>
+<li class="chapter" data-level="12.4.4" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#reducing-reducible-error"><i class="fa fa-check"></i><b>12.4.4</b> Reducing reducible error</a></li>
+<li class="chapter" data-level="12.4.5" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#error-decomposition"><i class="fa fa-check"></i><b>12.4.5</b> Error decomposition</a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#model-selection"><i class="fa fa-check"></i><b>12.5</b> Model Selection</a><ul>
+<li class="chapter" data-level="12.5.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#exercise-cv"><i class="fa fa-check"></i><b>12.5.1</b> Exercise: CV</a></li>
+<li class="chapter" data-level="12.5.2" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#out-of-sample-error"><i class="fa fa-check"></i><b>12.5.2</b> Out-of-sample Error</a></li>
+<li class="chapter" data-level="12.5.3" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#alternative-measures-of-model-goodness"><i class="fa fa-check"></i><b>12.5.3</b> Alternative measures of model goodness</a></li>
+<li class="chapter" data-level="12.5.4" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#feature-and-model-selection-setup"><i class="fa fa-check"></i><b>12.5.4</b> Feature and model selection: setup</a></li>
+<li class="chapter" data-level="12.5.5" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#model-selection-1"><i class="fa fa-check"></i><b>12.5.5</b> Model selection</a></li>
+<li class="chapter" data-level="12.5.6" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#feature-predictor-selection"><i class="fa fa-check"></i><b>12.5.6</b> Feature (predictor) selection</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="describing-relationships.html"><a href="describing-relationships.html"><i class="fa fa-check"></i>Describing Relationships</a></li>
-<li class="chapter" data-level="12" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html"><i class="fa fa-check"></i><b>12</b> There’s meaning in parameters</a></li>
-<li class="chapter" data-level="13" data-path="the-meaning-of-interaction.html"><a href="the-meaning-of-interaction.html"><i class="fa fa-check"></i><b>13</b> The meaning of interaction</a></li>
-<li class="chapter" data-level="14" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html"><i class="fa fa-check"></i><b>14</b> Scales and the restricted range problem</a></li>
-<li class="chapter" data-level="15" data-path="improving-estimation-through-distributional-assumptions.html"><a href="improving-estimation-through-distributional-assumptions.html"><i class="fa fa-check"></i><b>15</b> Improving estimation through distributional assumptions</a></li>
-<li class="chapter" data-level="16" data-path="when-we-only-want-interpretation-on-some-predictors.html"><a href="when-we-only-want-interpretation-on-some-predictors.html"><i class="fa fa-check"></i><b>16</b> When we only want interpretation on some predictors</a></li>
+<li class="chapter" data-level="13" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html"><i class="fa fa-check"></i><b>13</b> There’s meaning in parameters</a></li>
+<li class="chapter" data-level="14" data-path="the-meaning-of-interaction.html"><a href="the-meaning-of-interaction.html"><i class="fa fa-check"></i><b>14</b> The meaning of interaction</a></li>
+<li class="chapter" data-level="15" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html"><i class="fa fa-check"></i><b>15</b> Scales and the restricted range problem</a></li>
+<li class="chapter" data-level="16" data-path="improving-estimation-through-distributional-assumptions.html"><a href="improving-estimation-through-distributional-assumptions.html"><i class="fa fa-check"></i><b>16</b> Improving estimation through distributional assumptions</a></li>
+<li class="chapter" data-level="17" data-path="when-we-only-want-interpretation-on-some-predictors.html"><a href="when-we-only-want-interpretation-on-some-predictors.html"><i class="fa fa-check"></i><b>17</b> When we only want interpretation on some predictors</a></li>
 <li class="chapter" data-level="" data-path="special-cases.html"><a href="special-cases.html"><i class="fa fa-check"></i>Special cases</a></li>
-<li class="chapter" data-level="17" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html"><i class="fa fa-check"></i><b>17</b> Regression when data are censored: survival analysis</a></li>
-<li class="chapter" data-level="18" data-path="regression-in-the-presence-of-outliers-robust-regression.html"><a href="regression-in-the-presence-of-outliers-robust-regression.html"><i class="fa fa-check"></i><b>18</b> Regression in the presence of outliers: robust regression</a></li>
-<li class="chapter" data-level="19" data-path="regression-in-the-presence-of-extremes-extreme-value-regression.html"><a href="regression-in-the-presence-of-extremes-extreme-value-regression.html"><i class="fa fa-check"></i><b>19</b> Regression in the presence of extremes: extreme value regression</a></li>
-<li class="chapter" data-level="20" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html"><i class="fa fa-check"></i><b>20</b> Regression when data are ordinal</a></li>
-<li class="chapter" data-level="21" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html"><i class="fa fa-check"></i><b>21</b> Regression when data are missing: multiple imputation</a></li>
-<li class="chapter" data-level="22" data-path="regression-under-many-groups-mixed-effects-models.html"><a href="regression-under-many-groups-mixed-effects-models.html"><i class="fa fa-check"></i><b>22</b> Regression under many groups: mixed effects models</a></li>
-<li class="chapter" data-level="23" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html"><i class="fa fa-check"></i><b>23</b> Regression on an entire distribution: Probabilistic Forecasting</a><ul>
-<li class="chapter" data-level="23.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasting-what-it-is"><i class="fa fa-check"></i><b>23.1</b> Probabilistic Forecasting: What it is</a></li>
-<li class="chapter" data-level="23.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#review-univariate-distribution-estimates"><i class="fa fa-check"></i><b>23.2</b> Review: Univariate distribution estimates</a><ul>
-<li class="chapter" data-level="23.2.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#continuous-response"><i class="fa fa-check"></i><b>23.2.1</b> Continuous response</a></li>
-<li class="chapter" data-level="23.2.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discrete-response"><i class="fa fa-check"></i><b>23.2.2</b> Discrete Response</a></li>
+<li class="chapter" data-level="18" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html"><i class="fa fa-check"></i><b>18</b> Regression when data are censored: survival analysis</a></li>
+<li class="chapter" data-level="19" data-path="regression-in-the-presence-of-outliers-robust-regression.html"><a href="regression-in-the-presence-of-outliers-robust-regression.html"><i class="fa fa-check"></i><b>19</b> Regression in the presence of outliers: robust regression</a></li>
+<li class="chapter" data-level="20" data-path="regression-in-the-presence-of-extremes-extreme-value-regression.html"><a href="regression-in-the-presence-of-extremes-extreme-value-regression.html"><i class="fa fa-check"></i><b>20</b> Regression in the presence of extremes: extreme value regression</a></li>
+<li class="chapter" data-level="21" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html"><i class="fa fa-check"></i><b>21</b> Regression when data are ordinal</a></li>
+<li class="chapter" data-level="22" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html"><i class="fa fa-check"></i><b>22</b> Regression when data are missing: multiple imputation</a></li>
+<li class="chapter" data-level="23" data-path="regression-under-many-groups-mixed-effects-models.html"><a href="regression-under-many-groups-mixed-effects-models.html"><i class="fa fa-check"></i><b>23</b> Regression under many groups: mixed effects models</a></li>
+<li class="chapter" data-level="24" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html"><i class="fa fa-check"></i><b>24</b> Regression on an entire distribution: Probabilistic Forecasting</a><ul>
+<li class="chapter" data-level="24.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasting-what-it-is"><i class="fa fa-check"></i><b>24.1</b> Probabilistic Forecasting: What it is</a></li>
+<li class="chapter" data-level="24.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#review-univariate-distribution-estimates"><i class="fa fa-check"></i><b>24.2</b> Review: Univariate distribution estimates</a><ul>
+<li class="chapter" data-level="24.2.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#continuous-response"><i class="fa fa-check"></i><b>24.2.1</b> Continuous response</a></li>
+<li class="chapter" data-level="24.2.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discrete-response"><i class="fa fa-check"></i><b>24.2.2</b> Discrete Response</a></li>
 </ul></li>
-<li class="chapter" data-level="23.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasts-subset-based-learning-methods"><i class="fa fa-check"></i><b>23.3</b> Probabilistic Forecasts: subset-based learning methods</a><ul>
-<li class="chapter" data-level="23.3.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#the-techniques"><i class="fa fa-check"></i><b>23.3.1</b> The techniques</a></li>
-<li class="chapter" data-level="23.3.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#exercise-1"><i class="fa fa-check"></i><b>23.3.2</b> Exercise</a></li>
-<li class="chapter" data-level="23.3.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>23.3.3</b> Bias-variance tradeoff</a></li>
-<li class="chapter" data-level="23.3.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#evaluating-model-goodness"><i class="fa fa-check"></i><b>23.3.4</b> Evaluating Model Goodness</a></li>
+<li class="chapter" data-level="24.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasts-subset-based-learning-methods"><i class="fa fa-check"></i><b>24.3</b> Probabilistic Forecasts: subset-based learning methods</a><ul>
+<li class="chapter" data-level="24.3.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#the-techniques"><i class="fa fa-check"></i><b>24.3.1</b> The techniques</a></li>
+<li class="chapter" data-level="24.3.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#exercise-1"><i class="fa fa-check"></i><b>24.3.2</b> Exercise</a></li>
+<li class="chapter" data-level="24.3.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>24.3.3</b> Bias-variance tradeoff</a></li>
+<li class="chapter" data-level="24.3.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#evaluating-model-goodness"><i class="fa fa-check"></i><b>24.3.4</b> Evaluating Model Goodness</a></li>
 </ul></li>
-<li class="chapter" data-level="23.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discussion-points"><i class="fa fa-check"></i><b>23.4</b> Discussion Points</a></li>
-<li class="chapter" data-level="23.5" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#when-are-they-not-useful"><i class="fa fa-check"></i><b>23.5</b> When are they not useful?</a></li>
+<li class="chapter" data-level="24.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discussion-points"><i class="fa fa-check"></i><b>24.4</b> Discussion Points</a></li>
+<li class="chapter" data-level="24.5" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#when-are-they-not-useful"><i class="fa fa-check"></i><b>24.5</b> When are they not useful?</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/vincenzocoia/Interpreting-Regression" target="blank">Published with bookdown</a></li>
@@ -186,9 +245,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="the-signal-model-functions" class="section level1">
-<h1><span class="header-section-number">Chapter 8</span> The signal: model functions</h1>
+<h1><span class="header-section-number">Chapter 9</span> The signal: model functions</h1>
 <div id="linear-quantile-regression" class="section level2">
-<h2><span class="header-section-number">8.1</span> Linear Quantile Regression</h2>
+<h2><span class="header-section-number">9.1</span> Linear Quantile Regression</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(tidyverse))
 <span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(Lahman))</code></pre></div>
 <p>The idea here is to model <span class="math display">\[Q(\tau)=\beta_0(\tau) + \beta_1(\tau) X_1 + \cdots + \beta_p(\tau) X_p,\]</span> where <span class="math inline">\(Q(\tau)\)</span> is the <span class="math inline">\(\tau\)</span>-quantile. In other words, <strong>each quantile level gets its own line</strong>, and are each fit independently of each other.</p>
@@ -206,7 +265,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## 
 ##     backsolve</code></pre>
 <pre><code>## Smoothing formula not specified. Using: y ~ x</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>I did this easily with <code>ggplot2</code>, just by adding a layer <code>geom_quantile</code> to my scatterplot, specifying the quantile levels with the <code>quantiles=</code> argument. We could also use the function <code>rq</code> in the <code>quantreg</code> package in R:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(fit_rq &lt;-<span class="st"> </span><span class="kw">rq</span>(runs <span class="op">~</span><span class="st"> </span>hits, <span class="dt">data=</span>baseball, <span class="dt">tau=</span><span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>)))</code></pre></div>
 <pre><code>## Call:
@@ -232,14 +291,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul>
 <p>amongst other things.</p>
 <div id="exercise" class="section level3">
-<h3><span class="header-section-number">8.1.1</span> Exercise</h3>
+<h3><span class="header-section-number">9.1.1</span> Exercise</h3>
 <ul>
 <li>Get a 95% prediction interval using linear quantile regression, with Y=<code>R</code> (number of runs), X=<code>H</code> (number of hits), when X=1500.</li>
 <li>What about a 95% PI using kNN, going back to the earlier example we did?</li>
 </ul>
 </div>
 <div id="problem-crossing-quantiles" class="section level3">
-<h3><span class="header-section-number">8.1.2</span> Problem: Crossing quantiles</h3>
+<h3><span class="header-section-number">9.1.2</span> Problem: Crossing quantiles</h3>
 <p>Because each quantile is allowed to have its own line, some of these lines might cross, giving an <strong>invalid result</strong>. Here is an example with the <code>iris</code> data set, fitting the 0.2- and 0.3-quantiles:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(iris, <span class="kw">aes</span>(Sepal.Length, Sepal.Width)) <span class="op">+</span>
 <span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.25</span>, <span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>) <span class="op">+</span>
@@ -251,7 +310,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
          <span class="dt">y=</span><span class="st">&quot;Sepal Width&quot;</span>)</code></pre></div>
 <pre><code>## Smoothing formula not specified. Using: y ~ x
 ## Smoothing formula not specified. Using: y ~ x</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit_iris &lt;-<span class="st"> </span><span class="kw">rq</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>Sepal.Length, <span class="dt">data=</span>iris, <span class="dt">tau=</span><span class="dv">2</span><span class="op">:</span><span class="dv">3</span><span class="op">/</span><span class="dv">10</span>)
 b &lt;-<span class="st"> </span><span class="kw">coef</span>(fit_iris)
 at8 &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">predict</span>(fit_iris, <span class="dt">newdata=</span><span class="kw">data.frame</span>(<span class="dt">Sepal.Length=</span><span class="dv">8</span>)), <span class="dv">2</span>)</code></pre></div>
@@ -264,7 +323,7 @@ at8 &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw"
 </ul>
 </div>
 <div id="problem-upper-quantiles" class="section level3">
-<h3><span class="header-section-number">8.1.3</span> Problem: Upper quantiles</h3>
+<h3><span class="header-section-number">9.1.3</span> Problem: Upper quantiles</h3>
 <p>Estimates of higher quantiles usually become worse for large/small values of <span class="math inline">\(\tau\)</span>. This is especially true when data are heavy-tailed.</p>
 <p>Check out the Chapter on Extreme Value Regression for more info.</p>
 
