@@ -19,12 +19,15 @@ description: "My tutorials for regression analysis, in the form of a bookdown bo
 
 Currently, much of the book is a stitching together of previous pieces of my writing that I think might be relevant to this book. These chapters will be updated to consider the different context, audience, and content organization that's best for this book.
 
-Stage of writing:
+Stage of development:
 
 1. ~~Gather existing and potentially relevant pieces of writing~~
 2. ~~Create a new chapter structure~~
 3. ~~Parse existing writing into new chapters~~
-4. Write draft preambles for each chapter and part
+4. Writing:
+    1. Write concepts/objectives of each chapter
+    2. Fill in content
+    3. Write preambles for each chapter and part
 
 ## Purpose of the book
 

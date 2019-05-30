@@ -2,17 +2,28 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
+Concepts:
+
+- Probabilistic quantities and their interpretation
+- Prediction as choosing a probabilistic quantity to put forth.
+- Irreducible error
+
 
 ## Probabilistic Quantities
 
 - Sometimes confusingly called "parameters".
 - Explain the quantities by their interpretation/usefulness, using examples.
 	- Mean: what number would you want if you have 10 weeks worth of data, and you want to estimate the total after 52 weeks (one year)?
-	- Median: 
-	- Mode:
-	- High Quantile:
-	- Low Quantile:
-	- Extreme quantile?
+	- Mode
+	- Quantiles:
+- Measures of discrepency/"distance" (for prediction):
+    - difference
+    - ratio
+- Measures of spread:
+    - Variance
+    - IQR
+    - Coefficient of Variance (point to its usefulness on a positive ratio scale)
+- Information measures
 
 When you want information about an unknown quantity, it's up to you what you decide to use. 
 

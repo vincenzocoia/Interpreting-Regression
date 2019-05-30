@@ -1,6 +1,12 @@
-# Data versions of interpretable quantities
+# Estimation
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
+Concepts:
+
+- What is an estimator?
+- Sampling distributions
+- Reducible error
 
 ## Estimation of Probabilistic Quantities
 

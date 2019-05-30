@@ -1,0 +1,10 @@
+# Parametric Families of Distributions
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
+Concepts:
+
+- Common scales: Positive ratio scale, binary, (0,1)
+- Different data generating processes give rise to various _parametric families_ of distributions.  We'll explain a good chunk of them. 
+- These are useful in data analysis because they narrow down the things that need to be estimated. Improving estimator quality by parametric distributional assumptions and MLE
+
