@@ -72,7 +72,6 @@ A very powerful R package to assist with multiple imputation is the `mice` packa
 We'll look at the `airquality` dataset in R.
 
 ```{r}
-library(mice)
 head(airquality)
 ```
 
@@ -114,7 +113,7 @@ class(dats)
 But we can extract the data sets. Want to see the fourth imputed data set? Here it is:
 
 ```{r}
-head(complete(dats, 4))
+head(mice::complete(dats, 4))
 ```
 
 ### Pooling

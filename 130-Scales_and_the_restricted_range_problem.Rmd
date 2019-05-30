@@ -86,18 +86,14 @@ Sometimes there are theoretically derived formulas for the relationship between 
 This document introduces the `glm()` function in R for fitting a Generlized Linear Model (GLM). We'll work with the `titanic_train` dataset in the `titanic` package.
 
 ```{r}
-library(tidyverse)
-library(broom)
-library(titanic)
-dat <- na.omit(titanic_train)
-str(dat)
+str(titanic)
 ```
 
 
 Consider the regression of `Survived` on `Age`. Let's take a look at the data with jitter:
 
 ```{r, fig.height=2, warning=FALSE}
-ggplot(dat, aes(Age, Survived)) +
+ggplot(titanic, aes(Age, Survived)) +
     geom_jitter(height=0.1, alpha=0.25) +
     scale_y_continuous(breaks=0:1, labels=c("Perished", "Survived")) +
     theme_bw()
@@ -106,7 +102,7 @@ ggplot(dat, aes(Age, Survived)) +
 Recall that the linear regression can be done with the `lm` function:
 
 ```{r}
-res_lm <- lm(Survived ~ Age, data=dat)
+res_lm <- lm(Survived ~ Age, data=titanic)
 summary(res_lm)
 ```
 
@@ -115,7 +111,7 @@ In this case, the regression line is ```r res_lm$coefficients[1]``` + ```r res_l
 A GLM can be fit in a similar way, using the `glm` function -- we just need to indicate what type of regression we're doing (binomial? poission?) and the link function. We are doing bernoulli (binomial) regression, since the response is binary (0 or 1); lets choose a `probit` link function.
 
 ```{r}
-res_glm <- glm(factor(Survived) ~ Age, data=dat, family=binomial(link="probit"))
+res_glm <- glm(factor(Survived) ~ Age, data=titanic, family=binomial(link="probit"))
 ```
 
 The `family` argument takes a __function__, indicating the type of regression. See `?family` for the various types of regression allowed by `glm()`. 
@@ -130,7 +126,7 @@ We can make predictions too, but this is not as straight-forward as in `lm()` --
 
 ```{r}
 pred <- predict(res_glm)
-qplot(dat$Age, pred) + labs(x="Age", y="Default Predictions")
+qplot(titanic$Age, pred) + labs(x="Age", y="Default Predictions")
 ```
 
 Why the negative predictions? It turns out this is just the linear predictor, ```r res_glm$coefficients[1]``` + ```r res_glm$coefficients[2]``` `Age`.
@@ -141,14 +137,14 @@ Here are those predictions again, this time indicating `type="response"`:
 
 ```{r}
 pred <- predict(res_glm, type="response")
-qplot(dat$Age, pred) + labs(x="Age", y="Mean Estimates")
+qplot(titanic$Age, pred) + labs(x="Age", y="Mean Estimates")
 ```
 
 Look closely -- these predictions don't actually fall on a straight line. They follow an inverse probit function (i.e., a Gaussian cdf):
 
 ```{r}
 mu <- function(x) pnorm(res_glm$coefficients[1] + res_glm$coefficients[2] * x)
-qplot(dat$Age, pred) + 
+qplot(titanic$Age, pred) + 
     labs(x="Age", y="Mean Estimates") +
     stat_function(fun=mu, colour="blue") +
     scale_x_continuous(limits=c(-200, 200))

@@ -7,11 +7,7 @@
 Let's take a look at the `esoph` data set, to see how the number of controls `ncontrols` affects the number of cases `ncases` of cancer for each age group `agegp`. Here's what the data look like (with a tad bit of vertical jitter):
 
 ```{r, echo=FALSE, fig.width=4, fig.height=3, fig.align="center"}
-suppressMessages(library(tidyverse))
-library(plyr)
-dat <- as_tibble(esoph) %>% 
-    mutate(agegp = as.character(agegp))
-(p <- ggplot(dat, aes(ncontrols, ncases, group=agegp, colour=agegp)) +
+(p <- ggplot(esoph, aes(ncontrols, ncases, group=agegp, colour=agegp)) +
     geom_jitter(height=0.25) +
     scale_colour_discrete("Age Group") +
     ylab("Number of Cases") + xlab("Number of Controls"))
@@ -26,7 +22,7 @@ p + geom_smooth(method="lm", se=FALSE, size=0.5)
 But, each group has so few observations, making the regression less powerful:
 
 ```{r, echo=FALSE}
-dat %>% 
+esoph %>% 
     group_by(agegp) %>% 
     summarise(n=length(ncases))
 ```
@@ -53,14 +49,14 @@ Here is a simulation that compares the "actual" SE (or at least an approximation
 #   beta0 <- rnorm(g)
 #   beta1 <- 1 + beta0 + rnorm(g)
 #   ## Generate iid data from within each group
-#   dat <- tibble(group=LETTERS[1:g], beta0, beta1) %>%
+#   esoph <- tibble(group=LETTERS[1:g], beta0, beta1) %>%
 #     mutate(x = map(beta0, ~ rnorm(ng))) %>%
 #     unnest() %>%
 #     group_by(group) %>%
 #     mutate(eps = rnorm(length(x)),
 #            y = beta0 + beta1 * x + eps)
 #   ## Fit a linear regression, forcing a common slope
-#   fit <- lm(y ~ x + group, data=dat) %>%
+#   fit <- lm(y ~ x + group, data=esoph) %>%
 #     tidy()
 #   beta1hat[i] <- fit$estimate[2]
 #   se[i] <- fit$std.error[2]
@@ -71,7 +67,7 @@ Here is a simulation that compares the "actual" SE (or at least an approximation
 # mean(se)
 # 
 # ## Here's a plot of the last sample generated:
-# ggplot(dat, aes(x, y)) +
+# ggplot(esoph, aes(x, y)) +
 #   geom_point(aes(colour=group), alpha=0.5) +
 #   theme_bw()
 ```
@@ -90,14 +86,13 @@ Note that we don't have to make _both_ the slope and intercept random. For examp
 
 ### R Tools for Fitting
 
-Two R packages exist for working with mixed effects models: `lme4` and `nlme`. We'll be using the `lme4` package (check out [this](http://stats.stackexchange.com/questions/5344/how-to-choose-nlme-or-lme4-r-library-for-mixed-effects-models) discussion on Cross Validated for a comparison of the two packages).
+Two R packages exist for working with mixed effects models: `lme4` and `nlme`. We'll be using the `lme4` package (check out [this](http://stats.stackexchange.com/questions/5344/how-to-choose-nlme-or-lme4-r-library-for-mixed-effects-models) discussion on Cross Valiesophed for a comparison of the two packages).
 
 Let's fit the model. We need to indicate a formula first in the `lmer` function, and indicate the data set we're using.
 
 ```{r}
-library(lme4)
-fit <- lmer(ncases ~ ncontrols + (ncontrols | agegp), 
-            data=dat)
+fit <- lme4::lmer(ncases ~ ncontrols + (ncontrols | agegp), 
+            data=esoph)
 ```
 
 Let's take a closer look at the _formula_, which in this case is `ncases ~ ncontrols + (ncontrols | agegp)`. 
@@ -127,9 +122,9 @@ Let's put these regression lines on the plot:
 ## Put the slopes and intercepts with the data frame:
 par_coll %>% 
     rownames_to_column("agegp") %>% 
-    left_join(dat, by="agegp")
+    left_join(esoph, by="agegp")
 par_coll <- rownames_to_column(par_coll)
-dat <- ddply(dat, ~ agegp, function(df){
+esoph <- plyr::ddply(esoph, ~ agegp, function(df){
     pars <- subset(par_coll, rowname==unique(df$agegp))
     int <- pars$`(Intercept)`
     slp <- pars$ncontrols
@@ -137,7 +132,7 @@ dat <- ddply(dat, ~ agegp, function(df){
 })
 
 ## Plot
-ggplot(dat, aes(ncontrols, ncases, group=agegp, colour=agegp)) +
+ggplot(esoph, aes(ncontrols, ncases, group=agegp, colour=agegp)) +
     geom_jitter(height=0.25) +
     geom_abline(aes(intercept=intercept, slope=slope, colour=agegp)) +
     scale_colour_discrete("Age Group") +
@@ -150,11 +145,7 @@ So, each group still gets its own regression line, but tying the parameters toge
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
-Two R packages exist for working with mixed effects models: `lme4` and `nlme`. We'll be using the `lme4` package (check out [this](http://stats.stackexchange.com/questions/5344/how-to-choose-nlme-or-lme4-r-library-for-mixed-effects-models) discussion on Cross Validated for a comparison of the two packages).
-
-```{r}
-library(lme4)
-```
+Two R packages exist for working with mixed effects models: `lme4` and `nlme`. We'll be using the `lme4` package (check out [this](http://stats.stackexchange.com/questions/5344/how-to-choose-nlme-or-lme4-r-library-for-mixed-effects-models) discussion on Cross Valiesophed for a comparison of the two packages).
 
 In Lab 1, we compared linear regression (function `lm`) with GLM's (function `glm`). In Lab 2, we consider adding a random effect to either of these:
 
@@ -164,10 +155,7 @@ In Lab 1, we compared linear regression (function `lm`) with GLM's (function `gl
 We'll work with the `esoph` data set, to see how the number of controls `ncontrols` affects the number of cases `ncases` based on age group `agegp`. Here's what the data look like (with a tad bit of vertical jitter):
 
 ```{r}
-library(ggplot2)
-library(dplyr)
-dat <- esoph
-p <- ggplot(dat, aes(ncontrols, ncases)) +
+p <- ggplot(esoph, aes(ncontrols, ncases)) +
     geom_jitter(aes(colour=agegp), height=0.25)
 p
 ```
@@ -183,9 +171,9 @@ What does this model mean? First, it means that the mean is exponential in the e
 Let's fit the model. Then we'll go through the formula, and the output.
 
 ```{r}
-fit <- glmer(ncases ~ ncontrols + (1 + ncontrols | agegp), 
-             data=dat, 
-             family=poisson)
+fit <- lme4::glmer(ncases ~ ncontrols + (1 + ncontrols | agegp), 
+                   data=esoph, 
+                   family=poisson)
 summary(fit)
 ```
 

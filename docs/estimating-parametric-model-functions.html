@@ -5,11 +5,11 @@
 
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Chapter 10 Estimating parametric model functions | Interpreting Regression</title>
+  <title>Chapter 11 Estimating parametric model functions | Interpreting Regression</title>
   <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
-  <meta property="og:title" content="Chapter 10 Estimating parametric model functions | Interpreting Regression" />
+  <meta property="og:title" content="Chapter 11 Estimating parametric model functions | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
@@ -17,7 +17,7 @@
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 10 Estimating parametric model functions | Interpreting Regression" />
+  <meta name="twitter:title" content="Chapter 11 Estimating parametric model functions | Interpreting Regression" />
   
   <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
   
@@ -32,7 +32,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="the-signal-model-functions.html">
+<link rel="prev" href="the-model-fitting-paradigm-in-r.html">
 <link rel="next" href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -155,74 +155,159 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="9.1.3" data-path="the-signal-model-functions.html"><a href="the-signal-model-functions.html#problem-upper-quantiles"><i class="fa fa-check"></i><b>9.1.3</b> Problem: Upper quantiles</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html"><i class="fa fa-check"></i><b>10</b> Estimating parametric model functions</a><ul>
-<li class="chapter" data-level="10.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#writing-the-sample-mean-as-an-optimization-problem"><i class="fa fa-check"></i><b>10.1</b> Writing the sample mean as an optimization problem</a></li>
-<li class="chapter" data-level="10.2" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#evaluating-model-goodness-quantiles"><i class="fa fa-check"></i><b>10.2</b> Evaluating Model Goodness: Quantiles</a></li>
+<li class="chapter" data-level="10" data-path="the-model-fitting-paradigm-in-r.html"><a href="the-model-fitting-paradigm-in-r.html"><i class="fa fa-check"></i><b>10</b> The Model-Fitting Paradigm in R</a><ul>
+<li class="chapter" data-level="10.1" data-path="the-model-fitting-paradigm-in-r.html"><a href="the-model-fitting-paradigm-in-r.html#broom-package"><i class="fa fa-check"></i><b>10.1</b> <code>broom</code> package</a></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><i class="fa fa-check"></i><b>11</b> Estimating assumption-free: the world of supervised learning techniques</a><ul>
-<li class="chapter" data-level="11.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#what-machine-learning-is"><i class="fa fa-check"></i><b>11.1</b> What machine learning is</a></li>
-<li class="chapter" data-level="11.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#types-of-supervised-learning"><i class="fa fa-check"></i><b>11.2</b> Types of Supervised Learning</a></li>
-<li class="chapter" data-level="11.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#local-regression"><i class="fa fa-check"></i><b>11.3</b> Local Regression</a><ul>
-<li class="chapter" data-level="11.3.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#knn"><i class="fa fa-check"></i><b>11.3.1</b> kNN</a></li>
-<li class="chapter" data-level="11.3.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess"><i class="fa fa-check"></i><b>11.3.2</b> loess</a></li>
-<li class="chapter" data-level="11.3.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#in-class-exercises"><i class="fa fa-check"></i><b>11.3.3</b> In-Class Exercises</a></li>
-<li class="chapter" data-level="11.3.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#hyperparameters-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>11.3.4</b> Hyperparameters and the bias/variance tradeoff</a></li>
-<li class="chapter" data-level="11.3.5" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#extensions-to-knn-and-loess"><i class="fa fa-check"></i><b>11.3.5</b> Extensions to kNN and loess</a></li>
-<li class="chapter" data-level="11.3.6" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#model-assumptions-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>11.3.6</b> Model assumptions and the bias/variance tradeoff</a></li>
+<li class="chapter" data-level="11" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html"><i class="fa fa-check"></i><b>11</b> Estimating parametric model functions</a><ul>
+<li class="chapter" data-level="11.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#writing-the-sample-mean-as-an-optimization-problem"><i class="fa fa-check"></i><b>11.1</b> Writing the sample mean as an optimization problem</a></li>
+<li class="chapter" data-level="11.2" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#evaluating-model-goodness-quantiles"><i class="fa fa-check"></i><b>11.2</b> Evaluating Model Goodness: Quantiles</a></li>
+<li class="chapter" data-level="11.3" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#simple-linear-regression"><i class="fa fa-check"></i><b>11.3</b> Simple Linear Regression</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#model-specification"><i class="fa fa-check"></i><b>11.3.1</b> Model Specification</a></li>
 </ul></li>
-<li class="chapter" data-level="11.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#splines-and-loess-regression"><i class="fa fa-check"></i><b>11.4</b> Splines and Loess Regression</a><ul>
-<li class="chapter" data-level="11.4.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess-1"><i class="fa fa-check"></i><b>11.4.1</b> Loess</a></li>
+<li class="chapter" data-level="11.4" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#linear-models-in-general"><i class="fa fa-check"></i><b>11.4</b> Linear models in general</a></li>
+<li class="chapter" data-level="11.5" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#reference-treatment-parameterization"><i class="fa fa-check"></i><b>11.5</b> reference-treatment parameterization</a><ul>
+<li class="chapter" data-level="11.5.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#more-than-one-category-lab-2"><i class="fa fa-check"></i><b>11.5.1</b> More than one category (Lab 2)</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html"><i class="fa fa-check"></i><b>12</b> Overfitting: The problem with adding too many parameters</a><ul>
-<li class="chapter" data-level="12.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#classification-exercise-do-together"><i class="fa fa-check"></i><b>12.1</b> Classification Exercise: Do Together</a></li>
-<li class="chapter" data-level="12.2" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#training-error-vs.generalization-error"><i class="fa fa-check"></i><b>12.2</b> Training Error vs. Generalization Error</a></li>
-<li class="chapter" data-level="12.3" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#model-complexity"><i class="fa fa-check"></i><b>12.3</b> Model complexity</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#activity"><i class="fa fa-check"></i><b>12.3.1</b> Activity</a></li>
+<li class="chapter" data-level="12" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><i class="fa fa-check"></i><b>12</b> Estimating assumption-free: the world of supervised learning techniques</a><ul>
+<li class="chapter" data-level="12.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#what-machine-learning-is"><i class="fa fa-check"></i><b>12.1</b> What machine learning is</a></li>
+<li class="chapter" data-level="12.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#types-of-supervised-learning"><i class="fa fa-check"></i><b>12.2</b> Types of Supervised Learning</a></li>
+<li class="chapter" data-level="12.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#local-regression"><i class="fa fa-check"></i><b>12.3</b> Local Regression</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#knn"><i class="fa fa-check"></i><b>12.3.1</b> kNN</a></li>
+<li class="chapter" data-level="12.3.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess"><i class="fa fa-check"></i><b>12.3.2</b> loess</a></li>
+<li class="chapter" data-level="12.3.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#in-class-exercises"><i class="fa fa-check"></i><b>12.3.3</b> In-Class Exercises</a></li>
+<li class="chapter" data-level="12.3.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#hyperparameters-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>12.3.4</b> Hyperparameters and the bias/variance tradeoff</a></li>
+<li class="chapter" data-level="12.3.5" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#extensions-to-knn-and-loess"><i class="fa fa-check"></i><b>12.3.5</b> Extensions to kNN and loess</a></li>
+<li class="chapter" data-level="12.3.6" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#model-assumptions-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>12.3.6</b> Model assumptions and the bias/variance tradeoff</a></li>
 </ul></li>
-<li class="chapter" data-level="12.4" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#reducible-error"><i class="fa fa-check"></i><b>12.4</b> Reducible Error</a><ul>
-<li class="chapter" data-level="12.4.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#what-is-it"><i class="fa fa-check"></i><b>12.4.1</b> What is it?</a></li>
-<li class="chapter" data-level="12.4.2" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#example"><i class="fa fa-check"></i><b>12.4.2</b> Example</a></li>
-<li class="chapter" data-level="12.4.3" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#bias-and-variance"><i class="fa fa-check"></i><b>12.4.3</b> Bias and Variance</a></li>
-<li class="chapter" data-level="12.4.4" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#reducing-reducible-error"><i class="fa fa-check"></i><b>12.4.4</b> Reducing reducible error</a></li>
-<li class="chapter" data-level="12.4.5" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#error-decomposition"><i class="fa fa-check"></i><b>12.4.5</b> Error decomposition</a></li>
+<li class="chapter" data-level="12.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#splines-and-loess-regression"><i class="fa fa-check"></i><b>12.4</b> Splines and Loess Regression</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess-1"><i class="fa fa-check"></i><b>12.4.1</b> Loess</a></li>
 </ul></li>
-<li class="chapter" data-level="12.5" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#model-selection"><i class="fa fa-check"></i><b>12.5</b> Model Selection</a><ul>
-<li class="chapter" data-level="12.5.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#exercise-cv"><i class="fa fa-check"></i><b>12.5.1</b> Exercise: CV</a></li>
-<li class="chapter" data-level="12.5.2" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#out-of-sample-error"><i class="fa fa-check"></i><b>12.5.2</b> Out-of-sample Error</a></li>
-<li class="chapter" data-level="12.5.3" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#alternative-measures-of-model-goodness"><i class="fa fa-check"></i><b>12.5.3</b> Alternative measures of model goodness</a></li>
-<li class="chapter" data-level="12.5.4" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#feature-and-model-selection-setup"><i class="fa fa-check"></i><b>12.5.4</b> Feature and model selection: setup</a></li>
-<li class="chapter" data-level="12.5.5" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#model-selection-1"><i class="fa fa-check"></i><b>12.5.5</b> Model selection</a></li>
-<li class="chapter" data-level="12.5.6" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#feature-predictor-selection"><i class="fa fa-check"></i><b>12.5.6</b> Feature (predictor) selection</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html"><i class="fa fa-check"></i><b>13</b> Overfitting: The problem with adding too many parameters</a><ul>
+<li class="chapter" data-level="13.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#classification-exercise-do-together"><i class="fa fa-check"></i><b>13.1</b> Classification Exercise: Do Together</a></li>
+<li class="chapter" data-level="13.2" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#training-error-vs.generalization-error"><i class="fa fa-check"></i><b>13.2</b> Training Error vs. Generalization Error</a></li>
+<li class="chapter" data-level="13.3" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#model-complexity"><i class="fa fa-check"></i><b>13.3</b> Model complexity</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#activity"><i class="fa fa-check"></i><b>13.3.1</b> Activity</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#reducible-error"><i class="fa fa-check"></i><b>13.4</b> Reducible Error</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#what-is-it"><i class="fa fa-check"></i><b>13.4.1</b> What is it?</a></li>
+<li class="chapter" data-level="13.4.2" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#example"><i class="fa fa-check"></i><b>13.4.2</b> Example</a></li>
+<li class="chapter" data-level="13.4.3" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#bias-and-variance"><i class="fa fa-check"></i><b>13.4.3</b> Bias and Variance</a></li>
+<li class="chapter" data-level="13.4.4" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#reducing-reducible-error"><i class="fa fa-check"></i><b>13.4.4</b> Reducing reducible error</a></li>
+<li class="chapter" data-level="13.4.5" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#error-decomposition"><i class="fa fa-check"></i><b>13.4.5</b> Error decomposition</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#model-selection"><i class="fa fa-check"></i><b>13.5</b> Model Selection</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#exercise-cv"><i class="fa fa-check"></i><b>13.5.1</b> Exercise: CV</a></li>
+<li class="chapter" data-level="13.5.2" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#out-of-sample-error"><i class="fa fa-check"></i><b>13.5.2</b> Out-of-sample Error</a></li>
+<li class="chapter" data-level="13.5.3" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#alternative-measures-of-model-goodness"><i class="fa fa-check"></i><b>13.5.3</b> Alternative measures of model goodness</a></li>
+<li class="chapter" data-level="13.5.4" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#feature-and-model-selection-setup"><i class="fa fa-check"></i><b>13.5.4</b> Feature and model selection: setup</a></li>
+<li class="chapter" data-level="13.5.5" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#model-selection-1"><i class="fa fa-check"></i><b>13.5.5</b> Model selection</a></li>
+<li class="chapter" data-level="13.5.6" data-path="overfitting-the-problem-with-adding-too-many-parameters.html"><a href="overfitting-the-problem-with-adding-too-many-parameters.html#feature-predictor-selection"><i class="fa fa-check"></i><b>13.5.6</b> Feature (predictor) selection</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="describing-relationships.html"><a href="describing-relationships.html"><i class="fa fa-check"></i>Describing Relationships</a></li>
-<li class="chapter" data-level="13" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html"><i class="fa fa-check"></i><b>13</b> There’s meaning in parameters</a></li>
-<li class="chapter" data-level="14" data-path="the-meaning-of-interaction.html"><a href="the-meaning-of-interaction.html"><i class="fa fa-check"></i><b>14</b> The meaning of interaction</a></li>
-<li class="chapter" data-level="15" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html"><i class="fa fa-check"></i><b>15</b> Scales and the restricted range problem</a></li>
-<li class="chapter" data-level="16" data-path="improving-estimation-through-distributional-assumptions.html"><a href="improving-estimation-through-distributional-assumptions.html"><i class="fa fa-check"></i><b>16</b> Improving estimation through distributional assumptions</a></li>
-<li class="chapter" data-level="17" data-path="when-we-only-want-interpretation-on-some-predictors.html"><a href="when-we-only-want-interpretation-on-some-predictors.html"><i class="fa fa-check"></i><b>17</b> When we only want interpretation on some predictors</a></li>
+<li class="chapter" data-level="14" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html"><i class="fa fa-check"></i><b>14</b> There’s meaning in parameters</a><ul>
+<li class="chapter" data-level="14.1" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html#the-types-of-parametric-assumptions"><i class="fa fa-check"></i><b>14.1</b> The types of parametric assumptions</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html#when-defining-a-model-function."><i class="fa fa-check"></i><b>14.1.1</b> 1. When defining a <strong>model function</strong>.</a></li>
+<li class="chapter" data-level="14.1.2" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html#when-defining-probability-distributions."><i class="fa fa-check"></i><b>14.1.2</b> 2. When defining <strong>probability distributions</strong>.</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html#the-value-of-making-parametric-assumptions"><i class="fa fa-check"></i><b>14.2</b> The value of making parametric assumptions</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html#value-1-reduced-error"><i class="fa fa-check"></i><b>14.2.1</b> Value #1: Reduced Error</a></li>
+<li class="chapter" data-level="14.2.2" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html#value-2-interpretation"><i class="fa fa-check"></i><b>14.2.2</b> Value #2: Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="theres-meaning-in-parameters.html"><a href="theres-meaning-in-parameters.html#anova"><i class="fa fa-check"></i><b>14.3</b> ANOVA</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="the-meaning-of-interaction.html"><a href="the-meaning-of-interaction.html"><i class="fa fa-check"></i><b>15</b> The meaning of interaction</a></li>
+<li class="chapter" data-level="16" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html"><i class="fa fa-check"></i><b>16</b> Scales and the restricted range problem</a><ul>
+<li class="chapter" data-level="16.1" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html#problems"><i class="fa fa-check"></i><b>16.1</b> Problems</a></li>
+<li class="chapter" data-level="16.2" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html#solutions"><i class="fa fa-check"></i><b>16.2</b> Solutions</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html#solution-1-transformations"><i class="fa fa-check"></i><b>16.2.1</b> Solution 1: Transformations</a></li>
+<li class="chapter" data-level="16.2.2" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html#solution-2-link-functions"><i class="fa fa-check"></i><b>16.2.2</b> Solution 2: Link Functions</a></li>
+<li class="chapter" data-level="16.2.3" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html#solution-3-scientifically-backed-functions"><i class="fa fa-check"></i><b>16.2.3</b> Solution 3: Scientifically-backed functions</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html#glms-in-r"><i class="fa fa-check"></i><b>16.3</b> GLM’s in R</a><ul>
+<li class="chapter" data-level="16.3.1" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html#broomaugment"><i class="fa fa-check"></i><b>16.3.1</b> <code>broom::augment()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html#options-for-logistic-regression"><i class="fa fa-check"></i><b>16.4</b> Options for Logistic Regression</a><ul>
+<li class="chapter" data-level="16.4.1" data-path="scales-and-the-restricted-range-problem.html"><a href="scales-and-the-restricted-range-problem.html#models"><i class="fa fa-check"></i><b>16.4.1</b> Models</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="improving-estimation-through-distributional-assumptions.html"><a href="improving-estimation-through-distributional-assumptions.html"><i class="fa fa-check"></i><b>17</b> Improving estimation through distributional assumptions</a></li>
+<li class="chapter" data-level="18" data-path="when-we-only-want-interpretation-on-some-predictors.html"><a href="when-we-only-want-interpretation-on-some-predictors.html"><i class="fa fa-check"></i><b>18</b> When we only want interpretation on some predictors</a><ul>
+<li class="chapter" data-level="18.1" data-path="when-we-only-want-interpretation-on-some-predictors.html"><a href="when-we-only-want-interpretation-on-some-predictors.html#non-identifiability-in-gams"><i class="fa fa-check"></i><b>18.1</b> Non-identifiability in GAMS</a><ul>
+<li class="chapter" data-level="18.1.1" data-path="when-we-only-want-interpretation-on-some-predictors.html"><a href="when-we-only-want-interpretation-on-some-predictors.html#non-identifiability"><i class="fa fa-check"></i><b>18.1.1</b> Non-identifiability</a></li>
+<li class="chapter" data-level="18.1.2" data-path="when-we-only-want-interpretation-on-some-predictors.html"><a href="when-we-only-want-interpretation-on-some-predictors.html#question-1b"><i class="fa fa-check"></i><b>18.1.2</b> Question 1b</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="special-cases.html"><a href="special-cases.html"><i class="fa fa-check"></i>Special cases</a></li>
-<li class="chapter" data-level="18" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html"><i class="fa fa-check"></i><b>18</b> Regression when data are censored: survival analysis</a></li>
-<li class="chapter" data-level="19" data-path="regression-in-the-presence-of-outliers-robust-regression.html"><a href="regression-in-the-presence-of-outliers-robust-regression.html"><i class="fa fa-check"></i><b>19</b> Regression in the presence of outliers: robust regression</a></li>
-<li class="chapter" data-level="20" data-path="regression-in-the-presence-of-extremes-extreme-value-regression.html"><a href="regression-in-the-presence-of-extremes-extreme-value-regression.html"><i class="fa fa-check"></i><b>20</b> Regression in the presence of extremes: extreme value regression</a></li>
-<li class="chapter" data-level="21" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html"><i class="fa fa-check"></i><b>21</b> Regression when data are ordinal</a></li>
-<li class="chapter" data-level="22" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html"><i class="fa fa-check"></i><b>22</b> Regression when data are missing: multiple imputation</a></li>
-<li class="chapter" data-level="23" data-path="regression-under-many-groups-mixed-effects-models.html"><a href="regression-under-many-groups-mixed-effects-models.html"><i class="fa fa-check"></i><b>23</b> Regression under many groups: mixed effects models</a></li>
-<li class="chapter" data-level="24" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html"><i class="fa fa-check"></i><b>24</b> Regression on an entire distribution: Probabilistic Forecasting</a><ul>
-<li class="chapter" data-level="24.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasting-what-it-is"><i class="fa fa-check"></i><b>24.1</b> Probabilistic Forecasting: What it is</a></li>
-<li class="chapter" data-level="24.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#review-univariate-distribution-estimates"><i class="fa fa-check"></i><b>24.2</b> Review: Univariate distribution estimates</a><ul>
-<li class="chapter" data-level="24.2.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#continuous-response"><i class="fa fa-check"></i><b>24.2.1</b> Continuous response</a></li>
-<li class="chapter" data-level="24.2.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discrete-response"><i class="fa fa-check"></i><b>24.2.2</b> Discrete Response</a></li>
+<li class="chapter" data-level="19" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html"><i class="fa fa-check"></i><b>19</b> Regression when data are censored: survival analysis</a></li>
+<li class="chapter" data-level="20" data-path="regression-in-the-presence-of-outliers-robust-regression.html"><a href="regression-in-the-presence-of-outliers-robust-regression.html"><i class="fa fa-check"></i><b>20</b> Regression in the presence of outliers: robust regression</a><ul>
+<li class="chapter" data-level="20.1" data-path="regression-in-the-presence-of-outliers-robust-regression.html"><a href="regression-in-the-presence-of-outliers-robust-regression.html#robust-regression-in-r"><i class="fa fa-check"></i><b>20.1</b> Robust Regression in R</a><ul>
+<li class="chapter" data-level="20.1.1" data-path="regression-in-the-presence-of-outliers-robust-regression.html"><a href="regression-in-the-presence-of-outliers-robust-regression.html#heavy-tailed-regression"><i class="fa fa-check"></i><b>20.1.1</b> Heavy Tailed Regression</a></li>
 </ul></li>
-<li class="chapter" data-level="24.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasts-subset-based-learning-methods"><i class="fa fa-check"></i><b>24.3</b> Probabilistic Forecasts: subset-based learning methods</a><ul>
-<li class="chapter" data-level="24.3.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#the-techniques"><i class="fa fa-check"></i><b>24.3.1</b> The techniques</a></li>
-<li class="chapter" data-level="24.3.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#exercise-1"><i class="fa fa-check"></i><b>24.3.2</b> Exercise</a></li>
-<li class="chapter" data-level="24.3.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>24.3.3</b> Bias-variance tradeoff</a></li>
-<li class="chapter" data-level="24.3.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#evaluating-model-goodness"><i class="fa fa-check"></i><b>24.3.4</b> Evaluating Model Goodness</a></li>
 </ul></li>
-<li class="chapter" data-level="24.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discussion-points"><i class="fa fa-check"></i><b>24.4</b> Discussion Points</a></li>
-<li class="chapter" data-level="24.5" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#when-are-they-not-useful"><i class="fa fa-check"></i><b>24.5</b> When are they not useful?</a></li>
+<li class="chapter" data-level="21" data-path="regression-in-the-presence-of-extremes-extreme-value-regression.html"><a href="regression-in-the-presence-of-extremes-extreme-value-regression.html"><i class="fa fa-check"></i><b>21</b> Regression in the presence of extremes: extreme value regression</a></li>
+<li class="chapter" data-level="22" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html"><i class="fa fa-check"></i><b>22</b> Regression when data are ordinal</a></li>
+<li class="chapter" data-level="23" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html"><i class="fa fa-check"></i><b>23</b> Regression when data are missing: multiple imputation</a><ul>
+<li class="chapter" data-level="23.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#mean-imputation"><i class="fa fa-check"></i><b>23.1</b> Mean Imputation</a></li>
+<li class="chapter" data-level="23.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#multiple-imputation"><i class="fa fa-check"></i><b>23.2</b> Multiple Imputation</a><ul>
+<li class="chapter" data-level="23.2.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#patterns"><i class="fa fa-check"></i><b>23.2.1</b> Patterns</a></li>
+<li class="chapter" data-level="23.2.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#multiple-imputation-1"><i class="fa fa-check"></i><b>23.2.2</b> Multiple Imputation</a></li>
+<li class="chapter" data-level="23.2.3" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#pooling"><i class="fa fa-check"></i><b>23.2.3</b> Pooling</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="24" data-path="regression-under-many-groups-mixed-effects-models.html"><a href="regression-under-many-groups-mixed-effects-models.html"><i class="fa fa-check"></i><b>24</b> Regression under many groups: mixed effects models</a><ul>
+<li class="chapter" data-level="24.1" data-path="regression-under-many-groups-mixed-effects-models.html"><a href="regression-under-many-groups-mixed-effects-models.html#motivation-for-lme"><i class="fa fa-check"></i><b>24.1</b> Motivation for LME</a><ul>
+<li class="chapter" data-level="24.1.1" data-path="regression-under-many-groups-mixed-effects-models.html"><a href="regression-under-many-groups-mixed-effects-models.html#definition"><i class="fa fa-check"></i><b>24.1.1</b> Definition</a></li>
+<li class="chapter" data-level="24.1.2" data-path="regression-under-many-groups-mixed-effects-models.html"><a href="regression-under-many-groups-mixed-effects-models.html#r-tools-for-fitting"><i class="fa fa-check"></i><b>24.1.2</b> R Tools for Fitting</a></li>
+</ul></li>
+<li class="chapter" data-level="24.2" data-path="regression-under-many-groups-mixed-effects-models.html"><a href="regression-under-many-groups-mixed-effects-models.html#mixed-effects-models-in-r-tutorial"><i class="fa fa-check"></i><b>24.2</b> Mixed Effects Models in R: tutorial</a></li>
+</ul></li>
+<li class="chapter" data-level="25" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html"><i class="fa fa-check"></i><b>25</b> Regression on an entire distribution: Probabilistic Forecasting</a><ul>
+<li class="chapter" data-level="25.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasting-what-it-is"><i class="fa fa-check"></i><b>25.1</b> Probabilistic Forecasting: What it is</a></li>
+<li class="chapter" data-level="25.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#review-univariate-distribution-estimates"><i class="fa fa-check"></i><b>25.2</b> Review: Univariate distribution estimates</a><ul>
+<li class="chapter" data-level="25.2.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#continuous-response"><i class="fa fa-check"></i><b>25.2.1</b> Continuous response</a></li>
+<li class="chapter" data-level="25.2.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discrete-response"><i class="fa fa-check"></i><b>25.2.2</b> Discrete Response</a></li>
+</ul></li>
+<li class="chapter" data-level="25.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasts-subset-based-learning-methods"><i class="fa fa-check"></i><b>25.3</b> Probabilistic Forecasts: subset-based learning methods</a><ul>
+<li class="chapter" data-level="25.3.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#the-techniques"><i class="fa fa-check"></i><b>25.3.1</b> The techniques</a></li>
+<li class="chapter" data-level="25.3.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#exercise-1"><i class="fa fa-check"></i><b>25.3.2</b> Exercise</a></li>
+<li class="chapter" data-level="25.3.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>25.3.3</b> Bias-variance tradeoff</a></li>
+<li class="chapter" data-level="25.3.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#evaluating-model-goodness"><i class="fa fa-check"></i><b>25.3.4</b> Evaluating Model Goodness</a></li>
+</ul></li>
+<li class="chapter" data-level="25.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discussion-points"><i class="fa fa-check"></i><b>25.4</b> Discussion Points</a></li>
+<li class="chapter" data-level="25.5" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#when-are-they-not-useful"><i class="fa fa-check"></i><b>25.5</b> When are they not useful?</a></li>
+</ul></li>
+<li class="chapter" data-level="26" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html"><i class="fa fa-check"></i><b>26</b> Regression when order matters: time series and spatial analysis</a><ul>
+<li class="chapter" data-level="26.1" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#timeseries-in-base-r"><i class="fa fa-check"></i><b>26.1</b> Timeseries in (base) R</a></li>
+<li class="chapter" data-level="26.2" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#spatial-example"><i class="fa fa-check"></i><b>26.2</b> Spatial Example</a></li>
+<li class="chapter" data-level="26.3" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#a-model-for-river-rock-size"><i class="fa fa-check"></i><b>26.3</b> A Model for River Rock Size</a><ul>
+<li class="chapter" data-level="26.3.1" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#average-rock-size"><i class="fa fa-check"></i><b>26.3.1</b> 1. Average rock size:</a></li>
+<li class="chapter" data-level="26.3.2" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#mean-rock-size"><i class="fa fa-check"></i><b>26.3.2</b> 2. Mean rock size:</a></li>
+<li class="chapter" data-level="26.3.3" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#downstream-fining-curve"><i class="fa fa-check"></i><b>26.3.3</b> 3. Downstream fining curve:</a></li>
+</ul></li>
+<li class="chapter" data-level="26.4" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#statistical-objectives"><i class="fa fa-check"></i><b>26.4</b> Statistical Objectives</a><ul>
+<li class="chapter" data-level="26.4.1" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#preliminaries-variance-and-correlation"><i class="fa fa-check"></i><b>26.4.1</b> Preliminaries: Variance and Correlation</a></li>
+</ul></li>
+<li class="chapter" data-level="26.5" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#three-concepts"><i class="fa fa-check"></i><b>26.5</b> Three Concepts</a><ul>
+<li class="chapter" data-level="26.5.1" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#error-variance-sigma_e2leftxright"><i class="fa fa-check"></i><b>26.5.1</b> Error Variance <span class="math inline">\(\sigma_{E}^{2}\left(x\right)\)</span></a></li>
+<li class="chapter" data-level="26.5.2" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#mean-variance-sigma_m2"><i class="fa fa-check"></i><b>26.5.2</b> Mean Variance <span class="math inline">\(\sigma_{M}^{2}\)</span></a></li>
+<li class="chapter" data-level="26.5.3" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#mean-correlation-rholeftdright"><i class="fa fa-check"></i><b>26.5.3</b> Mean Correlation <span class="math inline">\(\rho\left(d\right)\)</span></a></li>
+</ul></li>
+<li class="chapter" data-level="26.6" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#estimation"><i class="fa fa-check"></i><b>26.6</b> Estimation</a><ul>
+<li class="chapter" data-level="26.6.1" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#constant-error-variance"><i class="fa fa-check"></i><b>26.6.1</b> Constant Error Variance</a></li>
+<li class="chapter" data-level="26.6.2" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#non-constant-error-variance"><i class="fa fa-check"></i><b>26.6.2</b> Non-Constant Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="26.7" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#statistical-objective-1-downstream-fining-curve"><i class="fa fa-check"></i><b>26.7</b> Statistical Objective 1: Downstream Fining Curve</a><ul>
+<li class="chapter" data-level="26.7.1" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#regression-form"><i class="fa fa-check"></i><b>26.7.1</b> Regression Form</a></li>
+</ul></li>
+<li class="chapter" data-level="26.8" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#statistical-objective-2-river-profile"><i class="fa fa-check"></i><b>26.8</b> Statistical Objective 2: River Profile</a><ul>
+<li class="chapter" data-level="26.8.1" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#simple-kriging"><i class="fa fa-check"></i><b>26.8.1</b> Simple Kriging</a></li>
+<li class="chapter" data-level="26.8.2" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#universal-kriging"><i class="fa fa-check"></i><b>26.8.2</b> Universal Kriging</a></li>
+<li class="chapter" data-level="26.8.3" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#kriging-under-non-constant-error-variance"><i class="fa fa-check"></i><b>26.8.3</b> Kriging under Non-Constant Error Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="26.9" data-path="regression-when-order-matters-time-series-and-spatial-analysis.html"><a href="regression-when-order-matters-time-series-and-spatial-analysis.html#confidence-intervals-of-the-river-profile"><i class="fa fa-check"></i><b>26.9</b> Confidence Intervals of the River Profile</a></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/vincenzocoia/Interpreting-Regression" target="blank">Published with bookdown</a></li>
@@ -245,10 +330,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
             <section class="normal" id="section-">
 <div id="estimating-parametric-model-functions" class="section level1">
-<h1><span class="header-section-number">Chapter 10</span> Estimating parametric model functions</h1>
+<h1><span class="header-section-number">Chapter 11</span> Estimating parametric model functions</h1>
 <p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
 <div id="writing-the-sample-mean-as-an-optimization-problem" class="section level2">
-<h2><span class="header-section-number">10.1</span> Writing the sample mean as an optimization problem</h2>
+<h2><span class="header-section-number">11.1</span> Writing the sample mean as an optimization problem</h2>
 <p>(DSCI 561 lab2, 2018-2019)</p>
 <p>It’s important to know that the sample mean can also be calculated by finding the value that minimizes the sum of squared errors with respect to that value. We’ll explore that here.</p>
 <p>Store some numbers in the vector y. Calculate the sample mean of the data, stored in mu_y. This is not worth any marks, but having it as its own question jibes better with the autograder.</p>
@@ -262,7 +347,7 @@ curve(sse, mu_y - 2*sd(y), mu_y + 2*sd(y))</code></pre>
 <p>You should recognize that the sample mean minimizes this function! You’ll be seeing the sum of squared errors a lot through the program (mean squared error and R^2 are based on it). This is because the mean is a very popular quantity to model and use as a prediction. If you’re not convinced, play with different numbers to see for yourself.</p>
 </div>
 <div id="evaluating-model-goodness-quantiles" class="section level2">
-<h2><span class="header-section-number">10.2</span> Evaluating Model Goodness: Quantiles</h2>
+<h2><span class="header-section-number">11.2</span> Evaluating Model Goodness: Quantiles</h2>
 <p>The question here is: if we have two or more models that predicts the <span class="math inline">\(\tau\)</span>-quantile, which model is best? We’ll need some way to score different models to do things such as:</p>
 <ul>
 <li>Choose which predictors to include in a model;</li>
@@ -292,9 +377,150 @@ cowplot<span class="op">::</span><span class="kw">plot_grid</span>(
 <pre><code>## Warning: Removed 4 rows containing missing values (geom_path).
 
 ## Warning: Removed 4 rows containing missing values (geom_path).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-10-1.png" width="768" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-15-1.png" width="768" /></p>
 <p>For quantile regression <strong>estimation</strong>, we minimize the sum of scores instead of the sum of squared residuals, as in the usual (mean) linear regression.</p>
+</div>
+<div id="simple-linear-regression" class="section level2">
+<h2><span class="header-section-number">11.3</span> Simple Linear Regression</h2>
+<p>(From lab2, DSCI 561, 2018-2019)</p>
+<p>When a predictor is categorical, it’s easy to estimate the mean given a certain predictor value (i.e., given the category): just take the sample average of the data in that group.</p>
+<p>Now let’s consider a numeric predictor. Using the iris dataset again with sepal width as a response, use sepal length as the predictor. Here is a scatterplot of the data:</p>
+<pre><code>(p_numeric_x &lt;- ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
+    geom_point(alpha=0.25) +
+    theme_bw() +
+    labs(x = &quot;Sepal Length&quot;,
+         y = &quot;Sepal Width&quot;))</code></pre>
+<p>How can we estimate the mean sepal width (<span class="math inline">\(Y\)</span>) for any given sepal length (<span class="math inline">\(X\)</span>)? Say we want the mean of <span class="math inline">\(Y\)</span> at <span class="math inline">\(X=x\)</span> (for some pre-decided <span class="math inline">\(x\)</span>). Last week in DSCI 571 Lab 2 Exercise 5, you saw one way of estimating this: calculate the mean sepal width (<span class="math inline">\(Y\)</span>) using only the <span class="math inline">\(k\)</span> plants having sepal lengths (<span class="math inline">\(X\)</span> values) closest to <span class="math inline">\(x\)</span> (the sepal length you’re interested in).</p>
+<p>Methods like this are very powerful estimation methods, but there’s merit in assuming the mean is linear in <span class="math inline">\(x\)</span>: <span class="math display">\[E(Y \mid X=x) = \beta_0 + \beta_1 x,\]</span> for some numbers <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> (to be estimated).</p>
+<p>How do we estimate <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span>? In other words, how do we pick an acceptable line? Since we want the line to represent the mean, choose the line that minimizes the sum of squared errors – remember, this is another way of writing the sample average in the univariate case, and now we can generalize the univariate mean to the regression setting in this way.</p>
+<p>Is it possible to find a line that has a smaller sum of squared errors than what you found in Exercise 3.3? Why or why not? Is it possible to find a line that has a smaller sum of absolute errors (i.e., the absolute value of the errors)? Elaborate.</p>
+<div id="model-specification" class="section level3">
+<h3><span class="header-section-number">11.3.1</span> Model Specification</h3>
+<p>You might see linear regression models specified in different ways.</p>
+<p>In this exercise, we’re still working with sepal length as the only predictor of sepal width.</p>
+<p>Denote <span class="math inline">\(\beta_0\)</span> as the true intercept of the regression line, and <span class="math inline">\(\beta_1\)</span> as the true slope. As we’ve said, we’re assuming that the mean of <span class="math inline">\(Y\)</span> is linear in the predictor: <span class="math display">\[E(Y \mid X=x) = \beta_0 + \beta_1 x.\]</span> There are other ways to write this model; i.e., different ways of saying the same thing (not to be confused with different parameterizations). We’ll explore this here.</p>
+<p>4.1 rubric={reasoning:3}</p>
+<p>One way to write this model is to emphasize that this model holds for every single observation, instead of for a generic <span class="math inline">\(Y\)</span>. Denote <span class="math inline">\(Y_i\)</span> as the random variable corresponding to the <span class="math inline">\(i\)</span>’th observation of the response, and <span class="math inline">\(x_i\)</span> the corresponding observed value of the predictor. Let <span class="math inline">\(n\)</span> be the sample size.</p>
+<p>Your task: specify what goes in the <span class="math inline">\(?\)</span> in the following equation:</p>
+<p><span class="math display">\[E(Y_i | X_i = x_i) = \text{ ?}, \text{ for each } i=1,\ldots,n.\]</span> YOUR ANSWER HERE</p>
+<p>4.2 rubric={reasoning:3}</p>
+<p>We could also specify how <span class="math inline">\(Y_i\)</span> itself was supposedly calculated. Your task: specify what goes in the <span class="math inline">\(?\)</span> in the following equation.</p>
+<p><span class="math display">\[Y_i = \text{ ?}, \text{ for each } i=1,\ldots,n.\]</span> Hint: you’ll have to introduce a variable. Be sure to specify any assumptions about this variable so that your equation is equivalent to the one in Exercise 4.1 – this means not putting more assumptions than are necessary, too!</p>
+<p>YOUR ANSWER HERE</p>
+<p>4.3 rubric={reasoning:3}</p>
+<p>Instead of having to say “for each <span class="math inline">\(i=1,\ldots,n\)</span>”, we could just write out each of the <span class="math inline">\(n\)</span> equations. It’s actually convenient to do so, but expressed as one equation by using matrix algebra.</p>
+<p>We’ll use bold-face to denote vectors. Denote <span class="math inline">\(\boldsymbol{Y}\)</span> as the vector containing <span class="math inline">\(Y_1,\ldots,Y_n\)</span> (in that order), and similarly for <span class="math inline">\(\boldsymbol{X}\)</span> and <span class="math inline">\(\boldsymbol{x}\)</span>. Denote <span class="math inline">\(\boldsymbol{\beta}\)</span> as the vector containing <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> (in that order). Then, the same equation becomes: <span class="math display">\[E(\boldsymbol{Y} \mid \boldsymbol{X} = \boldsymbol{x}) = \text{? }\boldsymbol{\beta}, \]</span> where “?” is an <span class="math inline">\(n \times 2\)</span> matrix.</p>
+<p>Your task: specify the matrix indicated by “?” in the above equation. It’s probably most convenient to describe what each column contains. Each column is worth approx. 50% of your grade for this question.</p>
+<p>YOUR ANSWER HERE</p>
+</div>
+</div>
+<div id="linear-models-in-general" class="section level2">
+<h2><span class="header-section-number">11.4</span> Linear models in general</h2>
+<p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<p>(DSCI 561 lab 2, 2018-2019)</p>
+<p>In general, linear models estimate the mean using <span class="math inline">\(p\)</span> predictors <span class="math inline">\(X_1, \ldots, X_p\)</span> (this time, the subscripts denote “predictor number” instead of “observation number”, and the vectors <span class="math inline">\(\boldsymbol{X}\)</span> and <span class="math inline">\(\boldsymbol{x}\)</span> contain the predictors, not the observations), according to the following generic equation: <span class="math display">\[E(Y \mid \boldsymbol{X}=\boldsymbol{x}) = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p.\]</span> We saw that:</p>
+<p>a <span class="math inline">\(K\)</span>-level categorical predictor enters the equation through <span class="math inline">\(K-1\)</span> binary predictors (relative to a “baseline” category), and a numeric predictor enters the equation as itself. We will now consider using both sepal length (numeric) and species (categorical) as predictors of sepal width.</p>
+<p>6.1</p>
+<p>Fit a linear regression line to sepal length (<span class="math inline">\(X\)</span>) vs. sepal width (<span class="math inline">\(Y\)</span>) for each species independently. Plot the results by facetting by species.</p>
+<p>Note that all we’re looking for here is the plot. You can bypass the lm() calls by adding the layer geom_smooth(method=“lm”, se=FALSE), which runs the linear regression separately in each panel.</p>
+<p>Although these look like three separate models, it’s still just one model: one specification as to how to estimate the mean. We can write a single equation that describes this specification, using the following variables: <span class="math display">\[X_1 = \text{sepal length}\]</span><span class="math display">\[X_2 = 1 \text{ if versicolor, } 0, \text{ otherwise}\]</span><span class="math display">\[X_3 = 1 \text{ if virginica, } 0, \text{ otherwise}\]</span><span class="math display">\[X_4 = X_2 X_1\]</span><span class="math display">\[X_5 = X_3 X_1\]</span> The model becomes: <span class="math display">\[E(Y \mid \boldsymbol{X} = \boldsymbol{x}) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_4 + \beta_5 X_5 \]</span></p>
+<p>Your task: specify the slope and intercept of the regression lines for each species, in terms of the <span class="math inline">\(X\)</span>’s and <span class="math inline">\(\beta\)</span>’s above. We’ve given you the answer for Setosa already. Answer by copying and pasting the below table into the answer cell, and filling in the missing table cells.</p>
+<p>Hint: evaluate whatever <span class="math inline">\(X\)</span>’s you can.</p>
+<p>Species Intercept Slope Setosa <span class="math inline">\(\beta_0\)</span> <span class="math inline">\(\beta_1\)</span> Versicolor<br />
+Virginica<br />
+YOUR ANSWER HERE</p>
+<p>6.3</p>
+<p><span class="math inline">\(X_4\)</span> and <span class="math inline">\(X_5\)</span> are called interaction terms, and are not present by default in the lm() function. In their absence, what are the slopes and intercepts of the regression line for each species? Answer like you did above, in terms of the <span class="math inline">\(X\)</span>’s and <span class="math inline">\(\beta\)</span>’s, by filling in the below table. We’ve given you the answer for Setosa already.</p>
+<p>Species Intercept Slope Setosa <span class="math inline">\(\beta_0\)</span> <span class="math inline">\(\beta_1\)</span> Versicolor<br />
+Virginica<br />
+YOUR ANSWER HERE</p>
+<p>6.4</p>
+<p>Make a similar plot as in Exercise 6.1, but for the model without interaction.</p>
+</div>
+<div id="reference-treatment-parameterization" class="section level2">
+<h2><span class="header-section-number">11.5</span> reference-treatment parameterization</h2>
+<p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<p>(From DSCI 561 lab1, 2018-2019)</p>
+<p>When data fall into groups, you already know how to estimate the population mean for each group: calculate the sample mean of the data in each group. For example, the mean Sepal.Width of the three species in the iris dataset are:</p>
+<pre><code>iris %&gt;% 
+    group_by(Species) %&gt;% 
+    summarize(mean_sepal_width = mean(Sepal.Width))</code></pre>
+<p>In this exercise, you’ll start exploring a “trick” that linear regression models use so that we can obtain the same mean estimates by evaluating a line. Although it might seem silly to do, especially when we can just do a group_by() and summarize(), using this trick will be very important when we start incorporating more variables in our model, as we’ll soon see in this course.</p>
+<p>Next, using the “trick” that linear regression models use, you’ll write these estimates as a line, so that we can obtain the mean estimates by evaluating the line. Here’s the trick: convert the categories to a numeric variable, where one category takes the value 0, and the other takes the value 1.</p>
+<p>Let’s convert “first” to 0, and “other” to 1:</p>
+<pre><code>x_map &lt;- c(first=0, other=1)
+preg &lt;- mutate(preg, num_x = x_map[birth_order])
+head(preg)</code></pre>
+<p>What’s the equation of the line that goes through the mean estimates of both groups? Specify this by storing the slope and (y-) intercept of the line in the variables preg_slope and preg_int, respectively. This line is called the regression line.</p>
+<p>In Inf-1 lab3, you made a plot of the data, including the two means with a confidence interval. Here’s the code (using asymptotics to form the CI), zooming in on the “center” of the data (uncomment preg_plot to view the plot):</p>
+<pre><code>preg_plot &lt;- preg %&gt;%
+    group_by(birth_order, num_x) %&gt;%
+    summarize(mean = mean(prglngth),
+              n    = length(prglngth),
+              se   = sd(prglngth) / sqrt(n)) %&gt;%
+    ggplot(aes(x = num_x)) +
+    geom_violin(data    = preg,
+                mapping = aes(y = prglngth, group = birth_order), 
+                adjust  = 5) +
+    geom_point(aes(y = mean), colour = &quot;red&quot;) +
+    geom_errorbar(aes(ymin = mean + qnorm(alpha/2)*se,
+                      ymax = mean - qnorm(alpha/2)*se),
+                  colour = &quot;red&quot;,
+                  width  = 0.2) +
+    theme_bw() +
+    labs(x = &quot;Birth Order&quot;, 
+         y = &quot;Pregnancy Length (weeks)&quot;) +
+    ylim(c(30, 50)) +
+    scale_x_continuous(breaks = enframe(x_map)$value, 
+                       labels = enframe(x_map)$name)</code></pre>
+<p>Add the line to this plot.</p>
+<p>Can we always draw a straight line through the means of two groups? Why or why not?</p>
+<p>In this lab, we won’t be exploring the trick that linear regression models use when we have multiple groups. But, you’ll explore what we can’t do.</p>
+<p>For each species in the iris (three-group) data set, the code below:</p>
+<p>calculates the mean sepal width in the column mean_sepwid, along with the standard error of the mean in the se column, placed in the data frame iris_est. plots the raw data with a violin+jitter plot, stored in the variable iris_plot (uncomment it to view it).</p>
+<pre><code>(iris_est &lt;- iris %&gt;% 
+    group_by(Species) %&gt;% 
+    summarize(
+        mean_sepwid = mean(Sepal.Width),
+        se          = sd(Sepal.Width)/sqrt(length(Sepal.Width))
+    ))
+iris_plot &lt;- iris %&gt;% 
+    mutate(Species = fct_reorder(Species, Sepal.Width)) %&gt;% 
+    ggplot(aes(Species)) +
+    geom_violin(aes(y = Sepal.Width)) +
+    geom_jitter(aes(y = Sepal.Width), 
+                alpha=0.2, width=0.1, size=0.5) +
+    theme_bw() +
+    labs(x = &quot;Species&quot;, 
+         y = &quot;Sepal Width&quot;)
+iris_plot</code></pre>
+<p>Your task is to add the group means and confidence intervals to the plot. You can do this by adding layers to iris_plot. You can use asymptotic theory to calculate the confidence intervals, calculated by:</p>
+<p><span class="math display">\[\bar{x} \pm z_{\alpha/2} \text{SE}.\]</span></p>
+<p>Can we fit a single straight line through the mean sepal widths across the three species groups? Why or why not?</p>
+<div id="more-than-one-category-lab-2" class="section level3">
+<h3><span class="header-section-number">11.5.1</span> More than one category (Lab 2)</h3>
+<p>In class, we saw two “ways to store information” about groups means – in technical terms, two parameterizations.</p>
+<p>The first and most “direct” parameterization is cell-wise parameterization, a fancy way of saying that we’re just going to consider the raw means themselves: one mean for each group. For the three species in the iris dataset, here are estimates of these parameters:</p>
+<pre><code>iris %&gt;% 
+    group_by(Species) %&gt;% 
+    summarize(mean_sepal_width = mean(Sepal.Width))</code></pre>
+<p>The mean of the response (conditional on species) can be written as a linear model, if we call the above means <span class="math inline">\(\mu_0,\mu_1,\mu_2\)</span> (respectively), and define the following three predictors:</p>
+<p><span class="math display">\[X_0 = 1 \text{ if setosa, } 0 \text{ otherwise},\]</span> <span class="math display">\[X_1 = 1 \text{ if versicolor, } 0 \text{ otherwise},\]</span> <span class="math display">\[X_2 = 1 \text{ if virginica, } 0 \text{ otherwise}.\]</span> Then, the linear model is</p>
+<p><span class="math display">\[E(\text{Sepal Width} \mid \text{species}) = \mu_0 X_0 + \mu_1 X_1 + \mu_2 X_2.\]</span> In this exercise, you’ll be exploring another parameterization that’s useful in linear regression: the reference-treatment parameterization.</p>
+<p>1.1</p>
+<p>To keep things different from lm(), let’s consider the virginica species as our “reference”. The reference-treatment parameterization is then: <span class="math display">\[\theta=\mu_{\text{virginica}},\]</span> <span class="math display">\[\tau_1=\mu_{\text{versicolor}}-\theta,\]</span> <span class="math display">\[\tau_2=\mu_{\text{setosa}}-\theta,\]</span> where <span class="math inline">\(\mu\)</span> denotes the mean of that species’ sepal width.</p>
+<p>Your task: Calculate estimates of these parameters, and store the estimates in the (respective) variables theta, tau1, and tau2.</p>
+<p>Provide an interpretation for <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\tau_1\)</span>, and <span class="math inline">\(\tau_2\)</span>. One brief sentence for each is enough.</p>
+<p>Let’s now write this information as a single (linear) equation containing:</p>
+<p>two predictors <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>, and the parameters <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\tau_1\)</span>, and <span class="math inline">\(\tau_2\)</span>. Let’s focus on the predictors first. Define: <span class="math display">\[X_1 = 1 \text{ if versicolor, } 0 \text{ otherwise},\]</span> <span class="math display">\[X_2 = 1 \text{ if setosa, } 0 \text{ otherwise}.\]</span> We’ve deliberately not defined a predictor for virginica, the reference group.</p>
+<p>Your task: What are the values of <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span> for each species? Store the values in three length-2 vectors called x_setosa, x_versicolor, and x_virginica.</p>
+<p>Use the predictors <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>, along with the parameters <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\tau_1\)</span>, and <span class="math inline">\(\tau_2\)</span>, to write a linear equation that returns the species mean <span class="math inline">\(\mu\)</span>. The equation should look like: <span class="math display">\[E(Y \mid \text{species}) = (1) + (2)\times(3) + (4)\times(5)\]</span> To use the autograder for this question, specify the order that <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, <span class="math inline">\(\theta\)</span>, <span class="math inline">\(\tau_1\)</span>, and <span class="math inline">\(\tau_2\)</span> are to appear in the equation, respectively, in a vector containing the numbers 1 through 5, named eq_order.</p>
+<p>For example, specifying eq_order &lt;- c(1,2,3,4,5) corresponds to the equation <span class="math inline">\(E(Y \mid \text{species}) = X_1 + X_2 \theta + \tau_1 \tau_2\)</span> (which is not the correct equation)</p>
+<p>(Based on your answers to 1.4 and 1.5, can you see why the parameter that goes in place of (1) is also called the “intercept”?)</p>
+<p>Now try using lm(): use the iris data with the same predictor and response (don’t include -1 in the formula, so that you end up with a reference-treatment parameterization).</p>
+<p>Your task: What’s the reference species? Put the name of the species as a character in the variable iris_lm_ref_species.</p>
 
+</div>
 </div>
 </div>
             </section>
@@ -302,7 +528,7 @@ cowplot<span class="op">::</span><span class="kw">plot_grid</span>(
           </div>
         </div>
       </div>
-<a href="the-signal-model-functions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="the-model-fitting-paradigm-in-r.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

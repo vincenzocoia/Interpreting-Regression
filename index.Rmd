@@ -23,7 +23,7 @@ Stage of writing:
 
 1. ~~Gather existing and potentially relevant pieces of writing~~
 2. ~~Create a new chapter structure~~
-3. Parse existing writing into new chapters
+3. ~~Parse existing writing into new chapters~~
 4. Write draft preambles for each chapter and part
 
 ## Purpose of the book
@@ -71,12 +71,17 @@ Why not focus on optimizing predictions? This is the objective of _supervised le
 ## Examples
 
 ```{r}
+library(mice)
+library(broom)
 library(tidyverse)
 Wage <- ISLR::Wage
 NCI60 <- ISLR::NCI60
 baseball <- Lahman::Teams %>% tbl_df %>% 
   select(runs=R, hits=H)
 cow <- suppressMessages(read_csv("data/milk_fat.csv"))
+esoph <- as_tibble(esoph) %>% 
+    mutate(agegp = as.character(agegp))
+titanic <- na.omit(titanic::titanic_train)
 ```
 
 

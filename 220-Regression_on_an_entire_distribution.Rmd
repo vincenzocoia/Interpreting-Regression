@@ -253,7 +253,6 @@ For (1) and (2) below, you're choosing between two candidates to hire. Discuss t
 1. Both are predicted to have the same productivity score of 75, but have the following probabilistic forecasts.
 
 ```{r, echo=FALSE}
-suppressPackageStartupMessages(library(viridis))
 mu <- 75
 ggplot(data.frame(x=c(-10,10)+mu), aes(x)) +
     stat_function(fun=function(x) dnorm(x, mean=mu), 
@@ -261,7 +260,6 @@ ggplot(data.frame(x=c(-10,10)+mu), aes(x)) +
     stat_function(fun=function(x) dnorm(x, mean=mu, sd=3),
                   mapping=aes(colour="B")) +
     theme_bw() +
-    scale_colour_viridis("", discrete=TRUE) +
     xlab("Productivity") +
     ylab("Density")
 ```
@@ -279,7 +277,6 @@ ggplot(data.frame(x=c(50,90)), aes(x)) +
     stat_function(fun=function(x) dnorm(x, mean=80, sd=3), n=500,
                   mapping=aes(colour="B")) +
     theme_bw() +
-    scale_colour_viridis("", discrete=TRUE) +
     xlab("Productivity") +
     ylab("Density")
 ```

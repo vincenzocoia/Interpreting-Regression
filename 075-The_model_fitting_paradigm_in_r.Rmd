@@ -4,10 +4,6 @@
 
 Scratch notes from our in-class activities in Lecture 3. This covers the model-fitting paradigm in R.
 
-```{r}
-library(tidyverse)
-```
-
 Use the `iris` data to demonstrate. Split into training and test data:
 
 ```{r}
@@ -43,7 +39,6 @@ mean((yhat - iris_test$Sepal.Width)^2)
 ## `broom` package
 
 ```{r}
-library(broom)
 #tidy(fit)
 #glance(fit)
 augment(fit, newdata = iris_test)

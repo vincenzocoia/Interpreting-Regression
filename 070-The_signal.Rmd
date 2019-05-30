@@ -3,12 +3,6 @@
 
 ## Linear Quantile Regression
 
-```{r, warning=FALSE}
-suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(Lahman))
-```
-
-
 
 The idea here is to model
 $$Q(\tau)=\beta_0(\tau) + \beta_1(\tau) X_1 + \cdots + \beta_p(\tau) X_p,$$
@@ -28,7 +22,7 @@ ggplot(baseball, aes(hits, runs)) +
 I did this easily with `ggplot2`, just by adding a layer `geom_quantile` to my scatterplot, specifying the quantile levels with the `quantiles=` argument. We could also use the function `rq` in the `quantreg` package in R:
 
 ```{r, echo=TRUE}
-(fit_rq <- rq(runs ~ hits, data=baseball, tau=c(0.25, 0.5, 0.75)))
+(fit_rq <- quantreg::rq(runs ~ hits, data=baseball, tau=c(0.25, 0.5, 0.75)))
 ```
 
 If we were to again focus on the two teams (one with 1000 hits, and one with 1500 hits), we have (by evaluating the above three lines):
@@ -64,7 +58,7 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
     theme_bw() +
     labs(x="Sepal Length",
          y="Sepal Width")
-fit_iris <- rq(Sepal.Width ~ Sepal.Length, data=iris, tau=2:3/10)
+fit_iris <- quantreg::rq(Sepal.Width ~ Sepal.Length, data=iris, tau=2:3/10)
 b <- coef(fit_iris)
 at8 <- round(predict(fit_iris, newdata=data.frame(Sepal.Length=8)), 2)
 ```

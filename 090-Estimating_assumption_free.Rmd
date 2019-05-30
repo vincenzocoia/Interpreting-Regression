@@ -73,7 +73,6 @@ Note: Don't confuse classification with _clustering_! The latter is an unsupervi
 (BAIT 509 Class Meeting 03)
 
 ```{r setup, include=FALSE}
-suppressPackageStartupMessages(library(tidyverse))
 rotate_y <- theme(axis.title.y=element_text(angle=0, vjust=0.5))
 ```
 
@@ -388,7 +387,6 @@ You can think of splines as regression between knots. We'll use the `splines` pa
 Here's some generated data:
 
 ```{r}
-library(ggplot2)
 x <- rnorm(1000)
 y <- x^2 + rnorm(1000)
 qplot(x, y, alpha=I(0.5)) + theme_bw()
@@ -397,8 +395,7 @@ qplot(x, y, alpha=I(0.5)) + theme_bw()
 First, we need to "set up" the regression by placing knots.
 
 ```{r}
-library(splines)
-x2 <- ns(x, knots=c(-2, 0, 2))
+x2 <- splines::ns(x, knots=c(-2, 0, 2))
 ```
 
 Now we can do regression between these knots, with the natural spline shape (as opposed to linear):

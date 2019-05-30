@@ -8,7 +8,6 @@
 
 
 ```{r, include=FALSE}
-suppressPackageStartupMessages(library(tidyverse))
 rotate_y <- theme(axis.title.y=element_text(angle=0, vjust=0.5))
 ```
 
@@ -223,8 +222,7 @@ __Note__: If you look online, the MSE is often defined as the expected squared d
 (BAIT 509 Class Meeting 04)
 
 ```{r}
-suppressPackageStartupMessages(library(tidyverse))
-my_accent <- "#d95f02"
+"orange" <- "#d95f02"
 rotate_y <- theme(axis.title.y=element_text(angle=0, vjust=0.5))
 ```
 
