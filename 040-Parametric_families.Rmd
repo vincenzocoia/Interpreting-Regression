@@ -8,3 +8,249 @@ Concepts:
 - Different data generating processes give rise to various _parametric families_ of distributions.  We'll explain a good chunk of them. 
 - These are useful in data analysis because they narrow down the things that need to be estimated. Improving estimator quality by parametric distributional assumptions and MLE
 
+## Maximum Likelihood Estimation
+
+In the previous chapter, we estimated quantities like means and probabilities using "sample versions" of these quantities. In some circumstances, there are better ways to go about estimating these quantities, using a technique called maximum likelihood estimation (MLE). This chapter explains what MLE is, as well as why and when it would be of use, and how to implement the technique. Although there are far fewer cases in the univariate case compared to the regression setting where MLE gives a dramatic improvement to estimation, it's still worth discussing when it's most useful in the univariate setting and to ground concepts.
+
+
+
+T without making any assumptions on the corresponding random variable's distribution. For example, the sample average $\bar{y}$ will always be a valid estimator of the mean, and the proportion of times that an event happens will always be a valid estimator of the probability of that event. But sometimes these estimators can be drastically improved if we make a __distributional assumption__ on the corresponding random variable.
+
+For example, suppose you've been going fishing for carp every day for an hour. Here are the number of carp you caught over the past ten days:
+
+```{r}
+carp <- c(1, 0, 0, 1, 0, 0, 0, 1, 2, 0)
+```
+
+You would like to know the chance of catching more than one carp on a given day. This probability can be estimated to be 0.1, since only one day produced more than one carp -- but it would not be a very good estimate, since it is only based on one observation.
+
+```{r}
+N <- 1000
+lambda <- 2.5
+ncarp <- 0
+proportion <- numeric(0)
+mle <- numeric(0)
+for (i in 1:N) {
+    carp <- rpois(10, lambda = lambda)
+    proportion[i] <- sum(carp == ncarp) / 10
+    mle[i] <- dpois(ncarp, lambda = mean(carp))
+}
+tibble(proportion, mle) %>% 
+    gather(value = "estimate") %>%
+    ggplot(aes(estimate)) +
+    geom_density(aes(group = key, fill = key), alpha = 0.5, bw = 0.05) +
+    geom_vline(xintercept = dpois(ncarp, lambda = lambda),
+               linetype = "dashed") +
+    theme_bw()
+sd(proportion)
+sd(mle)
+```
+
+High quantile example for a PI:
+
+```{r}
+N <- 10000
+rate <- 1
+ordered <- numeric(0)
+mle <- numeric(0)
+for (i in 1:N) {
+    x <- rexp(10, rate = rate)
+    ordered[i] <- quantile(x, probs = 0.975, type = 1)
+    mle[i] <- qexp(0.975, rate = 1/mean(x))
+}
+tibble(ordered, mle) %>% 
+    gather(value = "estimate") %>%
+    ggplot(aes(estimate)) +
+    geom_density(aes(group = key, fill = key), alpha = 0.5) +
+    geom_vline(xintercept = qexp(0.975, rate = rate),
+               linetype = "dashed") +
+    theme_bw()
+sd(ordered)
+sd(mle)
+```
+
+In both cases, the sampling distribution of the MLE is better than that of the sample version -- that is, more narrow and (sometimes) centered closer to the true value.
+
+The maximum likelihood estimator is _a way of estimating a distribution_. When you make a distributional assumption, remember that you are only assuming a particular family.
+
+Is there a better estimator than the MLE? It turns out that the MLE is realistically the best that we can do -- as long as the distributional assumption is not too bad of an approximation. If you're curious to learn more, the end of this chapter fleshes this out using precise terminology.
+
+If the improvement by using MLE does not seem very impressive to you, you'd be right -- at least in the univariate world. To see much difference between the MLE and sample version estimators, you'd need to be estimating low-probability events with a small amount of data. In fact, estimating the mean using MLE most often results in the same estimator as the sample mean! Don't write off the MLE just yet -- it really shines in the regression setting, where it has even more benefits than just improved estimation. Tune in to Part II to learn more. 
+
+When would one be inclined to make a distributional assumption? The typical case is Case 1: the data "look" like they came from some family of distributions that's flexible enough to come close to the data. In fact, you should always check this, either with a sample density/mass function, and/or a QQ-plot. An added justification to solidify your assumption is Case 2: you have insight into the data-generating process, which informs a family of distributions. 
+
+As an example of (1), suppose you are measuring the ratio of torso height to body height. Since your sample falls between 0 and 1, and probably does not have a weirdly shaped density, a Beta distribution would be a good assumption, since the Beta family spans non-weird densities over (0, 1). However, not knowing the data-generating process, you would not be able to justify the distribution completely (and that's OK). As an example of (2), perhaps you are operating the port of Vancouver, BC, and based on your experience, know that vessels arrive more-or-less independently at some average rate. This is how a Poisson distribution is defined. Not only that, but the data appear to be shaped like a Poisson distribution. Then it would be justifiable to assume the data follow a Poisson distribution. 
+
+```{r}
+n <- 50
+N <- 1000
+fit_mle <- numeric(0)
+fit_ls <- numeric(0)
+for (i in 1:N) {
+    x <- rnorm(n)
+    mu <- 1/(1+exp(-x))
+    y <- rbinom(n, size = 1, prob = mu)
+    fit_mle[i] <- glm(y ~ x, family = "binomial")$coefficients[2]
+    ls <- function(par) sum((y - 1/(1+exp(-par[1]-par[2]*x)))^2)
+    fit_ls[i] <- optim(c(0,1), ls)$par[2]
+}
+tibble(fit_mle, fit_ls) %>% 
+    gather(value = "beta") %>% 
+    ggplot(aes(beta)) +
+    # scale_x_log10() +
+    geom_density(aes(group = key, fill = key), alpha = 0.5)
+sd(fit_mle)
+sd(fit_ls)
+IQR(fit_mle)
+IQR(fit_ls)
+## More extremes show up with LS (at least with n=50):
+sort(fit_ls) %>% tail(10)
+sort(fit_mle) %>% tail(10)
+## Gaussian assumption
+##  - LS not even that good at n=100 -- bowed down. MLE is good.
+##  - MLE qqplot with n=50 looks about the same as LS with n=100
+##  - LS at n=50 is heavy tailed (seemingly).
+qqnorm(fit_mle)
+qqnorm(fit_ls)
+```
+
+For n=50, check out an example that results in an extreme beta:
+
+```{r}
+n <- 50
+beta <- 0
+while (beta < 300) {
+    x <- rnorm(n)
+    mu <- 1/(1+exp(-x))
+    y <- rbinom(n, size = 1, prob = mu)
+    ls <- function(par) sum((y - 1/(1+exp(-par[1]-par[2]*x)))^2)
+    .optim <- optim(c(0,1), ls)
+    beta <- .optim$par[2]
+    alpha <- .optim$par[1]
+}
+if (.optim$convergence == 0) stop("optim didn't successfully converge.")
+mle <- glm(y ~ x, family = "binomial")$coefficients
+qplot(x, y) + 
+    stat_function(fun = function(x) 1/(1+exp(-alpha-beta*x)), mapping = aes(colour = "LS")) +
+    stat_function(fun = function(x) 1/(1+exp(-mle[1]-mle[2]*x)), mapping = aes(colour = "MLE"))
+```
+
+
+```{r}
+# MLE is still slightly narrower, even for a Beta(2,2) distribution (which is
+# symmetric and bell-like) -- for n=5 and n=50. Both close to Gaussian, even at
+# n=5 (as expected).
+shape1 <- 2
+shape2 <- 2
+foo <- function(x) dbeta(x, shape1, shape2)
+curve(foo, 0, 1)
+n <- 5
+N <- 1000
+xbar <- numeric(0)
+mle <- numeric(0)
+for (i in 1:N) {
+    x <- rbeta(n, shape1, shape2)
+    xbar[i] <- mean(x)
+    nllh <- function(par) {
+        if (min(par) <= 0) return(Inf)
+        -sum(dbeta(x, par[1], par[2], log = TRUE))
+    }
+    .optim <- optim(c(shape1, shape2), nllh)
+    par_hat <- .optim$par
+    mle[i] <- par_hat[1] / sum(par_hat)
+}
+plot(mle - xbar) # The estimates aren't the same.
+tibble(mle, xbar) %>% 
+    gather() %>% 
+    ggplot(aes(value)) +
+    geom_density(aes(group = key, fill = key), alpha = 0.5)
+sd(mle)
+sd(xbar)
+qqnorm(mle)
+qqnorm(xbar)
+```
+
+
+
+```{r}
+# Univariate MLE *especially* important for heavy tailed distributions!
+nu <- 1.5
+n <- 5
+N <- 1000
+xbar <- numeric(0)
+mle <- numeric(0)
+for (i in 1:N) {
+    x <- rt(n, df = nu)
+    xbar[i] <- mean(x)
+    nllh <- function(par) -sum(dt(x, df = par[1], ncp = par[2], log = TRUE))
+    .optim <- optim(c(nu, 0), nllh)
+    mle[i] <- .optim$par[2]
+}
+plot(mle - xbar) # The estimates aren't the same.
+tibble(mle, xbar) %>% 
+    gather() %>% 
+    ggplot(aes(value)) +
+    geom_density(aes(group = key, fill = key), alpha = 0.5)
+sd(mle)
+sd(xbar)
+qqnorm(mle)
+qqnorm(xbar)
+```
+
+
+Stock market example:
+
+```{r}
+library(CopulaModel)
+data(asianwklgret) # activates dataset 'hksikotw' (weekly returns HK, Singapore, Korea, Taiwan)
+dat <- as_tsibble(hksikotw)
+t_mean <- function(x) {
+    cat("|")
+    nllh <- function(par) -sum(dt(x, df = exp(par[1]), ncp = par[2], log = TRUE))
+    ss <- var(x)
+    nu_init <- if (ss < 1) log(1) else log(2*ss/(ss-1))
+    ncp_init <- median(x)
+    par_init <- c(nu_init, ncp_init)
+    fit <- nlm(nllh, par_init)
+    code <- fit$code
+    df_hat <- exp(fit$estimate[1])
+    if (df_hat > 50) {
+        cat("*")
+        return(mean(x))
+    }
+    if (code %in% 3:5) return(NA)
+    fit$estimate[2]
+    # fit <- stats4::mle(nllh)
+    # fit$coef$ncp
+}
+gpd_mean <- function(x) {
+    fit <- ismev::gpd.fit(x, 0, show = FALSE)
+    sigma <- fit$mle[1]
+    xi <- fit$mle[2]
+    if (xi >= 1) stop("Mean does not exist")
+    sigma / (1 - xi)
+}
+gpd_quantile <- function(x, p = 0.5) {
+    fit <- ismev::gpd.fit(x, 0, show = FALSE)
+    sigma <- fit$mle[1]
+    xi <- fit$mle[2]
+    sigma * (p^(-xi) - 1) / xi
+}
+library(extRemes)
+data(damage)
+n <- nrow(damage)
+sampling_dist <- damage %>% 
+    bootstraps(times = 1000) %>%
+    pull(splits) %>%
+    map(as_tibble) %>% 
+    map_df(~ summarise(.x, 
+                       bar = quantile(Dam, probs = 0.8), 
+                       mle = gpd_quantile(Dam, 0.8)))
+sampling_dist %>% 
+    gather(key = "method", value = "estimate") %>% 
+    ggplot(aes(estimate)) +
+    facet_wrap(~method, ncol = 2) +
+    geom_histogram() +
+    theme_bw()
+```
+
