@@ -63,7 +63,7 @@ This step is the namesake of MLE. To fit the best distribution from our selected
 
 To calculate the likelihood, denoted $\mathcal{L}$, from a distribution with density $f$, we calculate the product of the densities evaluated at the data:
 $$\mathcal{L} = \prod_{i=1}^n f(y_i).$$
-When $f$ is a probability mass function, you can interpret the likelihood as the probability of observing the data under the distribution $f$ (at least, if the data are independent). In the continuous case, like a density function, the interpretation of likelihood is less tangible, and is the probability density of observing the data under the distribution $f$ (again, under independence).
+The likelihood likelihood in general is a useful measure for how well a distribution fits the data. When $f$ is a probability mass function, you can interpret the likelihood as the probability of observing the data under the distribution $f$ (at least, if the data are independent). In the continuous case, like a density function, the interpretation of likelihood is less tangible, and is the probability density of observing the data under the distribution $f$ (again, under independence).
 
 Remember, each distribution in a family has a set likelihood of observing your data set -- the key is finding the distribution with the largest likelihood. But remember that a distribution is identified uniquely by its parameters -- this means that we can view the likelihood as a function of the family's parameters, and optimize this function! This can sometimes be done using calculus, but is most often done computationally.
 
