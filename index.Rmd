@@ -8,7 +8,7 @@ documentclass: book
 biblio-style: apalike
 link-citations: yes
 github-repo: vincenzocoia/Interpreting-Regression
-description: "My tutorials for regression analysis, in the form of a bookdown book."
+description: "A book about the why of regression to help you make decisions about your analysis."
 ---
 
 # Preamble
