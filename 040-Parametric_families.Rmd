@@ -8,43 +8,123 @@ Concepts:
 - Different data generating processes give rise to various _parametric families_ of distributions.  We'll explain a good chunk of them. 
 - These are useful in data analysis because they narrow down the things that need to be estimated. Improving estimator quality by parametric distributional assumptions and MLE
 
+## Parametric Families of Distributions
+
+What is meant by "family"? This means that there are more than one of them, and that a specific distribution from the family can be characterized the family's parameters. This is what is meant by "parametric" -- the distribution can be distilled down to a set of parameters. 
+
+For example, to identify a Gaussian distribution, we need to know the mean and variance. Note that some families are characterized by parameters that do not necessarily have an interpretation (or at least an easy one) -- for example, to identify a Beta distribution, we need to know the two shape parameters $\alpha$ and $\beta$.
+
+**Technicality that you can safely skip**: It's not that there are "set" parameters that identify a distribution. For example, although a Beta distribution is identified by the two shape parameters $\alpha$ and $\beta$, the distribution can also be uniquely identified by its mean and variance. Or, by two quantiles. In general, we need as many pieces of information as there are parameters. This needs to be done in an _identifiable_ way, however. For example, it's not enough to identify an Exponential distibution by its skewness, because all Exponential distributions have a skewness of 2! The way in which we identify a distribution from parameters is called the _parameterization_ of the distribution. 
+
 ## Maximum Likelihood Estimation
 
-In the previous chapter, we estimated quantities like means and probabilities using "sample versions" of these quantities. In some circumstances, there are better ways to go about estimating these quantities, using a technique called maximum likelihood estimation (MLE). This chapter explains what MLE is, as well as why and when it would be of use, and how to implement the technique. Although there are far fewer cases in the univariate case compared to the regression setting where MLE gives a dramatic improvement to estimation, it's still worth discussing when it's most useful in the univariate setting and to ground concepts.
+In the previous chapter, we estimated parameters like means and probabilities using "sample versions" of these parameters. Usually, these estimators perform well, but there are some circumstances where they do not. There is a technique called _Maximum Likelihood estimation_ (MLE) that approximates the data distribution as a parametric family, and if done carefully, allows for significant improvements to estimation.
 
+This chapter first explains what MLE is and how to implement the technique, as well as why and when it would be of use. 
 
+### How MLE works
 
-T without making any assumptions on the corresponding random variable's distribution. For example, the sample average $\bar{y}$ will always be a valid estimator of the mean, and the proportion of times that an event happens will always be a valid estimator of the probability of that event. But sometimes these estimators can be drastically improved if we make a __distributional assumption__ on the corresponding random variable.
+Maximum likelihood estimation is a way of estimating parameters _by first estimating the data distribution_. The steps are as follows.
 
-For example, suppose you've been going fishing for carp every day for an hour. Here are the number of carp you caught over the past ten days:
+1. Make a distributional assumption: choose a parametric family of distributions that you think is a decent approximation to the data distribution.
+2. Estimate: from that family, choose the distribution that fits the data "best".
+3. Check the assumption: check that the fitted distribution matches the data (not required, but is good practice).
+4. Using the fitted distribution, extract the parameter(s) of interest (such as the mean or quantiles).
+
+Let's look at these in turn. As an example, consider the following data set of damages caused by hurricanes, in billions of USD. The distribution of the 144 observations is depicted in the following histogram:
 
 ```{r}
-carp <- c(1, 0, 0, 1, 0, 0, 0, 1, 2, 0)
+library(extRemes)
+data(damage)
+ggplot(damage, aes(Dam)) +
+    geom_histogram(bins = 50) +
+    theme_bw() +
+    scale_x_continuous("Damage (billions of USD)", 
+                       labels = dollar_format()) +
+    ylab("Count")
 ```
 
-You would like to know the chance of catching more than one carp on a given day. This probability can be estimated to be 0.1, since only one day produced more than one carp -- but it would not be a very good estimate, since it is only based on one observation.
+#### Step 1: Make a distributional assumption
+
+This step requires choosing a family to approximate the data distribution (you can find several families defined in the previous chapter). Here are two general guidelines that may help you choose a distribution. 
+
+1. Visually match the shape of the data distribution to the shapes covered by a distribution family.
+2. If possible, think about the process that "generated" the data, and match that process to the process defining a family.
+
+In the hurricane damages example, the family should accomodate a positive continuous variable, and perhaps should decay starting from zero. The family should contain heavy-tailed distributions to allow for the two large values. A GPD is so far a good candidate. As for the way the data are "generated", the data are inherently recorded because they are extreme, and this matches the way that a GPD is derived.
+
+In the house prices example, the family should also accomodate a positive continuous random variable, should be unimodal with two tails, and be skewed to the right. A Weibull or lognormal distribution so far seem like good candidates. Since the log of house prices looks like a Gaussian distribution, we choose a lognormal distribution, since this is how the lognormal family is defined. 
+
+Always keep in mind that there is almost never a "correct" choice! Remember, we are making an approximation here, not seeking a "true" distribution.
+
+#### Step 2: Estimate
+
+This step is the namesake of MLE. To fit the best distribution from our selected family, the key is to _select the distribution for which the observed data is most likely to have been drawn from_. We can do this through a quantity called the _likelihood_, which can be calculated for any distribution, and choosing the distribution that has the highest likelihood.  
+
+To calculate the likelihood, denoted $\mathcal{L}$, from a distribution with density $f$, we calculate the product of the densities evaluated at the data:
+$$\mathcal{L} = \prod_{i=1}^n f(y_i).$$
+The likelihood likelihood in general is a useful measure for how well a distribution fits the data. When $f$ is a probability mass function, you can interpret the likelihood as the probability of observing the data under the distribution $f$ (at least, if the data are independent). In the continuous case, like a density function, the interpretation of likelihood is less tangible, and is the probability density of observing the data under the distribution $f$ (again, under independence).
+
+Remember, each distribution in a family has a set likelihood of observing your data set -- the key is finding the distribution with the largest likelihood. But remember that a distribution is identified uniquely by its parameters -- this means that we can view the likelihood as a function of the family's parameters, and optimize this function! This can sometimes be done using calculus, but is most often done computationally.
+
+
+
+#### Step 3
+
+either with a sample density/mass function, and/or a QQ-plot.
+
+#### Step 4
+
+
+
+The sample versions of estimation always "work" -- no matter what the distribution of the data is, the estimators are always valid. anything about the data distribution on any assumptions on the data distribution. For example, the sample average $\bar{y}$ will always be a valid estimator of the mean, and the proportion of times that an event happens will always be a valid estimator of the probability of that event. But sometimes these estimators can be drastically improved if we make a __distributional assumption__ on the corresponding random variable.
+
+### Motivating Example
+
+
+
+Data such as this can help an insurance company with their financial planning. Knowing an upper quantile, such as the 0.8-quantile, would give a sense of the damage caused by the "worst" hurricanes.
+
+Take a look at the sampling distributions of three estimators of the 0.8-quantile: the sample version, the MLE under a Gaussian assumption, and the MLE under a generalized Pareto distribution (GPD) assumption. The sampling distributions are obtained using bootstrapping. The Gaussian-based MLE is an example of a _bad_ MLE that uses a poorly chosen assumption -- its sampling distribution is much wider than that of the sample version. On the other hand, the GPD-based MLE is based on a much more realistic assumption, and shows a significant improvement to the sample version -- its sampling distribution is much narrower. 
 
 ```{r}
-N <- 1000
-lambda <- 2.5
-ncarp <- 0
-proportion <- numeric(0)
-mle <- numeric(0)
-for (i in 1:N) {
-    carp <- rpois(10, lambda = lambda)
-    proportion[i] <- sum(carp == ncarp) / 10
-    mle[i] <- dpois(ncarp, lambda = mean(carp))
+dgpd <- function(x, sig, xi) 1/sig*(1 + xi*(x/sig))^(-1/(xi+1)) 
+gpd_quantile <- function(x, p = 0.5) {
+    fit <- ismev::gpd.fit(x, 0, show = FALSE)
+    sigma <- fit$mle[1]
+    xi <- fit$mle[2]
+    sigma * (p^(-xi) - 1) / xi
 }
-tibble(proportion, mle) %>% 
-    gather(value = "estimate") %>%
+wei_quantile <- function(x, p = 0.5) {
+    nllh <- function(par) -sum(dweibull(x, par[1], par[2], log = TRUE))
+    par_hat <- optim(c(1,1), nllh)$par
+    qweibull(p, par_hat[1], par_hat[2])
+}
+sampling_dist <- damage %>% 
+    bootstraps(times = 1000) %>%
+    pull(splits) %>%
+    map(as_tibble) %>% 
+    map_df(~ summarise(
+        .x, 
+        bar = quantile(Dam, probs = 0.8), 
+        mle_gpd = gpd_quantile(Dam, 0.8),
+        mle_gau = qnorm(0.8, mean = mean(Dam), sd = sd(Dam)))
+    )
+sampling_dist %>% 
+    gather(key = "method", value = "estimate") %>% 
     ggplot(aes(estimate)) +
-    geom_density(aes(group = key, fill = key), alpha = 0.5, bw = 0.05) +
-    geom_vline(xintercept = dpois(ncarp, lambda = lambda),
-               linetype = "dashed") +
-    theme_bw()
-sd(proportion)
-sd(mle)
+    facet_wrap(~method, nrow = 1, scales = "free_x") +
+    geom_histogram(bins = 30) +
+    theme_bw() 
 ```
+
+**Caution**: A common misconception is that the two large observations in the dataset are outliers, and therefore should be removed. However, doing so would bias our understanding of hurricance damages, since these "outliers" are real occurences.
+
+In other cases, an MLE does not result in much of an improvement at all. 
+
+Although there are far fewer cases in the univariate case compared to the regression setting where MLE gives a dramatic improvement to estimation, it's still worth discussing when it's most useful in the univariate setting and to ground concepts.
+
+
 
 High quantile example for a PI:
 
@@ -71,13 +151,10 @@ sd(mle)
 
 In both cases, the sampling distribution of the MLE is better than that of the sample version -- that is, more narrow and (sometimes) centered closer to the true value.
 
-The maximum likelihood estimator is _a way of estimating a distribution_. When you make a distributional assumption, remember that you are only assuming a particular family.
-
 Is there a better estimator than the MLE? It turns out that the MLE is realistically the best that we can do -- as long as the distributional assumption is not too bad of an approximation. If you're curious to learn more, the end of this chapter fleshes this out using precise terminology.
 
 If the improvement by using MLE does not seem very impressive to you, you'd be right -- at least in the univariate world. To see much difference between the MLE and sample version estimators, you'd need to be estimating low-probability events with a small amount of data. In fact, estimating the mean using MLE most often results in the same estimator as the sample mean! Don't write off the MLE just yet -- it really shines in the regression setting, where it has even more benefits than just improved estimation. Tune in to Part II to learn more. 
 
-When would one be inclined to make a distributional assumption? The typical case is Case 1: the data "look" like they came from some family of distributions that's flexible enough to come close to the data. In fact, you should always check this, either with a sample density/mass function, and/or a QQ-plot. An added justification to solidify your assumption is Case 2: you have insight into the data-generating process, which informs a family of distributions. 
 
 As an example of (1), suppose you are measuring the ratio of torso height to body height. Since your sample falls between 0 and 1, and probably does not have a weirdly shaped density, a Beta distribution would be a good assumption, since the Beta family spans non-weird densities over (0, 1). However, not knowing the data-generating process, you would not be able to justify the distribution completely (and that's OK). As an example of (2), perhaps you are operating the port of Vancouver, BC, and based on your experience, know that vessels arrive more-or-less independently at some average rate. This is how a Poisson distribution is defined. Not only that, but the data appear to be shaped like a Poisson distribution. Then it would be justifiable to assume the data follow a Poisson distribution. 
 
@@ -200,57 +277,5 @@ qqnorm(xbar)
 
 Stock market example:
 
-```{r}
-library(CopulaModel)
-data(asianwklgret) # activates dataset 'hksikotw' (weekly returns HK, Singapore, Korea, Taiwan)
-dat <- as_tsibble(hksikotw)
-t_mean <- function(x) {
-    cat("|")
-    nllh <- function(par) -sum(dt(x, df = exp(par[1]), ncp = par[2], log = TRUE))
-    ss <- var(x)
-    nu_init <- if (ss < 1) log(1) else log(2*ss/(ss-1))
-    ncp_init <- median(x)
-    par_init <- c(nu_init, ncp_init)
-    fit <- nlm(nllh, par_init)
-    code <- fit$code
-    df_hat <- exp(fit$estimate[1])
-    if (df_hat > 50) {
-        cat("*")
-        return(mean(x))
-    }
-    if (code %in% 3:5) return(NA)
-    fit$estimate[2]
-    # fit <- stats4::mle(nllh)
-    # fit$coef$ncp
-}
-gpd_mean <- function(x) {
-    fit <- ismev::gpd.fit(x, 0, show = FALSE)
-    sigma <- fit$mle[1]
-    xi <- fit$mle[2]
-    if (xi >= 1) stop("Mean does not exist")
-    sigma / (1 - xi)
-}
-gpd_quantile <- function(x, p = 0.5) {
-    fit <- ismev::gpd.fit(x, 0, show = FALSE)
-    sigma <- fit$mle[1]
-    xi <- fit$mle[2]
-    sigma * (p^(-xi) - 1) / xi
-}
-library(extRemes)
-data(damage)
-n <- nrow(damage)
-sampling_dist <- damage %>% 
-    bootstraps(times = 1000) %>%
-    pull(splits) %>%
-    map(as_tibble) %>% 
-    map_df(~ summarise(.x, 
-                       bar = quantile(Dam, probs = 0.8), 
-                       mle = gpd_quantile(Dam, 0.8)))
-sampling_dist %>% 
-    gather(key = "method", value = "estimate") %>% 
-    ggplot(aes(estimate)) +
-    facet_wrap(~method, ncol = 2) +
-    geom_histogram() +
-    theme_bw()
-```
+
 
