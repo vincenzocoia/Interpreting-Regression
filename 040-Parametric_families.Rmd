@@ -22,7 +22,7 @@ In the previous chapter, we estimated parameters like means and probabilities us
 
 This chapter first explains what MLE is and how to implement the technique, as well as why and when it would be of use. 
 
-### How MLE works
+### Estimation Procedure
 
 Maximum likelihood estimation is a way of estimating parameters _by first estimating the data distribution_ from a specified parametric family. The steps are as follows.
 
@@ -35,11 +35,11 @@ Let's look at these steps in turn, together with the following examples.
 
 Consider the following data set of damages caused by hurricanes, in billions of USD. The distribution of the 144 observations is depicted in the following histogram:
 
-```{r}
+```{r, warning=FALSE}
 # library(extRemes)
-library(tidyverse)
+suppressPackageStartupMessages(library(tidyverse))
 data(damage, package = "extRemes")
-house <- read_csv("data/house.csv")
+house <- suppressMessages(read_csv("data/house.csv"))
 (hurricane_hist <- ggplot(damage, aes(Dam)) +
         geom_histogram(aes(y = ..density..), bins = 50, alpha = 0.75) +
         theme_bw() +
@@ -48,10 +48,13 @@ house <- read_csv("data/house.csv")
         ylab("Density"))
 ```
 
+Data such as this can help an insurance company with their financial planning. Knowing an upper quantile, such as the 0.8-quantile, would give a sense of the damage caused by the "worst" hurricanes.
+
+
 Consider the following sale prices of houses:
 
 ```{r}
-house <- read_csv("data")
+house <- read_csv("data/house.csv")
 house_hist <- ggplot(house, aes(SalePrice)) + 
         geom_histogram(aes(y = ..density..), alpha = 0.75) +
         theme_bw() +
@@ -192,7 +195,9 @@ qlnorm(0.9, meanlog = ln_loc, sdlog = ln_scale)
 
 #### Step 4: Check the Assumption
 
-In order to end up with "good" estimates from MLE, the fitted distribution from Step 2 should be a decent approximation to the data distribution. To see why, consider a poor distributional assumption -- such as approximating the distribution of house prices as Uniform. We end up with the following density fitted by MLE:
+In order to end up with "good" estimates from MLE, the fitted distribution from Step 2 should be a decent approximation to the data distribution. 
+
+To see why, consider a poor distributional assumption -- such as approximating the distribution of house prices as Uniform. We end up with the following density fitted by MLE:
 
 ```{r, echo = FALSE}
 unif_density <- function(x) dunif(
@@ -202,19 +207,22 @@ unif_density <- function(x) dunif(
 )
 house_hist +
     stat_function(fun = unif_density, colour = "blue")
+d <- diff(range(house$SalePrice))
+min(house$SalePrice) + d/4
+min(house$SalePrice) + 3*d/4
 ```
 
-The fitted density is flat, and does not match the data (histogram) at all. This means we can anticipate parameter estimates to be way off -- for example, the MLE for the mean under this Uniform model is somewhere around \$400,000, which is clearly very wrong. More, 75% of the house prices lie between about \$200,000 and \$600,000.
+The fitted density is flat, and does not match the data (histogram) at all. This means we can anticipate parameter estimates to be way off. For example, according to the model, the mean is somewhere around \$400,000, and a half of the house prices roughly lie somewhere between \$200,000 and \$600,000. 
+
+The above method of comparing the modelled density to the histogram is one effective way of checking the distributional assumption. Another way is to use a QQ-plot. 
+
+These visual methods might seem informal, but they are very powerful, and should always be investigated if possible. After visualizing the fit, if you want to add more rigor to your assumption checking, you can consider a hypothesis test such as the Kolmogorov-Smirnov test, the Anderson-Darling test, or the Cram\'{e}r-von Mises test for equality of distributions. 
+
+Just remember that there is no such thing as a "correct" distributional assumption in practice, but rather just approximations that have different degrees of plausibility. The key is in avoiding bad assumptions, as opposed to finding the "right" assumption.
 
 
-either with a sample density/mass function, and/or a QQ-plot.
+### Usefulness in Practice
 
-
-### Motivating Example
-
-
-
-Data such as this can help an insurance company with their financial planning. Knowing an upper quantile, such as the 0.8-quantile, would give a sense of the damage caused by the "worst" hurricanes.
 
 Take a look at the sampling distributions of three estimators of the 0.8-quantile: the sample version, the MLE under a Gaussian assumption, and the MLE under a generalized Pareto distribution (GPD) assumption. The sampling distributions are obtained using bootstrapping. The Gaussian-based MLE is an example of a _bad_ MLE that uses a poorly chosen assumption -- its sampling distribution is much wider than that of the sample version. On the other hand, the GPD-based MLE is based on a much more realistic assumption, and shows a significant improvement to the sample version -- its sampling distribution is much narrower. 
 
