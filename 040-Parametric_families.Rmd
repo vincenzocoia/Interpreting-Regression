@@ -18,66 +18,197 @@ For example, to identify a Gaussian distribution, we need to know the mean and v
 
 ## Maximum Likelihood Estimation
 
-In the previous chapter, we estimated parameters like means and probabilities using "sample versions" of these parameters. Usually, these estimators perform well, but there are some circumstances where they do not. There is a technique called _Maximum Likelihood estimation_ (MLE) that approximates the data distribution as a parametric family, and if done carefully, allows for significant improvements to estimation.
+In the previous chapter, we estimated parameters like means and probabilities using "sample versions" of these parameters. Usually, these estimators perform well in the univariate setting, but there are some circumstances where they do not. There is a technique called _Maximum Likelihood Estimation_ (MLE) that approximates the data distribution using a parametric family, and if done carefully, allows for significant improvements to estimation.
 
 This chapter first explains what MLE is and how to implement the technique, as well as why and when it would be of use. 
 
 ### How MLE works
 
-Maximum likelihood estimation is a way of estimating parameters _by first estimating the data distribution_. The steps are as follows.
+Maximum likelihood estimation is a way of estimating parameters _by first estimating the data distribution_ from a specified parametric family. The steps are as follows.
 
-1. Make a distributional assumption: choose a parametric family of distributions that you think is a decent approximation to the data distribution.
-2. Estimate: from that family, choose the distribution that fits the data "best".
-3. Check the assumption: check that the fitted distribution matches the data (not required, but is good practice).
-4. Using the fitted distribution, extract the parameter(s) of interest (such as the mean or quantiles).
+1. __Make a distributional assumption__: Choose a parametric family of distributions that you think is a decent approximation to the data distribution.
+2. __Estimate__: From that family, choose the distribution that fits the data "best".
+3. __Extract__: Using the fitted distribution, extract the parameter(s) of interest (such as the mean and/or quantiles).
+4. __Check the assumption__: Check that the fitted distribution is a reasonable approximation to the data distribution (not required for estimation, but is good practice).
 
-Let's look at these in turn. As an example, consider the following data set of damages caused by hurricanes, in billions of USD. The distribution of the 144 observations is depicted in the following histogram:
+Let's look at these steps in turn, together with the following examples.
+
+Consider the following data set of damages caused by hurricanes, in billions of USD. The distribution of the 144 observations is depicted in the following histogram:
 
 ```{r}
-library(extRemes)
-data(damage)
-ggplot(damage, aes(Dam)) +
-    geom_histogram(bins = 50) +
-    theme_bw() +
-    scale_x_continuous("Damage (billions of USD)", 
-                       labels = dollar_format()) +
-    ylab("Count")
+# library(extRemes)
+library(tidyverse)
+data(damage, package = "extRemes")
+house <- read_csv("data/house.csv")
+(hurricane_hist <- ggplot(damage, aes(Dam)) +
+        geom_histogram(aes(y = ..density..), bins = 50, alpha = 0.75) +
+        theme_bw() +
+        scale_x_continuous("Damage (billions of USD)", 
+                           labels = scales::dollar_format()) +
+        ylab("Density"))
 ```
+
+Consider the following sale prices of houses:
+
+```{r}
+house <- read_csv("data")
+house_hist <- ggplot(house, aes(SalePrice)) + 
+        geom_histogram(aes(y = ..density..), alpha = 0.75) +
+        theme_bw() +
+    labs(x = "Price", y = "Density") +
+    scale_x_continuous(labels = scales::dollar_format())
+cowplot::plot_grid(
+    house_hist,
+    house_hist + scale_x_log10(labels = scales::dollar_format())
+)
+```
+
+
 
 #### Step 1: Make a distributional assumption
 
-This step requires choosing a family to approximate the data distribution (you can find several families defined in the previous chapter). Here are two general guidelines that may help you choose a distribution. 
+This step requires choosing a family to approximate the data distribution (you can find several families defined in the previous chapter). Here are two general guidelines that may help you choose a distribution family. 
 
-1. Visually match the shape of the data distribution to the shapes covered by a distribution family.
-2. If possible, think about the process that "generated" the data, and match that process to the process defining a family.
+1. Visually match the variable characteristics and shape of the data distribution to a distribution family.
+2. If possible, think about the process that "generated" the data, and match that process to the data-generating process defining a family.
 
-In the hurricane damages example, the family should accomodate a positive continuous variable, and perhaps should decay starting from zero. The family should contain heavy-tailed distributions to allow for the two large values. A GPD is so far a good candidate. As for the way the data are "generated", the data are inherently recorded because they are extreme, and this matches the way that a GPD is derived.
+Always keep in mind that there is almost never a "correct" choice! Remember, we are making an approximation here, not seeking a "true" distribution family.
 
-In the house prices example, the family should also accomodate a positive continuous random variable, should be unimodal with two tails, and be skewed to the right. A Weibull or lognormal distribution so far seem like good candidates. Since the log of house prices looks like a Gaussian distribution, we choose a lognormal distribution, since this is how the lognormal family is defined. 
+__Example 1.__ In the hurricane damages example, the data variable is a positive continuous variable, and has a histogram that appears to decay starting from a damage of zero. The selected distribution should accomodate this --  Weibull, Gamma, or GPD can all accomodate this. But the family should allow for heavy-tailed distributions to accomodate the two large data values that we see in the histogram, leaving a GPD as a good candidate. As for the way the data are "generated", the data are inherently recorded because they are extreme, and this matches the way that a GPD is derived.
 
-Always keep in mind that there is almost never a "correct" choice! Remember, we are making an approximation here, not seeking a "true" distribution.
+__Example 2.__ In the house prices example, the family should also accomodate a positive continuous random variable, should be unimodal with two tails, and be skewed to the right. A Weibull or lognormal distribution so far seem like good candidates. Since the log of house prices looks like a Gaussian distribution, we choose a lognormal distribution, since this is how the lognormal family is defined. 
 
 #### Step 2: Estimate
 
-This step is the namesake of MLE. To fit the best distribution from our selected family, the key is to _select the distribution for which the observed data is most likely to have been drawn from_. We can do this through a quantity called the _likelihood_, which can be calculated for any distribution, and choosing the distribution that has the highest likelihood.  
+So far, we've selected a _family_ of distributions. Now, in this step, we need to select the distribution from this family that best matches the data. This step is the namesake of MLE.
 
-To calculate the likelihood, denoted $\mathcal{L}$, from a distribution with density $f$, we calculate the product of the densities evaluated at the data:
+The key is to _select the distribution for which the observed data are most likely to have been drawn from_. We can do this through a quantity called the _likelihood_, which can be calculated for any distribution that has a density/pmf, then finding the distribution that has the largest likelihood. Let's break these two concepts down.
+
+1. __Likelihood__.
+
+The likelihood is a useful way to measure how well a distribution fits the data. To calculate the likelihood, denoted $\mathcal{L}$, from data $y_1, \ldots, y_n$ and a distribution with density/pmf $f$, calculate the product of the densities/pmf's evaluated at the data:
 $$\mathcal{L} = \prod_{i=1}^n f(y_i).$$
-The likelihood likelihood in general is a useful measure for how well a distribution fits the data. When $f$ is a probability mass function, you can interpret the likelihood as the probability of observing the data under the distribution $f$ (at least, if the data are independent). In the continuous case, like a density function, the interpretation of likelihood is less tangible, and is the probability density of observing the data under the distribution $f$ (again, under independence).
 
-Remember, each distribution in a family has a set likelihood of observing your data set -- the key is finding the distribution with the largest likelihood. But remember that a distribution is identified uniquely by its parameters -- this means that we can view the likelihood as a function of the family's parameters, and optimize this function! This can sometimes be done using calculus, but is most often done computationally.
+When $f$ is a pmf, you can interpret the likelihood as the probability of observing the data under the distribution $f$. When $f$ is a density, the interpretation of likelihood is less tangible, and is the probability density of observing the data under the distribution $f$. These interpretations are exactly true if the data are independent, but are still approximately true if data are "almost" independent. Even with non-independent data, the likelihood is still a useful measurement.
+
+A similar quantity to the likelihood is the _negative log likelihood_ (nllh), defined as 
+$$\ell = -\log\mathcal{L} = -\sum_{i=1}^n \log f(y_i).$$ 
+The nllh is numerically more convenient than the likelihood. For example, the likelihood ($\mathcal{L}$) tends to be an extremely small number, whereas the nllh typically is not. For instance, 100 draws from a N(0,1) distribution results in a likelihood that's typically around $3 \times 10^{-62},$ whereas the nllh is typically around 141.5. Note that _minimizing_ the nllh is the same as maximizing the likelihood.
+
+2. __Finding the distribution that has the largest likelihood__
+
+Remember that each distribution in the distribution family that we selected can be represented by its parameters -- for example, the Normal distribution by its mean and variance, or the Beta distribution by $\alpha$ and $\beta$. This means that we can view the likelihood as a function of the family's parameters, and optimize this function! This can sometimes be done using calculus, but is most often done numerically.
+
+We end up with estimates of the distribution's parameters, which is the same thing as having an estimate of the data's distribution. Don't stop here if you are looking to estimate something other than the distibution's parameters -- move on to Step 3.
+
+__Example 1__. For the hurricane example, first find the GPD shape and scale parameters that maximize the likelihood (or, minimize the nllh).
+
+```{r}
+gpd_nllh <- function(parameters) {
+    scale <- parameters[1]
+    shape <- parameters[2]
+    if (scale <= 0) return(Inf)
+    -sum(evd::dgpd(damage$Dam, scale = scale, shape = shape, log = TRUE))
+}
+gpd_optim <- optim(c(1, 1), gpd_nllh)
+gpd_scale <- gpd_optim$par[1]
+gpd_shape <- gpd_optim$par[2]
+```
+
+Take a look at the GPD density corresponding to these parameters, with the data histogram in the background:
+
+```{r}
+gpd_density <- function(x) evd::dgpd(x, scale = gpd_scale, shape = gpd_shape)
+hurricane_hist +
+    stat_function(fun = gpd_density, colour = "blue") +
+    ylim(c(0, 0.13))
+```
+
+__Example 2.__
+
+```{r}
+ln_nllh <- function(parameters) {
+    loc   <- parameters[1]
+    scale <- parameters[2]
+    if (scale <= 0) return(Inf)
+    -sum(dlnorm(house$SalePrice, meanlog = loc, sdlog = scale, log = TRUE))
+}
+ln_optim <- optim(c(0, 1), ln_nllh)
+ln_loc   <- ln_optim$par[1]
+ln_scale <- ln_optim$par[2]
+```
+
+```{r}
+ln_density <- function(x) dlnorm(x, meanlog = ln_loc, sdlog = ln_scale)
+house_hist +
+    stat_function(fun = ln_density, colour = "blue")
+```
 
 
 
-#### Step 3
+#### Step 3: Extract 
+
+Now that we have the data distribution estimated, we can extract any parameter we'd like, such as the mean or quantiles. This might involve looking up formulas based on the distribution's parameters -- for example, the mean of a Beta distribution with parameters $\alpha$ and $\beta$ is $\alpha/(\alpha + \beta)$.
+
+__Example 1.__ Here is the MLE of the median hurricane damage:
+
+```{r}
+gpd_qf <- function(p) evd::qgpd(p, scale = gpd_scale, shape = gpd_shape)
+gpd_qf(0.5)
+```
+
+Here is the MLE of the 0.9-quantile:
+
+```{r}
+gpd_qf(0.9)
+```
+
+Here is the MLE of the IQR:
+
+```{r}
+gpd_qf(0.75) - gpd_qf(0.25)
+```
+
+__Example 2.__
+
+Mean of the Lognormal distribution can be computed as $\exp(\mu + \sigma^2/2)$; so the MLE for the mean is:
+
+```{r}
+exp(ln_loc + ln_scale^2/2)
+```
+
+Variance of the Lognormal distribution can be computed as $(\exp(\sigma^2)-1)(\exp(2\mu + \sigma^2)$; so the MLE for the variance is:
+
+```{r}
+(exp(ln_scale^2) - 1) * (exp(2*ln_loc + ln_scale^2))
+```
+
+The MLE for the 0.9-quantile is:
+
+```{r}
+qlnorm(0.9, meanlog = ln_loc, sdlog = ln_scale)
+```
+
+
+#### Step 4: Check the Assumption
+
+In order to end up with "good" estimates from MLE, the fitted distribution from Step 2 should be a decent approximation to the data distribution. To see why, consider a poor distributional assumption -- such as approximating the distribution of house prices as Uniform. We end up with the following density fitted by MLE:
+
+```{r, echo = FALSE}
+unif_density <- function(x) dunif(
+    x, 
+    min = min(house$SalePrice),
+    max = max(house$SalePrice)
+)
+house_hist +
+    stat_function(fun = unif_density, colour = "blue")
+```
+
+The fitted density is flat, and does not match the data (histogram) at all. This means we can anticipate parameter estimates to be way off -- for example, the MLE for the mean under this Uniform model is somewhere around \$400,000, which is clearly very wrong. More, 75% of the house prices lie between about \$200,000 and \$600,000.
+
 
 either with a sample density/mass function, and/or a QQ-plot.
 
-#### Step 4
-
-
-
-The sample versions of estimation always "work" -- no matter what the distribution of the data is, the estimators are always valid. anything about the data distribution on any assumptions on the data distribution. For example, the sample average $\bar{y}$ will always be a valid estimator of the mean, and the proportion of times that an event happens will always be a valid estimator of the probability of that event. But sometimes these estimators can be drastically improved if we make a __distributional assumption__ on the corresponding random variable.
 
 ### Motivating Example
 
@@ -88,34 +219,34 @@ Data such as this can help an insurance company with their financial planning. K
 Take a look at the sampling distributions of three estimators of the 0.8-quantile: the sample version, the MLE under a Gaussian assumption, and the MLE under a generalized Pareto distribution (GPD) assumption. The sampling distributions are obtained using bootstrapping. The Gaussian-based MLE is an example of a _bad_ MLE that uses a poorly chosen assumption -- its sampling distribution is much wider than that of the sample version. On the other hand, the GPD-based MLE is based on a much more realistic assumption, and shows a significant improvement to the sample version -- its sampling distribution is much narrower. 
 
 ```{r}
-dgpd <- function(x, sig, xi) 1/sig*(1 + xi*(x/sig))^(-1/(xi+1)) 
-gpd_quantile <- function(x, p = 0.5) {
-    fit <- ismev::gpd.fit(x, 0, show = FALSE)
-    sigma <- fit$mle[1]
-    xi <- fit$mle[2]
-    sigma * (p^(-xi) - 1) / xi
-}
-wei_quantile <- function(x, p = 0.5) {
-    nllh <- function(par) -sum(dweibull(x, par[1], par[2], log = TRUE))
-    par_hat <- optim(c(1,1), nllh)$par
-    qweibull(p, par_hat[1], par_hat[2])
-}
-sampling_dist <- damage %>% 
-    bootstraps(times = 1000) %>%
-    pull(splits) %>%
-    map(as_tibble) %>% 
-    map_df(~ summarise(
-        .x, 
-        bar = quantile(Dam, probs = 0.8), 
-        mle_gpd = gpd_quantile(Dam, 0.8),
-        mle_gau = qnorm(0.8, mean = mean(Dam), sd = sd(Dam)))
-    )
-sampling_dist %>% 
-    gather(key = "method", value = "estimate") %>% 
-    ggplot(aes(estimate)) +
-    facet_wrap(~method, nrow = 1, scales = "free_x") +
-    geom_histogram(bins = 30) +
-    theme_bw() 
+# dgpd <- function(x, sig, xi) 1/sig*(1 + xi*(x/sig))^(-1/(xi+1)) 
+# gpd_quantile <- function(x, p = 0.5) {
+#     fit <- ismev::gpd.fit(x, 0, show = FALSE)
+#     sigma <- fit$mle[1]
+#     xi <- fit$mle[2]
+#     sigma * (p^(-xi) - 1) / xi
+# }
+# wei_quantile <- function(x, p = 0.5) {
+#     nllh <- function(par) -sum(dweibull(x, par[1], par[2], log = TRUE))
+#     par_hat <- optim(c(1,1), nllh)$par
+#     qweibull(p, par_hat[1], par_hat[2])
+# }
+# sampling_dist <- damage %>% 
+#     bootstraps(times = 1000) %>%
+#     pull(splits) %>%
+#     map(as_tibble) %>% 
+#     map_df(~ summarise(
+#         .x, 
+#         bar = quantile(Dam, probs = 0.8), 
+#         mle_gpd = gpd_quantile(Dam, 0.8),
+#         mle_gau = qnorm(0.8, mean = mean(Dam), sd = sd(Dam)))
+#     )
+# sampling_dist %>% 
+#     gather(key = "method", value = "estimate") %>% 
+#     ggplot(aes(estimate)) +
+#     facet_wrap(~method, nrow = 1, scales = "free_x") +
+#     geom_histogram(bins = 30) +
+#     theme_bw() 
 ```
 
 **Caution**: A common misconception is that the two large observations in the dataset are outliers, and therefore should be removed. However, doing so would bias our understanding of hurricance damages, since these "outliers" are real occurences.
@@ -129,24 +260,24 @@ Although there are far fewer cases in the univariate case compared to the regres
 High quantile example for a PI:
 
 ```{r}
-N <- 10000
-rate <- 1
-ordered <- numeric(0)
-mle <- numeric(0)
-for (i in 1:N) {
-    x <- rexp(10, rate = rate)
-    ordered[i] <- quantile(x, probs = 0.975, type = 1)
-    mle[i] <- qexp(0.975, rate = 1/mean(x))
-}
-tibble(ordered, mle) %>% 
-    gather(value = "estimate") %>%
-    ggplot(aes(estimate)) +
-    geom_density(aes(group = key, fill = key), alpha = 0.5) +
-    geom_vline(xintercept = qexp(0.975, rate = rate),
-               linetype = "dashed") +
-    theme_bw()
-sd(ordered)
-sd(mle)
+# N <- 10000
+# rate <- 1
+# ordered <- numeric(0)
+# mle <- numeric(0)
+# for (i in 1:N) {
+#     x <- rexp(10, rate = rate)
+#     ordered[i] <- quantile(x, probs = 0.975, type = 1)
+#     mle[i] <- qexp(0.975, rate = 1/mean(x))
+# }
+# tibble(ordered, mle) %>% 
+#     gather(value = "estimate") %>%
+#     ggplot(aes(estimate)) +
+#     geom_density(aes(group = key, fill = key), alpha = 0.5) +
+#     geom_vline(xintercept = qexp(0.975, rate = rate),
+#                linetype = "dashed") +
+#     theme_bw()
+# sd(ordered)
+# sd(mle)
 ```
 
 In both cases, the sampling distribution of the MLE is better than that of the sample version -- that is, more narrow and (sometimes) centered closer to the true value.
@@ -159,123 +290,118 @@ If the improvement by using MLE does not seem very impressive to you, you'd be r
 As an example of (1), suppose you are measuring the ratio of torso height to body height. Since your sample falls between 0 and 1, and probably does not have a weirdly shaped density, a Beta distribution would be a good assumption, since the Beta family spans non-weird densities over (0, 1). However, not knowing the data-generating process, you would not be able to justify the distribution completely (and that's OK). As an example of (2), perhaps you are operating the port of Vancouver, BC, and based on your experience, know that vessels arrive more-or-less independently at some average rate. This is how a Poisson distribution is defined. Not only that, but the data appear to be shaped like a Poisson distribution. Then it would be justifiable to assume the data follow a Poisson distribution. 
 
 ```{r}
-n <- 50
-N <- 1000
-fit_mle <- numeric(0)
-fit_ls <- numeric(0)
-for (i in 1:N) {
-    x <- rnorm(n)
-    mu <- 1/(1+exp(-x))
-    y <- rbinom(n, size = 1, prob = mu)
-    fit_mle[i] <- glm(y ~ x, family = "binomial")$coefficients[2]
-    ls <- function(par) sum((y - 1/(1+exp(-par[1]-par[2]*x)))^2)
-    fit_ls[i] <- optim(c(0,1), ls)$par[2]
-}
-tibble(fit_mle, fit_ls) %>% 
-    gather(value = "beta") %>% 
-    ggplot(aes(beta)) +
-    # scale_x_log10() +
-    geom_density(aes(group = key, fill = key), alpha = 0.5)
-sd(fit_mle)
-sd(fit_ls)
-IQR(fit_mle)
-IQR(fit_ls)
-## More extremes show up with LS (at least with n=50):
-sort(fit_ls) %>% tail(10)
-sort(fit_mle) %>% tail(10)
-## Gaussian assumption
-##  - LS not even that good at n=100 -- bowed down. MLE is good.
-##  - MLE qqplot with n=50 looks about the same as LS with n=100
-##  - LS at n=50 is heavy tailed (seemingly).
-qqnorm(fit_mle)
-qqnorm(fit_ls)
+# n <- 50
+# N <- 1000
+# fit_mle <- numeric(0)
+# fit_ls <- numeric(0)
+# for (i in 1:N) {
+#     x <- rnorm(n)
+#     mu <- 1/(1+exp(-x))
+#     y <- rbinom(n, size = 1, prob = mu)
+#     fit_mle[i] <- glm(y ~ x, family = "binomial")$coefficients[2]
+#     ls <- function(par) sum((y - 1/(1+exp(-par[1]-par[2]*x)))^2)
+#     fit_ls[i] <- optim(c(0,1), ls)$par[2]
+# }
+# tibble(fit_mle, fit_ls) %>% 
+#     gather(value = "beta") %>% 
+#     ggplot(aes(beta)) +
+#     # scale_x_log10() +
+#     geom_density(aes(group = key, fill = key), alpha = 0.5)
+# sd(fit_mle)
+# sd(fit_ls)
+# IQR(fit_mle)
+# IQR(fit_ls)
+# ## More extremes show up with LS (at least with n=50):
+# sort(fit_ls) %>% tail(10)
+# sort(fit_mle) %>% tail(10)
+# ## Gaussian assumption
+# ##  - LS not even that good at n=100 -- bowed down. MLE is good.
+# ##  - MLE qqplot with n=50 looks about the same as LS with n=100
+# ##  - LS at n=50 is heavy tailed (seemingly).
+# qqnorm(fit_mle)
+# qqnorm(fit_ls)
 ```
 
 For n=50, check out an example that results in an extreme beta:
 
 ```{r}
-n <- 50
-beta <- 0
-while (beta < 300) {
-    x <- rnorm(n)
-    mu <- 1/(1+exp(-x))
-    y <- rbinom(n, size = 1, prob = mu)
-    ls <- function(par) sum((y - 1/(1+exp(-par[1]-par[2]*x)))^2)
-    .optim <- optim(c(0,1), ls)
-    beta <- .optim$par[2]
-    alpha <- .optim$par[1]
-}
-if (.optim$convergence == 0) stop("optim didn't successfully converge.")
-mle <- glm(y ~ x, family = "binomial")$coefficients
-qplot(x, y) + 
-    stat_function(fun = function(x) 1/(1+exp(-alpha-beta*x)), mapping = aes(colour = "LS")) +
-    stat_function(fun = function(x) 1/(1+exp(-mle[1]-mle[2]*x)), mapping = aes(colour = "MLE"))
+# n <- 50
+# beta <- 0
+# while (beta < 300) {
+#     x <- rnorm(n)
+#     mu <- 1/(1+exp(-x))
+#     y <- rbinom(n, size = 1, prob = mu)
+#     ls <- function(par) sum((y - 1/(1+exp(-par[1]-par[2]*x)))^2)
+#     .optim <- optim(c(0,1), ls)
+#     beta <- .optim$par[2]
+#     alpha <- .optim$par[1]
+# }
+# if (.optim$convergence == 0) stop("optim didn't successfully converge.")
+# mle <- glm(y ~ x, family = "binomial")$coefficients
+# qplot(x, y) + 
+#     stat_function(fun = function(x) 1/(1+exp(-alpha-beta*x)), mapping = aes(colour = "LS")) +
+#     stat_function(fun = function(x) 1/(1+exp(-mle[1]-mle[2]*x)), mapping = aes(colour = "MLE"))
 ```
 
 
 ```{r}
-# MLE is still slightly narrower, even for a Beta(2,2) distribution (which is
-# symmetric and bell-like) -- for n=5 and n=50. Both close to Gaussian, even at
-# n=5 (as expected).
-shape1 <- 2
-shape2 <- 2
-foo <- function(x) dbeta(x, shape1, shape2)
-curve(foo, 0, 1)
-n <- 5
-N <- 1000
-xbar <- numeric(0)
-mle <- numeric(0)
-for (i in 1:N) {
-    x <- rbeta(n, shape1, shape2)
-    xbar[i] <- mean(x)
-    nllh <- function(par) {
-        if (min(par) <= 0) return(Inf)
-        -sum(dbeta(x, par[1], par[2], log = TRUE))
-    }
-    .optim <- optim(c(shape1, shape2), nllh)
-    par_hat <- .optim$par
-    mle[i] <- par_hat[1] / sum(par_hat)
-}
-plot(mle - xbar) # The estimates aren't the same.
-tibble(mle, xbar) %>% 
-    gather() %>% 
-    ggplot(aes(value)) +
-    geom_density(aes(group = key, fill = key), alpha = 0.5)
-sd(mle)
-sd(xbar)
-qqnorm(mle)
-qqnorm(xbar)
+# # MLE is still slightly narrower, even for a Beta(2,2) distribution (which is
+# # symmetric and bell-like) -- for n=5 and n=50. Both close to Gaussian, even at
+# # n=5 (as expected).
+# shape1 <- 2
+# shape2 <- 2
+# foo <- function(x) dbeta(x, shape1, shape2)
+# curve(foo, 0, 1)
+# n <- 5
+# N <- 1000
+# xbar <- numeric(0)
+# mle <- numeric(0)
+# for (i in 1:N) {
+#     x <- rbeta(n, shape1, shape2)
+#     xbar[i] <- mean(x)
+#     nllh <- function(par) {
+#         if (min(par) <= 0) return(Inf)
+#         -sum(dbeta(x, par[1], par[2], log = TRUE))
+#     }
+#     .optim <- optim(c(shape1, shape2), nllh)
+#     par_hat <- .optim$par
+#     mle[i] <- par_hat[1] / sum(par_hat)
+# }
+# plot(mle - xbar) # The estimates aren't the same.
+# tibble(mle, xbar) %>% 
+#     gather() %>% 
+#     ggplot(aes(value)) +
+#     geom_density(aes(group = key, fill = key), alpha = 0.5)
+# sd(mle)
+# sd(xbar)
+# qqnorm(mle)
+# qqnorm(xbar)
 ```
 
 
 
 ```{r}
-# Univariate MLE *especially* important for heavy tailed distributions!
-nu <- 1.5
-n <- 5
-N <- 1000
-xbar <- numeric(0)
-mle <- numeric(0)
-for (i in 1:N) {
-    x <- rt(n, df = nu)
-    xbar[i] <- mean(x)
-    nllh <- function(par) -sum(dt(x, df = par[1], ncp = par[2], log = TRUE))
-    .optim <- optim(c(nu, 0), nllh)
-    mle[i] <- .optim$par[2]
-}
-plot(mle - xbar) # The estimates aren't the same.
-tibble(mle, xbar) %>% 
-    gather() %>% 
-    ggplot(aes(value)) +
-    geom_density(aes(group = key, fill = key), alpha = 0.5)
-sd(mle)
-sd(xbar)
-qqnorm(mle)
-qqnorm(xbar)
+# # Univariate MLE *especially* important for heavy tailed distributions!
+# nu <- 1.5
+# n <- 5
+# N <- 1000
+# xbar <- numeric(0)
+# mle <- numeric(0)
+# for (i in 1:N) {
+#     x <- rt(n, df = nu)
+#     xbar[i] <- mean(x)
+#     nllh <- function(par) -sum(dt(x, df = par[1], ncp = par[2], log = TRUE))
+#     .optim <- optim(c(nu, 0), nllh)
+#     mle[i] <- .optim$par[2]
+# }
+# plot(mle - xbar) # The estimates aren't the same.
+# tibble(mle, xbar) %>% 
+#     gather() %>% 
+#     ggplot(aes(value)) +
+#     geom_density(aes(group = key, fill = key), alpha = 0.5)
+# sd(mle)
+# sd(xbar)
+# qqnorm(mle)
+# qqnorm(xbar)
 ```
-
-
-Stock market example:
-
-
 
