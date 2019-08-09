@@ -53,7 +53,7 @@ mean((yhat - iris_test$Sepal.Width)^2)
 ```{r}
 #tidy(fit)
 #glance(fit)
-augment(fit, newdata = iris_test)
+broom::augment(fit, newdata = iris_test)
 ```
 
 With linear regression:
@@ -63,8 +63,8 @@ fit2 <- lm(Sepal.Width ~ Petal.Width, data=iris_train)
 #unclass(fit2)
 #unclass(summary(fit2))
 
-tidy(fit2)
-augment(fit2)
-glance(fit2)
+broom::tidy(fit2)
+broom::augment(fit2)
+broom::glance(fit2)
 ```
 

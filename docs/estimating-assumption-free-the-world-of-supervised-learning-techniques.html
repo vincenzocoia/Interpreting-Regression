@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 11 Estimating assumption-free: the world of supervised learning techniques | Interpreting Regression</title>
-  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 11 Estimating assumption-free: the world of supervised learning techniques | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 11 Estimating assumption-free: the world of supervised learning techniques | Interpreting Regression" />
   
-  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
   
 
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-29">
+<meta name="date" content="2019-08-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation</a><ul>
 <li class="chapter" data-level="5.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a><ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parametric-families-of-distributions-1"><i class="fa fa-check"></i><b>6.1</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.2</b> Analyses under a Distributional Assumption</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.2.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
 <li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a><ul>
 <li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>7.1</b> Variable terminology</a><ul>
@@ -331,6 +337,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="estimating-assumption-free-the-world-of-supervised-learning-techniques" class="section level1">
 <h1><span class="header-section-number">Chapter 11</span> Estimating assumption-free: the world of supervised learning techniques</h1>
 <p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(tidyverse))</code></pre></div>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.5.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Wage &lt;-<span class="st"> </span>ISLR::Wage
+NCI60 &lt;-<span class="st"> </span>ISLR::NCI60
+baseball &lt;-<span class="st"> </span>Lahman::Teams %&gt;%<span class="st"> </span>tbl_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="dt">runs=</span>R, <span class="dt">hits=</span>H)
+cow &lt;-<span class="st"> </span><span class="kw">suppressMessages</span>(<span class="kw">read_csv</span>(<span class="st">&quot;data/milk_fat.csv&quot;</span>))
+esoph &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(esoph) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">agegp =</span> <span class="kw">as.character</span>(agegp))
+titanic &lt;-<span class="st"> </span><span class="kw">na.omit</span>(titanic::titanic_train)</code></pre></div>
 <div id="what-machine-learning-is" class="section level2">
 <h2><span class="header-section-number">11.1</span> What machine learning is</h2>
 <p>What is Machine Learning (ML) (or Statistical Learning)? As the <a href="http://www-bcf.usc.edu/~gareth/ISL/">ISLR book</a> puts it, it’s a “vast set of tools for understanding data”. Before we explain more, we need to consider the two main types of ML:</p>
@@ -347,13 +367,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## 6  54 127.11574</code></pre>
 <p>We try to model the relationship between age and wage so that we can predict the salary of a new individual, given their age.</p>
 <p>An example supervised learning technique is <em>linear regression</em>, which you’ve seen before in BABS 507/508. For an age <code>x</code>, let’s use linear regression to make a prediction that’s quadratic in <code>x</code>. Here’s the fit:</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>The blue curve represents our attempt to “re-construct” the black box by learning from the existing data. So, for a new individual aged 70, we would predict a salary of about $100,000. A 50-year-old, about $125,000.</p>
 <ul>
 <li><strong>Unsupervised learning</strong>. (<em>BAIT 509 will not focus on this</em>). Sometimes we can’t see the output of the black box. <em>Unsupervised learning</em> attempts to find structure in the data without any output.</li>
 </ul>
 <p>For example, consider the following two gene expression measurements (actually two principal components). Are there groups that we can identify here?</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>You’ve seen methods for doing this in BABS 507/508, such as k-means.</p>
 </div>
 <div id="types-of-supervised-learning" class="section level2">
@@ -398,14 +418,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3><span class="header-section-number">11.3.3</span> In-Class Exercises</h3>
 <p>Consider the following data set, given by <code>dat</code>. Here’s the top six rows of data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">87</span>)
-dat &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>), <span class="kw">rnorm</span>(<span class="dv">100</span>)<span class="op">+</span><span class="dv">5</span>)<span class="op">-</span><span class="dv">3</span>,
-              <span class="dt">y =</span> <span class="kw">sin</span>(x<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="dv">5</span>)<span class="op">/</span>x <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>)<span class="op">/</span><span class="dv">10</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(<span class="dv">1</span>))</code></pre></div>
+dat &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>), <span class="kw">rnorm</span>(<span class="dv">100</span>)+<span class="dv">5</span>)-<span class="dv">3</span>,
+              <span class="dt">y =</span> <span class="kw">sin</span>(x^<span class="dv">2</span>/<span class="dv">5</span>)/x +<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>)/<span class="dv">10</span> +<span class="st"> </span><span class="kw">exp</span>(<span class="dv">1</span>))</code></pre></div>
 <p>Here’s a scatterplot of the data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(x,y)) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_bw</span>() <span class="op">+</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(x,y)) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>) +
+<span class="st">    </span><span class="kw">theme_bw</span>() +<span class="st"> </span>
 <span class="st">    </span>rotate_y</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <div id="exercise-1-mean-at-x0" class="section level4">
 <h4><span class="header-section-number">11.3.3.1</span> Exercise 1: Mean at <span class="math inline">\(X=0\)</span></h4>
 <p>Let’s check your understanding of loess and kNN. Consider estimating the mean of <span class="math inline">\(Y\)</span> when <span class="math inline">\(X=0\)</span> by using data whose <span class="math inline">\(X\)</span> values are near 0.</p>
@@ -439,32 +459,32 @@ loess_prediction &lt;- FILL_THIS_IN</code></pre>
 <div id="exercise-2-regression-curve" class="section level4">
 <h4><span class="header-section-number">11.3.3.2</span> Exercise 2: Regression Curve</h4>
 <p>Form the <strong>regression curve</strong> / <strong>model function</strong> by doing the estimation over a grid of x values, and connecting the dots:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">xgrid &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">5</span>, <span class="dv">4</span>, <span class="dt">length.out=</span><span class="dv">1000</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">xgrid &lt;-<span class="st"> </span><span class="kw">seq</span>(-<span class="dv">5</span>, <span class="dv">4</span>, <span class="dt">length.out=</span><span class="dv">1000</span>)
 k &lt;-<span class="st"> </span><span class="dv">10</span>
 r &lt;-<span class="st"> </span><span class="fl">0.5</span>
-kNN_estimates &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(xgrid, <span class="cf">function</span>(x_){
-    dat <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">        </span><span class="kw">mutate</span>(<span class="dt">d =</span> <span class="kw">abs</span>(x<span class="op">-</span>x_)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">        </span><span class="kw">arrange</span>(d) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">        </span><span class="kw">summarize</span>(<span class="dt">yhat=</span><span class="kw">mean</span>(y[<span class="dv">1</span><span class="op">:</span>k])) <span class="op">%&gt;%</span><span class="st"> </span>
+kNN_estimates &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(xgrid, function(x_){
+    dat %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">mutate</span>(<span class="dt">d =</span> <span class="kw">abs</span>(x-x_)) %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">arrange</span>(d) %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">summarize</span>(<span class="dt">yhat=</span><span class="kw">mean</span>(y[<span class="dv">1</span>:k])) %&gt;%<span class="st"> </span>
 <span class="st">        `</span><span class="dt">[[</span><span class="st">`</span>(<span class="st">&quot;yhat&quot;</span>)
 })
-loess_estimates &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(xgrid, <span class="cf">function</span>(x_){
-    dat <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">        </span><span class="kw">mutate</span>(<span class="dt">d =</span> <span class="kw">abs</span>(x<span class="op">-</span>x_)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">        </span><span class="kw">filter</span>(d<span class="op">&lt;</span>r) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">        </span><span class="kw">summarize</span>(<span class="dt">yhat=</span><span class="kw">mean</span>(y)) <span class="op">%&gt;%</span><span class="st"> </span>
+loess_estimates &lt;-<span class="st"> </span><span class="kw">map_dbl</span>(xgrid, function(x_){
+    dat %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">mutate</span>(<span class="dt">d =</span> <span class="kw">abs</span>(x-x_)) %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">filter</span>(d&lt;r) %&gt;%<span class="st"> </span>
+<span class="st">        </span><span class="kw">summarize</span>(<span class="dt">yhat=</span><span class="kw">mean</span>(y)) %&gt;%<span class="st"> </span>
 <span class="st">        `</span><span class="dt">[[</span><span class="st">`</span>(<span class="st">&quot;yhat&quot;</span>)
 })
-est &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x=</span>xgrid, <span class="dt">kNN=</span>kNN_estimates, <span class="dt">loess=</span>loess_estimates) <span class="op">%&gt;%</span><span class="st"> </span>
+est &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x=</span>xgrid, <span class="dt">kNN=</span>kNN_estimates, <span class="dt">loess=</span>loess_estimates) %&gt;%<span class="st"> </span>
 <span class="st">    </span><span class="kw">gather</span>(<span class="dt">key=</span><span class="st">&quot;method&quot;</span>, <span class="dt">value=</span><span class="st">&quot;estimate&quot;</span>, kNN, loess)
-<span class="kw">ggplot</span>() <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data=</span>dat, <span class="dt">mapping=</span><span class="kw">aes</span>(x,y)) <span class="op">+</span>
+<span class="kw">ggplot</span>() +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">data=</span>dat, <span class="dt">mapping=</span><span class="kw">aes</span>(x,y)) +
 <span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">data=</span>est, 
               <span class="dt">mapping=</span><span class="kw">aes</span>(x,estimate, <span class="dt">group=</span>method, <span class="dt">colour=</span>method),
-              <span class="dt">size=</span><span class="dv">1</span>) <span class="op">+</span>
+              <span class="dt">size=</span><span class="dv">1</span>) +
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p><strong>Exercises</strong>:</p>
 <ul>
 <li>Play with different values of <span class="math inline">\(k\)</span> and <span class="math inline">\(r\)</span>, and regenerate the plot each time. What effect does increasing these values have on the regression curve? What about decreasing? What would you say is a “good” choice of <span class="math inline">\(k\)</span> and <span class="math inline">\(r\)</span>, and why?</li>
@@ -478,35 +498,35 @@ est &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt
 <p>Let’s look at the bias and variance for different values of the hyperparameter in loess.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">400</span>)
 N &lt;-<span class="st"> </span><span class="dv">100</span>
-xgrid &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">7</span>, <span class="fl">6.5</span>, <span class="dt">length.out=</span><span class="dv">300</span>)
-true_mean &lt;-<span class="st"> </span><span class="kw">Vectorize</span>(<span class="cf">function</span>(x){
-    <span class="cf">if</span> (x<span class="op">==</span><span class="dv">0</span>) <span class="kw">return</span>(<span class="kw">exp</span>(<span class="dv">1</span>)) <span class="cf">else</span> <span class="kw">return</span>(<span class="kw">sin</span>(x<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="dv">5</span>)<span class="op">/</span>x <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(<span class="dv">1</span>))
+xgrid &lt;-<span class="st"> </span><span class="kw">seq</span>(-<span class="dv">7</span>, <span class="fl">6.5</span>, <span class="dt">length.out=</span><span class="dv">300</span>)
+true_mean &lt;-<span class="st"> </span><span class="kw">Vectorize</span>(function(x){
+    if (x==<span class="dv">0</span>) <span class="kw">return</span>(<span class="kw">exp</span>(<span class="dv">1</span>)) else <span class="kw">return</span>(<span class="kw">sin</span>(x^<span class="dv">2</span>/<span class="dv">5</span>)/x +<span class="st"> </span><span class="kw">exp</span>(<span class="dv">1</span>))
 })
 ## Use &quot;tibble %&gt;% group_by %&gt;% do&quot; in place of `for` loop
-<span class="kw">expand.grid</span>(<span class="dt">iter=</span><span class="dv">1</span><span class="op">:</span>N, <span class="dt">r=</span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(iter, r) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">do</span>({
-    this_r &lt;-<span class="st"> </span><span class="kw">unique</span>(.<span class="op">$</span>r)
-    dat &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>), <span class="kw">rnorm</span>(<span class="dv">100</span>)<span class="op">+</span><span class="dv">5</span>)<span class="op">-</span><span class="dv">3</span>,
-                  <span class="dt">y =</span> <span class="kw">sin</span>(x<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="dv">5</span>)<span class="op">/</span>x <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>)<span class="op">/</span><span class="dv">10</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(<span class="dv">1</span>))
+<span class="kw">expand.grid</span>(<span class="dt">iter=</span><span class="dv">1</span>:N, <span class="dt">r=</span><span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)) %&gt;%<span class="st"> </span><span class="kw">group_by</span>(iter, r) %&gt;%<span class="st"> </span><span class="kw">do</span>({
+    this_r &lt;-<span class="st"> </span><span class="kw">unique</span>(.$r)
+    dat &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>), <span class="kw">rnorm</span>(<span class="dv">100</span>)+<span class="dv">5</span>)-<span class="dv">3</span>,
+                  <span class="dt">y =</span> <span class="kw">sin</span>(x^<span class="dv">2</span>/<span class="dv">5</span>)/x +<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>)/<span class="dv">10</span> +<span class="st"> </span><span class="kw">exp</span>(<span class="dv">1</span>))
     <span class="kw">data.frame</span>(
         .,
         <span class="dt">x =</span> xgrid,
-        <span class="dt">yhat =</span> <span class="kw">ksmooth</span>(dat<span class="op">$</span>x, dat<span class="op">$</span>y, <span class="dt">kernel=</span><span class="st">&quot;box&quot;</span>, 
+        <span class="dt">yhat =</span> <span class="kw">ksmooth</span>(dat$x, dat$y, <span class="dt">kernel=</span><span class="st">&quot;box&quot;</span>, 
                          <span class="dt">bandwidth=</span>this_r,
-                         <span class="dt">x.points=</span>xgrid)<span class="op">$</span>y
+                         <span class="dt">x.points=</span>xgrid)$y
     )
-}) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">r=</span><span class="kw">paste0</span>(<span class="st">&quot;bandwidth=&quot;</span>, r)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>yhat)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>r, <span class="dt">ncol=</span><span class="dv">1</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>iter, <span class="dt">colour=</span><span class="st">&quot;Estimates&quot;</span>), <span class="dt">alpha=</span><span class="fl">0.1</span>) <span class="op">+</span>
+}) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">ungroup</span>() %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">r=</span><span class="kw">paste0</span>(<span class="st">&quot;bandwidth=&quot;</span>, r)) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>yhat)) +
+<span class="st">    </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>r, <span class="dt">ncol=</span><span class="dv">1</span>) +
+<span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>iter, <span class="dt">colour=</span><span class="st">&quot;Estimates&quot;</span>), <span class="dt">alpha=</span><span class="fl">0.1</span>) +
 <span class="st">    </span><span class="kw">stat_function</span>(<span class="dt">fun=</span>true_mean,
-                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;True mean&quot;</span>)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_bw</span>() <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;&quot;</span>, <span class="dt">palette=</span><span class="st">&quot;Dark2&quot;</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;y&quot;</span>) <span class="op">+</span><span class="st"> </span>rotate_y</code></pre></div>
+                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;True mean&quot;</span>)) +
+<span class="st">    </span><span class="kw">theme_bw</span>() +
+<span class="st">    </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;&quot;</span>, <span class="dt">palette=</span><span class="st">&quot;Dark2&quot;</span>) +
+<span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;y&quot;</span>) +<span class="st"> </span>rotate_y</code></pre></div>
 <pre><code>## Warning: Removed 3240 rows containing missing values (geom_path).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p>You can see the bias/variance tradeoff here:</p>
 <ul>
 <li>Notice that the estimates get <em>narrower</em> as the bandwidth increases – this means the variance reduces as the bandwidth increases.</li>
@@ -565,38 +585,38 @@ true_mean &lt;-<span class="st"> </span><span class="kw">Vectorize</span>(<span 
 <p>Warning! The “bandwidth” hyperparameter in this plot is parameterized differently than in the previous plot, but carries the same interpretation.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">400</span>)
 N &lt;-<span class="st"> </span><span class="dv">100</span>
-xgrid &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">7</span>, <span class="fl">6.5</span>, <span class="dt">length.out=</span><span class="dv">300</span>)
-true_mean &lt;-<span class="st"> </span><span class="kw">Vectorize</span>(<span class="cf">function</span>(x){
-    <span class="cf">if</span> (x<span class="op">==</span><span class="dv">0</span>) <span class="kw">return</span>(<span class="kw">exp</span>(<span class="dv">1</span>)) <span class="cf">else</span> <span class="kw">return</span>(<span class="kw">sin</span>(x<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="dv">5</span>)<span class="op">/</span>x <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(<span class="dv">1</span>))
+xgrid &lt;-<span class="st"> </span><span class="kw">seq</span>(-<span class="dv">7</span>, <span class="fl">6.5</span>, <span class="dt">length.out=</span><span class="dv">300</span>)
+true_mean &lt;-<span class="st"> </span><span class="kw">Vectorize</span>(function(x){
+    if (x==<span class="dv">0</span>) <span class="kw">return</span>(<span class="kw">exp</span>(<span class="dv">1</span>)) else <span class="kw">return</span>(<span class="kw">sin</span>(x^<span class="dv">2</span>/<span class="dv">5</span>)/x +<span class="st"> </span><span class="kw">exp</span>(<span class="dv">1</span>))
 })
 ## Use &quot;tibble %&gt;% group_by %&gt;% do&quot; in place of `for` loop
-<span class="kw">expand.grid</span>(<span class="dt">iter=</span><span class="dv">1</span><span class="op">:</span>N, <span class="dt">r=</span><span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>), <span class="dt">d=</span><span class="dv">0</span><span class="op">:</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">group_by</span>(iter, r, d) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">do</span>({
-    this_r &lt;-<span class="st"> </span><span class="kw">unique</span>(.<span class="op">$</span>r)
-    this_d &lt;-<span class="st"> </span><span class="kw">unique</span>(.<span class="op">$</span>d)
-    dat &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>), <span class="kw">rnorm</span>(<span class="dv">100</span>)<span class="op">+</span><span class="dv">5</span>)<span class="op">-</span><span class="dv">3</span>,
-                  <span class="dt">y =</span> <span class="kw">sin</span>(x<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="dv">5</span>)<span class="op">/</span>x <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>)<span class="op">/</span><span class="dv">10</span> <span class="op">+</span><span class="st"> </span><span class="kw">exp</span>(<span class="dv">1</span>))
+<span class="kw">expand.grid</span>(<span class="dt">iter=</span><span class="dv">1</span>:N, <span class="dt">r=</span><span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>), <span class="dt">d=</span><span class="dv">0</span>:<span class="dv">2</span>) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">group_by</span>(iter, r, d) %&gt;%<span class="st"> </span><span class="kw">do</span>({
+    this_r &lt;-<span class="st"> </span><span class="kw">unique</span>(.$r)
+    this_d &lt;-<span class="st"> </span><span class="kw">unique</span>(.$d)
+    dat &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">c</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>), <span class="kw">rnorm</span>(<span class="dv">100</span>)+<span class="dv">5</span>)-<span class="dv">3</span>,
+                  <span class="dt">y =</span> <span class="kw">sin</span>(x^<span class="dv">2</span>/<span class="dv">5</span>)/x +<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">200</span>)/<span class="dv">10</span> +<span class="st"> </span><span class="kw">exp</span>(<span class="dv">1</span>))
     <span class="kw">data.frame</span>(
         .,
         <span class="dt">x =</span> xgrid,
-        <span class="dt">yhat =</span> <span class="kw">predict</span>(<span class="kw">loess</span>(y<span class="op">~</span>x, <span class="dt">data=</span>dat, 
+        <span class="dt">yhat =</span> <span class="kw">predict</span>(<span class="kw">loess</span>(y~x, <span class="dt">data=</span>dat, 
                              <span class="dt">span=</span>this_r, <span class="dt">degree=</span>this_d),
                        <span class="dt">newdata=</span><span class="kw">data.frame</span>(<span class="dt">x=</span>xgrid))
     )
-}) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+}) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">ungroup</span>() %&gt;%<span class="st"> </span>
 <span class="st">    </span><span class="kw">mutate</span>(<span class="dt">r=</span><span class="kw">paste0</span>(<span class="st">&quot;bandwidth=&quot;</span>, r),
-           <span class="dt">d=</span><span class="kw">paste0</span>(<span class="st">&quot;degree=&quot;</span>, d)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>yhat)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">facet_grid</span>(r <span class="op">~</span><span class="st"> </span>d) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>iter, <span class="dt">colour=</span><span class="st">&quot;Estimates&quot;</span>), <span class="dt">alpha=</span><span class="fl">0.1</span>) <span class="op">+</span>
+           <span class="dt">d=</span><span class="kw">paste0</span>(<span class="st">&quot;degree=&quot;</span>, d)) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>yhat)) +
+<span class="st">    </span><span class="kw">facet_grid</span>(r ~<span class="st"> </span>d) +
+<span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>iter, <span class="dt">colour=</span><span class="st">&quot;Estimates&quot;</span>), <span class="dt">alpha=</span><span class="fl">0.1</span>) +
 <span class="st">    </span><span class="kw">stat_function</span>(<span class="dt">fun=</span>true_mean,
-                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;True mean&quot;</span>)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_bw</span>() <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;&quot;</span>, <span class="dt">palette=</span><span class="st">&quot;Dark2&quot;</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;y&quot;</span>) <span class="op">+</span><span class="st"> </span>rotate_y</code></pre></div>
+                  <span class="dt">mapping=</span><span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;True mean&quot;</span>)) +
+<span class="st">    </span><span class="kw">theme_bw</span>() +
+<span class="st">    </span><span class="kw">scale_colour_brewer</span>(<span class="st">&quot;&quot;</span>, <span class="dt">palette=</span><span class="st">&quot;Dark2&quot;</span>) +
+<span class="st">    </span><span class="kw">ylab</span>(<span class="st">&quot;y&quot;</span>) +<span class="st"> </span>rotate_y</code></pre></div>
 <pre><code>## Warning: Removed 8034 rows containing missing values (geom_path).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-23-1.png" width="960" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-9-1.png" width="960" /></p>
 <p>Notice:</p>
 <ul>
 <li>For small bandwidth, increasing the degree of the poynomial just results in more variance – degree=0 looks best for this bandwidth.</li>
@@ -615,28 +635,28 @@ true_mean &lt;-<span class="st"> </span><span class="kw">Vectorize</span>(<span 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">474</span>)
 n &lt;-<span class="st"> </span><span class="dv">100</span>
 N &lt;-<span class="st"> </span><span class="dv">100</span>
-xgrid &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">4</span>,<span class="dv">4</span>, <span class="dt">length.out=</span><span class="dv">100</span>))
+xgrid &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">seq</span>(-<span class="dv">4</span>,<span class="dv">4</span>, <span class="dt">length.out=</span><span class="dv">100</span>))
 ## Use &quot;tibble %&gt;% group_by %&gt;% do&quot; in place of `for` loop
-<span class="kw">tibble</span>(<span class="dt">iter=</span><span class="dv">1</span><span class="op">:</span>N) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(iter) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">do</span>({
+<span class="kw">tibble</span>(<span class="dt">iter=</span><span class="dv">1</span>:N) %&gt;%<span class="st"> </span><span class="kw">group_by</span>(iter) %&gt;%<span class="st"> </span><span class="kw">do</span>({
     dat &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">x=</span><span class="kw">rnorm</span>(n), 
-                  <span class="dt">y=</span>x<span class="op">+</span><span class="kw">rnorm</span>(n))
+                  <span class="dt">y=</span>x+<span class="kw">rnorm</span>(n))
     <span class="kw">data.frame</span>(
         .,
         xgrid,
-        <span class="dt">Local  =</span> <span class="kw">predict</span>(<span class="kw">loess</span>(y<span class="op">~</span>x, <span class="dt">data=</span>dat),
+        <span class="dt">Local  =</span> <span class="kw">predict</span>(<span class="kw">loess</span>(y~x, <span class="dt">data=</span>dat),
                          <span class="dt">newdata=</span>xgrid),
-        <span class="dt">Linear =</span> <span class="kw">predict</span>(<span class="kw">lm</span>(y<span class="op">~</span>x, <span class="dt">data=</span>dat),
+        <span class="dt">Linear =</span> <span class="kw">predict</span>(<span class="kw">lm</span>(y~x, <span class="dt">data=</span>dat),
                          <span class="dt">newdata=</span>xgrid)
     )
-}) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">gather</span>(<span class="dt">key=</span><span class="st">&quot;method&quot;</span>, <span class="dt">value=</span><span class="st">&quot;Prediction&quot;</span>, Local, Linear) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>Prediction)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>method) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>iter), <span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">alpha=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">intercept=</span><span class="dv">0</span>, <span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>) <span class="op">+</span>
+}) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">gather</span>(<span class="dt">key=</span><span class="st">&quot;method&quot;</span>, <span class="dt">value=</span><span class="st">&quot;Prediction&quot;</span>, Local, Linear) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>Prediction)) +
+<span class="st">    </span><span class="kw">facet_wrap</span>(~<span class="st"> </span>method) +
+<span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group=</span>iter), <span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">alpha=</span><span class="fl">0.1</span>) +
+<span class="st">    </span><span class="kw">geom_abline</span>(<span class="dt">intercept=</span><span class="dv">0</span>, <span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>) +
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
 <pre><code>## Warning: Removed 1869 rows containing missing values (geom_path).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>Notice that the local method has higher variance than the linear regression method.</p>
 </div>
 </div>
@@ -647,18 +667,18 @@ xgrid &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span cla
 <p>You can think of splines as regression between knots. We’ll use the <code>splines</code> package to do this.</p>
 <p>Here’s some generated data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
-y &lt;-<span class="st"> </span>x<span class="op">^</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
-<span class="kw">qplot</span>(x, y, <span class="dt">alpha=</span><span class="kw">I</span>(<span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+y &lt;-<span class="st"> </span>x^<span class="dv">2</span> +<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>)
+<span class="kw">qplot</span>(x, y, <span class="dt">alpha=</span><span class="kw">I</span>(<span class="fl">0.5</span>)) +<span class="st"> </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>First, we need to “set up” the regression by placing knots.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x2 &lt;-<span class="st"> </span>splines<span class="op">::</span><span class="kw">ns</span>(x, <span class="dt">knots=</span><span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">2</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x2 &lt;-<span class="st"> </span>splines::<span class="kw">ns</span>(x, <span class="dt">knots=</span><span class="kw">c</span>(-<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">2</span>))</code></pre></div>
 <p>Now we can do regression between these knots, with the natural spline shape (as opposed to linear):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x2)
-<span class="kw">qplot</span>(x, y, <span class="dt">alpha=</span><span class="kw">I</span>(<span class="fl">0.5</span>)) <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">lm</span>(y ~<span class="st"> </span>x2)
+<span class="kw">qplot</span>(x, y, <span class="dt">alpha=</span><span class="kw">I</span>(<span class="fl">0.5</span>)) +
 <span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">data=</span><span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span><span class="kw">predict</span>(fit)), 
-              <span class="dt">mapping=</span><span class="kw">aes</span>(x, y), <span class="dt">colour=</span><span class="st">&quot;blue&quot;</span>) <span class="op">+</span><span class="st"> </span>
+              <span class="dt">mapping=</span><span class="kw">aes</span>(x, y), <span class="dt">colour=</span><span class="st">&quot;blue&quot;</span>) +<span class="st"> </span>
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <div id="loess-1" class="section level3">
 <h3><span class="header-section-number">11.4.1</span> Loess</h3>
 <p>Loess is “local regression”, and is based on the idea of estimating the mean response based on similar observed data in the predictor space.</p>
@@ -675,26 +695,26 @@ y &lt;-<span class="st"> </span>x<span class="op">^</span><span class="dv">2</sp
 <div id="ggplot2" class="section level4">
 <h4><span class="header-section-number">11.4.1.2</span> <code>ggplot2</code></h4>
 <p><code>ggplot2</code> comes with a fairly powerful tool for plotting a smoother, with <code>geom_smooth</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, y) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;loess&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, y) +
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;loess&quot;</span>) +<span class="st"> </span>
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>You can choose the bandwidth through the <code>span</code> argument:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, y) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;loess&quot;</span>, <span class="dt">span=</span><span class="fl">0.1</span>) <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, y) +
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;loess&quot;</span>, <span class="dt">span=</span><span class="fl">0.1</span>) +
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>Too wiggly. The default looks fine.</p>
 <p>Note that <code>geom_smooth</code> can fit <code>lm</code> and <code>glm</code> fits too:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, y) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">formula=</span>y<span class="op">~</span>x<span class="op">+</span><span class="kw">I</span>(x<span class="op">^</span><span class="dv">2</span>)) <span class="op">+</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, y) +
+<span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">formula=</span>y~x+<span class="kw">I</span>(x^<span class="dv">2</span>)) +<span class="st"> </span>
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
 <div id="manual-method" class="section level4">
 <h4><span class="header-section-number">11.4.1.3</span> Manual method</h4>
 <p>You can use the <code>loess</code> or <code>ksmooth</code> function in R to do kernel smoothing yourself. You get more flexibility here, since you can get things such as predictions. It works just like the other regression functions:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(fit &lt;-<span class="st"> </span><span class="kw">loess</span>(y <span class="op">~</span><span class="st"> </span>x))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(fit &lt;-<span class="st"> </span><span class="kw">loess</span>(y ~<span class="st"> </span>x))</code></pre></div>
 <pre><code>## Call:
 ## loess(formula = y ~ x)
 ## 
@@ -703,11 +723,11 @@ y &lt;-<span class="st"> </span>x<span class="op">^</span><span class="dv">2</sp
 ## Residual Standard Error: 1.037</code></pre>
 <p>We can make predictions as usual:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">yhat &lt;-<span class="st"> </span><span class="kw">predict</span>(fit)
-<span class="kw">qplot</span>(x, y) <span class="op">+</span>
+<span class="kw">qplot</span>(x, y) +
 <span class="st">    </span><span class="kw">geom_line</span>(<span class="dt">data=</span><span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>yhat), <span class="dt">mapping=</span><span class="kw">aes</span>(x, y), 
-              <span class="dt">colour=</span><span class="st">&quot;blue&quot;</span>) <span class="op">+</span><span class="st"> </span>
+              <span class="dt">colour=</span><span class="st">&quot;blue&quot;</span>) +<span class="st"> </span>
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><img src="090-Estimating_assumption_free_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>If you want the standard errors of the predictions, you can indicate this with <code>se=TRUE</code> in the <code>predict</code> function.</p>
 <p>Some key things that you might want to change in your kernel smoothing regression, through arguments in the <code>loess</code> function:</p>
 <ul>
@@ -764,7 +784,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
 "toc": {
 "collapse": "subsection"
 }

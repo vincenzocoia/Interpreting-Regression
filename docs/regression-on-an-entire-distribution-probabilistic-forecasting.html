@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 24 Regression on an entire distribution: Probabilistic Forecasting | Interpreting Regression</title>
-  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 24 Regression on an entire distribution: Probabilistic Forecasting | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 24 Regression on an entire distribution: Probabilistic Forecasting | Interpreting Regression" />
   
-  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
   
 
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-29">
+<meta name="date" content="2019-08-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation</a><ul>
 <li class="chapter" data-level="5.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a><ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parametric-families-of-distributions-1"><i class="fa fa-check"></i><b>6.1</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.2</b> Analyses under a Distributional Assumption</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.2.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
 <li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a><ul>
 <li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>7.1</b> Variable terminology</a><ul>
@@ -331,6 +337,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="regression-on-an-entire-distribution-probabilistic-forecasting" class="section level1">
 <h1><span class="header-section-number">Chapter 24</span> Regression on an entire distribution: Probabilistic Forecasting</h1>
 <p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(tidyverse))</code></pre></div>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.5.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">baseball &lt;-<span class="st"> </span>Lahman::Teams %&gt;%<span class="st"> </span>tbl_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="dt">runs=</span>R, <span class="dt">hits=</span>H)</code></pre></div>
 <p>Up until now, we’ve only seen different ways of using a predictor to give us more information the <strong>mean</strong> and <strong>mode</strong> of the response. The world holds a huge emphasis on the mean and mode, but these are not always what’s important. Two alternatives are:</p>
 <ol style="list-style-type: decimal">
 <li><strong>Probabilistic forecasting</strong></li>
@@ -358,13 +372,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Let’s not concern ourselves with the <em>methods</em> yet. Using a standard regression technique, here are our predictions:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r &lt;-<span class="st"> </span><span class="dv">20</span>
 datsub &lt;-<span class="st"> </span><span class="kw">filter</span>(baseball,
-                 (hits<span class="op">&gt;=</span><span class="dv">1000</span><span class="op">-</span>r <span class="op">&amp;</span><span class="st"> </span>hits<span class="op">&lt;=</span><span class="dv">1000</span><span class="op">+</span>r) <span class="op">|</span>
-<span class="st">                     </span>(hits<span class="op">&gt;=</span><span class="dv">1500</span><span class="op">-</span>r <span class="op">&amp;</span><span class="st"> </span>hits<span class="op">&lt;=</span><span class="dv">1500</span><span class="op">+</span>r)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">approx_hits =</span> <span class="kw">if_else</span>(hits<span class="op">&gt;=</span><span class="dv">1000</span><span class="op">-</span>r <span class="op">&amp;</span><span class="st"> </span>hits<span class="op">&lt;=</span><span class="dv">1000</span><span class="op">+</span>r, <span class="dv">1000</span>, <span class="dv">1500</span>))
-datsub <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">group_by</span>(approx_hits) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">expected_runs=</span><span class="kw">round</span>(<span class="kw">mean</span>(runs))) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">rename</span>(<span class="dt">hits=</span>approx_hits) <span class="op">%&gt;%</span><span class="st"> </span>
+                 (hits&gt;=<span class="dv">1000</span>-r &amp;<span class="st"> </span>hits&lt;=<span class="dv">1000</span>+r) |
+<span class="st">                     </span>(hits&gt;=<span class="dv">1500</span>-r &amp;<span class="st"> </span>hits&lt;=<span class="dv">1500</span>+r)) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">approx_hits =</span> <span class="kw">if_else</span>(hits&gt;=<span class="dv">1000</span>-r &amp;<span class="st"> </span>hits&lt;=<span class="dv">1000</span>+r, <span class="dv">1000</span>, <span class="dv">1500</span>))
+datsub %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">group_by</span>(approx_hits) %&gt;%
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">expected_runs=</span><span class="kw">round</span>(<span class="kw">mean</span>(runs))) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">rename</span>(<span class="dt">hits=</span>approx_hits) %&gt;%<span class="st"> </span>
 <span class="st">    </span><span class="kw">select</span>(hits, expected_runs)</code></pre></div>
 <pre><code>## # A tibble: 2 x 2
 ##    hits expected_runs
@@ -372,7 +386,7 @@ datsub <span class="op">%&gt;%</span><span class="st"> </span>
 ## 1  1000           558
 ## 2  1500           768</code></pre>
 <p>Using a probabilistic forecast, here are our predictions:</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-87-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Don’t you think this is far more informative than the mean estimates in the above table?</p>
 <p>The probabilistic forecast/prediction contains the most amount of information about the response as possible (based on a set of predictors), because it communicates the entire belief of what <span class="math inline">\(Y\)</span> values are most plausible, given values of the predictor.</p>
 <p>Predictions/forecasts here are called <strong>predictive distributions</strong>.</p>
@@ -402,23 +416,23 @@ datsub <span class="op">%&gt;%</span><span class="st"> </span>
 <li>For our setup, we have:</li>
 </ul></li>
 </ol>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(<span class="dt">x=</span>x), <span class="kw">aes</span>(x)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth=</span><span class="dv">10</span>, <span class="dt">center=</span><span class="kw">min</span>(x)<span class="op">+</span><span class="dv">5</span>,
-                   <span class="dt">fill=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(<span class="dt">x=</span>x), <span class="kw">aes</span>(x)) +
+<span class="st">    </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth=</span><span class="dv">10</span>, <span class="dt">center=</span><span class="kw">min</span>(x)+<span class="dv">5</span>,
+                   <span class="dt">fill=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">colour=</span><span class="st">&quot;black&quot;</span>) +
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-89-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>(Note: this is not a true density, since the area under the curve is not 1, but the shape is what matters)</p>
 <p>You’d have to play with the binwidth to get a histogram that looks about right (not too jagged, not too coarse). For the above example, there are too few data to make a good estimate. Let’s now generate 1000 observations, and make a histogram using <code>qplot</code> from R’s <code>ggplot2</code> package, with a variety of binwidths – too small, too large, and just right.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1000</span>, <span class="dt">sd=</span><span class="dv">10</span>)
 <span class="kw">qplot</span>(x, <span class="dt">binwidth=</span><span class="dv">1</span>)  <span class="co"># too small</span></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-90-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, <span class="dt">binwidth=</span><span class="dv">10</span>)  <span class="co"># too big</span></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-90-2.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, <span class="dt">binwidth=</span><span class="fl">3.5</span>)  <span class="co"># just right</span></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-90-3.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
 <p><strong>Advanced method</strong>: There’s a technique called the <em>kernel density estimate</em> that works as an alernative to the histogram. The idea is to put a “little mound” (a kernel) on top of each observation, and add them up. Instead of playing with the binwidth, you can play with the “bandwidth” of the kernels. Use <code>geom=&quot;density&quot;</code> in <code>qplot</code>, and use <code>bw</code> to play with the bandwidth:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(x, <span class="dt">geom=</span><span class="st">&quot;density&quot;</span>, <span class="dt">bw=</span><span class="fl">2.5</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-91-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 <div id="discrete-response" class="section level3">
 <h3><span class="header-section-number">24.2.2</span> Discrete Response</h3>
@@ -431,17 +445,17 @@ datsub <span class="op">%&gt;%</span><span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x</code></pre></div>
 <pre><code>##  [1] 1 0 0 0 2 0 1 2 3 0</code></pre>
 <p>The proportions are as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">props &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">Value=</span>x) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">group_by</span>(Value) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">Proportion=</span><span class="kw">length</span>(Value)<span class="op">/</span><span class="kw">length</span>(x))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">props &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">Value=</span>x) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">group_by</span>(Value) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">Proportion=</span><span class="kw">length</span>(Value)/<span class="kw">length</span>(x))</code></pre></div>
 <p>You can plot these proportions with <code>qplot</code>, specifying <code>geom=&quot;col&quot;</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qplot</span>(<span class="dt">x=</span>Value, <span class="dt">y=</span>Proportion, <span class="dt">data=</span>props, <span class="dt">geom=</span><span class="st">&quot;col&quot;</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-95-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>You can use <code>ggplot2</code> to calculate the proportions, but it’s more complex. It’s easier to plot the raw counts, instead of proportions – and that’s fine, you’ll still get the same shape. Using <code>qplot</code> again, let’s make a plot for 1000 observations (note that I indicate that my data are discrete by using the <code>factor</code> function):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2</span>)
 x &lt;-<span class="st"> </span><span class="kw">rpois</span>(<span class="dv">1000</span>, <span class="dt">lambda=</span><span class="dv">1</span>)
 <span class="kw">qplot</span>(<span class="kw">factor</span>(x))</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-96-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Here’s the code to get proportions instead of counts:</p>
 <pre><code>qplot(factor(x), mapping=aes(y=..prop..), group=1)</code></pre>
 </div>
@@ -457,14 +471,14 @@ x &lt;-<span class="st"> </span><span class="kw">rpois</span>(<span class="dv">1
 <li>For tree-based methods, use the observations within a leaf to form a histogram/density plot/bar plot for that leaf.</li>
 </ul>
 <p>The above baseball example used a moving window with a radius of <code>20</code> hits. Visually, you can see the data that I subsetted within these two narrow windows, for hits of 1000 and 1500:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(baseball, <span class="kw">aes</span>(hits, runs)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">alpha=</span><span class="fl">0.1</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_vline</span>(<span class="dt">xintercept=</span><span class="kw">c</span>(<span class="dv">1000</span><span class="op">+</span><span class="kw">c</span>(<span class="op">-</span>r,r), <span class="dv">1500</span><span class="op">+</span><span class="kw">c</span>(<span class="op">-</span>r,r)),
-               <span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(baseball, <span class="kw">aes</span>(hits, runs)) +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>, <span class="dt">alpha=</span><span class="fl">0.1</span>) +
+<span class="st">    </span><span class="kw">geom_vline</span>(<span class="dt">xintercept=</span><span class="kw">c</span>(<span class="dv">1000</span>+<span class="kw">c</span>(-r,r), <span class="dv">1500</span>+<span class="kw">c</span>(-r,r)),
+               <span class="dt">linetype=</span><span class="st">&quot;dashed&quot;</span>) +
+<span class="st">    </span><span class="kw">theme_bw</span>() +
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Number of Hits (X)&quot;</span>,
          <span class="dt">y=</span><span class="st">&quot;Number of Runs (Y)&quot;</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-97-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 </div>
 <div id="exercise-1" class="section level3">
 <h3><span class="header-section-number">24.3.2</span> Exercise</h3>
@@ -485,7 +499,7 @@ x &lt;-<span class="st"> </span><span class="kw">rpois</span>(<span class="dv">1
 <li>For each value of <span class="math inline">\(k\)</span>, we’ll generate 20 training data sets.</li>
 </ul>
 <p>Here are the 20 estimates for the values of <span class="math inline">\(k\)</span>. The overall mean of the distributions are indicated by a vertical dashed line.</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-98-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>Notice that:</p>
 <ul>
 <li>When <span class="math inline">\(k\)</span> is large, our estimates are biased, because the distributions are not centered correctly. But, the estimates are more consistent.</li>
@@ -507,7 +521,7 @@ x &lt;-<span class="st"> </span><span class="kw">rpois</span>(<span class="dv">1
 <ol style="list-style-type: decimal">
 <li>Both are predicted to have the same productivity score of 75, but have the following probabilistic forecasts.</li>
 </ol>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-99-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <blockquote>
 <p>It’s hard to make a decision here. On the one hand, we can be fairly certain that the <em>actual</em> productivity of candidate A will be about 75, but there’s more of a gamble with candidate B. There’s a very real chance that B’s productivity is actually quite a bit higher than A – for example, a productivity of 80 is plausible for B, but not for A. On the other hand, there’s also a very real chance that B’s productivity is actually quite a bit <em>lower</em> than A, for the same reason. Your decision would depend on whether you would want to take a risk or not.</p>
 </blockquote>
@@ -517,7 +531,7 @@ x &lt;-<span class="st"> </span><span class="kw">rpois</span>(<span class="dv">1
 <ol start="2" style="list-style-type: decimal">
 <li>Two “non-overlapping” forecasts:</li>
 </ol>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-100-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <blockquote>
 <p>In this case, B is very very likely to have higher productivity than A, because all “plausible” productivity values for B are higher than all “plausible” productivity values of A.</p>
 </blockquote>
@@ -527,7 +541,7 @@ x &lt;-<span class="st"> </span><span class="kw">rpois</span>(<span class="dv">1
 <ol start="3" style="list-style-type: decimal">
 <li>You’ve formed a probabilistic forecast for a particular value of the predictors, displayed below as a density. You then collect test data for that same value of the predictor, indicated as the points below the density. What is the problem with the probabilistic forecast?</li>
 </ol>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-101-1.png" width="672" /></p>
+<p><img src="220-Regression_on_an_entire_distribution_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <blockquote>
 <p>The forecast is biased, because the actual values are occuring near the upper tail of the distribution – they <em>should</em> be scattered about the middle, with a higher density of points occuring near 0. If using local methods, we’d have to reduce <span class="math inline">\(k\)</span> or the window width to decrease bias (to remove “further” data that are less relevant); if using a tree-based method, you could grow the tree deeper to lower the bias.</p>
 </blockquote>
@@ -590,7 +604,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
 "toc": {
 "collapse": "subsection"
 }

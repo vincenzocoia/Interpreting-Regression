@@ -30,7 +30,7 @@ We've defined sse() below, a function that takes some number and returns the sum
 
 We've also generated a quick plot of this function for you.
 
-```{r}
+```
 sse <- Vectorize(function(m) sum((y - m)^2))
 curve(sse, mu_y - 2*sd(y), mu_y + 2*sd(y))
 ```

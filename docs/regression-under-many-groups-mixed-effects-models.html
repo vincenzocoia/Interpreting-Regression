@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 23 Regression under many groups: mixed effects models | Interpreting Regression</title>
-  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 23 Regression under many groups: mixed effects models | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 23 Regression under many groups: mixed effects models | Interpreting Regression" />
   
-  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
   
 
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-29">
+<meta name="date" content="2019-08-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation</a><ul>
 <li class="chapter" data-level="5.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a><ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parametric-families-of-distributions-1"><i class="fa fa-check"></i><b>6.1</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.2</b> Analyses under a Distributional Assumption</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.2.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
 <li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a><ul>
 <li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>7.1</b> Variable terminology</a><ul>
@@ -331,16 +337,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="regression-under-many-groups-mixed-effects-models" class="section level1">
 <h1><span class="header-section-number">Chapter 23</span> Regression under many groups: mixed effects models</h1>
 <p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(tidyverse))</code></pre></div>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.5.2</code></pre>
 <div id="motivation-for-lme" class="section level2">
 <h2><span class="header-section-number">23.1</span> Motivation for LME</h2>
 <p>Let’s take a look at the <code>esoph</code> data set, to see how the number of controls <code>ncontrols</code> affects the number of cases <code>ncases</code> of cancer for each age group <code>agegp</code>. Here’s what the data look like (with a tad bit of vertical jitter):</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-73-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="210-Regression_under_many_groups_files/figure-html/unnamed-chunk-2-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>It seems each age group has a different relationship. Should we then fit regression lines for each group separately? Here’s what we get, if we do:</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-74-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="210-Regression_under_many_groups_files/figure-html/unnamed-chunk-3-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>But, each group has so few observations, making the regression less powerful:</p>
 <pre><code>## # A tibble: 6 x 2
 ##   agegp     n
-##   &lt;chr&gt; &lt;int&gt;
+##   &lt;ord&gt; &lt;int&gt;
 ## 1 25-34    15
 ## 2 35-44    15
 ## 3 45-54    16
@@ -397,7 +409,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3><span class="header-section-number">23.1.2</span> R Tools for Fitting</h3>
 <p>Two R packages exist for working with mixed effects models: <code>lme4</code> and <code>nlme</code>. We’ll be using the <code>lme4</code> package (check out <a href="http://stats.stackexchange.com/questions/5344/how-to-choose-nlme-or-lme4-r-library-for-mixed-effects-models">this</a> discussion on Cross Valiesophed for a comparison of the two packages).</p>
 <p>Let’s fit the model. We need to indicate a formula first in the <code>lmer</code> function, and indicate the data set we’re using.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span>lme4<span class="op">::</span><span class="kw">lmer</span>(ncases <span class="op">~</span><span class="st"> </span>ncontrols <span class="op">+</span><span class="st"> </span>(ncontrols <span class="op">|</span><span class="st"> </span>agegp), 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span>lme4::<span class="kw">lmer</span>(ncases ~<span class="st"> </span>ncontrols +<span class="st"> </span>(ncontrols |<span class="st"> </span>agegp), 
             <span class="dt">data=</span>esoph)</code></pre></div>
 <p>Let’s take a closer look at the <em>formula</em>, which in this case is <code>ncases ~ ncontrols + (ncontrols | agegp)</code>.</p>
 <p>On the left of the <code>~</code> is the response variable, as usual (just like for <code>lm</code>). On the right, we need to specify both the fixed and random effects. The fixed effects part is the same as usual: <code>ncontrols</code> indicates the explanatory variables that get a fixed effect. Then, we need to indicate which explanatory variables get a random effect. The random effects can be indicated in parentheses, separated by <code>+</code>, followed by a <code>|</code>, after which the variable(s) that you wish to group by are indicated. So <code>|</code> can be interpreted as “grouped by”.</p>
@@ -443,6 +455,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## 65-74   1.8699415  0.171918181
 ## 75+     1.1484332  0.029581764</code></pre>
 <p>Let’s put these regression lines on the plot:</p>
+<pre><code>## Warning: Column `agegp` joining character vector and factor, coercing into
+## character vector</code></pre>
 <pre><code>##    agegp (Intercept)  ncontrols.x     alcgp    tobgp ncases ncontrols.y
 ## 1  25-34   0.2674067 -0.002914520 0-39g/day 0-9g/day      0          40
 ## 2  25-34   0.2674067 -0.002914520 0-39g/day    10-19      0          10
@@ -532,7 +546,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## 86   75+   1.1484332  0.029581764    80-119    10-19      1           1
 ## 87   75+   1.1484332  0.029581764      120+ 0-9g/day      2           2
 ## 88   75+   1.1484332  0.029581764      120+    10-19      1           1</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-80-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="210-Regression_under_many_groups_files/figure-html/unnamed-chunk-9-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>So, each group still gets its own regression line, but tying the parameters together with a normal distribution gives us a more powerful regression.</p>
 </div>
 </div>
@@ -546,14 +560,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>A generalized linear model with random effects is a <em>Generalized Linear Mixed-Effects Model</em>, and is fit using the <code>glmer</code> function.</li>
 </ul>
 <p>We’ll work with the <code>esoph</code> data set, to see how the number of controls <code>ncontrols</code> affects the number of cases <code>ncases</code> based on age group <code>agegp</code>. Here’s what the data look like (with a tad bit of vertical jitter):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(esoph, <span class="kw">aes</span>(ncontrols, ncases)) <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(esoph, <span class="kw">aes</span>(ncontrols, ncases)) +
 <span class="st">    </span><span class="kw">geom_jitter</span>(<span class="kw">aes</span>(<span class="dt">colour=</span>agegp), <span class="dt">height=</span><span class="fl">0.25</span>)
 p</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-81-1.png" width="672" /></p>
+<p><img src="210-Regression_under_many_groups_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>Since the response is a count variable, we’ll go ahead with a Poisson regression – a Generalized Linear Mixed-Effects Model. The model is <span class="math display">\[ Y_{ij} \mid X_{ij} = x_{ij} \sim \text{Poisson}\left(\lambda_{ij}\right) \]</span> for each observation <span class="math inline">\(i\)</span> on the <span class="math inline">\(j\)</span>’th age group, where <span class="math inline">\(Y_{ij}\)</span> is the number of cases, <span class="math inline">\(X_{ij}\)</span> is the number of controls, and <span class="math inline">\(\lambda_{ij}\)</span> is the conditional mean of <span class="math inline">\(Y_{ij}.\)</span> We model <span class="math inline">\(\lambda_{ij}\)</span> as <span class="math display">\[ \log\left(\lambda_{ij}\right) = \left(\beta_0 + b_{0j}\right) + \left(\beta_1 + b_{1j}\right) x_{ij}, \]</span> where <span class="math inline">\(b_{0j}\)</span> and <span class="math inline">\(b_{1j}\)</span> are joint (bivariate) normally distributed with zero mean.</p>
 <p>What does this model mean? First, it means that the mean is exponential in the explanatory variable, since we chose a <span class="math inline">\(\log\)</span> link function. Second, each age group (<span class="math inline">\(j\)</span>) gets its own mean curve, via its own linear predictor. But we’re saying that these linear predictors are related: the collection of slopes and intercepts across age groups are centered around <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> (respectively, called the <em>fixed effects</em>), and the slope and intercept of each age group departs from this center according to some Gaussian random noise (the <span class="math inline">\(b\)</span> terms, called the <em>random effects</em>).</p>
 <p>Let’s fit the model. Then we’ll go through the formula, and the output.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span>lme4<span class="op">::</span><span class="kw">glmer</span>(ncases <span class="op">~</span><span class="st"> </span>ncontrols <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>ncontrols <span class="op">|</span><span class="st"> </span>agegp), 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span>lme4::<span class="kw">glmer</span>(ncases ~<span class="st"> </span>ncontrols +<span class="st"> </span>(<span class="dv">1</span> +<span class="st"> </span>ncontrols |<span class="st"> </span>agegp), 
                    <span class="dt">data=</span>esoph, 
                    <span class="dt">family=</span>poisson)
 <span class="kw">summary</span>(fit)</code></pre></div>
@@ -587,7 +601,7 @@ p</code></pre></div>
 <p>To specify the formula, the fixed effects part is the same as usual: <code>ncases ~ ncontrols</code> gives you <code>ncases = beta0 + beta1 * ncontrols</code>. Note that the intercept is put in there by default. Then, we need to indicate which explanatory variables are getting the random effects – including the intercept this time (with a 1), if you want it (in this case, we do). The random effects can be indicated in parentheses, separated by <code>+</code>, followed by a <code>|</code>, after which the variable(s) that you wish to group by are indicated. So <code>|</code> can be interpreted as “grouped by”.</p>
 <p>The output of the model fit is similar to what you’ve seen before (in <code>glm</code> for example), but the “random effects” part is new. That gives us the estimates of the joint normal distribution of the random effects – through the variances, and correlation matrix to the right (only the lower-diagonal of the correlation matrix is given, because that matrix is symmetric anyway).</p>
 <p>Let’s see what the intercepts and slopes for each age group are, and let’s plot the estimated mean curves:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(coef_fit &lt;-<span class="st"> </span><span class="kw">coef</span>(fit)<span class="op">$</span>agegp)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(coef_fit &lt;-<span class="st"> </span><span class="kw">coef</span>(fit)$agegp)</code></pre></div>
 <pre><code>##       (Intercept)    ncontrols
 ## 25-34  -1.7354568 -0.015913381
 ## 35-44  -0.4511795 -0.001500806
@@ -596,16 +610,16 @@ p</code></pre></div>
 ## 65-74   0.8568544  0.031875270
 ## 75+     0.1396592  0.006661840</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Colours with stat_function are not nice to deal with. Do manually.
-p <span class="op">+</span><span class="st"> </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;25-34&quot;</span>), <span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">exp</span>(coef_fit[<span class="dv">1</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_fit[<span class="dv">1</span>,<span class="dv">2</span>]<span class="op">*</span>x)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;35-44&quot;</span>), <span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">exp</span>(coef_fit[<span class="dv">2</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_fit[<span class="dv">2</span>,<span class="dv">2</span>]<span class="op">*</span>x)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;45-54&quot;</span>), <span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">exp</span>(coef_fit[<span class="dv">3</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_fit[<span class="dv">3</span>,<span class="dv">2</span>]<span class="op">*</span>x)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;55-64&quot;</span>), <span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">exp</span>(coef_fit[<span class="dv">4</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_fit[<span class="dv">4</span>,<span class="dv">2</span>]<span class="op">*</span>x)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;65-74&quot;</span>), <span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">exp</span>(coef_fit[<span class="dv">5</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_fit[<span class="dv">5</span>,<span class="dv">2</span>]<span class="op">*</span>x)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;75+&quot;</span>),   <span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">exp</span>(coef_fit[<span class="dv">6</span>,<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>coef_fit[<span class="dv">6</span>,<span class="dv">2</span>]<span class="op">*</span>x))</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-83-1.png" width="672" /></p>
+p +<span class="st"> </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;25-34&quot;</span>), <span class="dt">fun =</span> function(x) <span class="kw">exp</span>(coef_fit[<span class="dv">1</span>,<span class="dv">1</span>] +<span class="st"> </span>coef_fit[<span class="dv">1</span>,<span class="dv">2</span>]*x)) +
+<span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;35-44&quot;</span>), <span class="dt">fun =</span> function(x) <span class="kw">exp</span>(coef_fit[<span class="dv">2</span>,<span class="dv">1</span>] +<span class="st"> </span>coef_fit[<span class="dv">2</span>,<span class="dv">2</span>]*x)) +
+<span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;45-54&quot;</span>), <span class="dt">fun =</span> function(x) <span class="kw">exp</span>(coef_fit[<span class="dv">3</span>,<span class="dv">1</span>] +<span class="st"> </span>coef_fit[<span class="dv">3</span>,<span class="dv">2</span>]*x)) +
+<span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;55-64&quot;</span>), <span class="dt">fun =</span> function(x) <span class="kw">exp</span>(coef_fit[<span class="dv">4</span>,<span class="dv">1</span>] +<span class="st"> </span>coef_fit[<span class="dv">4</span>,<span class="dv">2</span>]*x)) +
+<span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;65-74&quot;</span>), <span class="dt">fun =</span> function(x) <span class="kw">exp</span>(coef_fit[<span class="dv">5</span>,<span class="dv">1</span>] +<span class="st"> </span>coef_fit[<span class="dv">5</span>,<span class="dv">2</span>]*x)) +
+<span class="st">    </span><span class="kw">stat_function</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;75+&quot;</span>),   <span class="dt">fun =</span> function(x) <span class="kw">exp</span>(coef_fit[<span class="dv">6</span>,<span class="dv">1</span>] +<span class="st"> </span>coef_fit[<span class="dv">6</span>,<span class="dv">2</span>]*x))</code></pre></div>
+<p><img src="210-Regression_under_many_groups_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>A (response-) residual plot is somewhat sensible to look at here:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(fit)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-84-1.png" width="672" /></p>
+<p><img src="210-Regression_under_many_groups_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Looks fairly centered at zero, so the shape of the mean curves are satisfactory.</p>
 
 </div>
@@ -653,7 +667,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
 "toc": {
 "collapse": "subsection"
 }

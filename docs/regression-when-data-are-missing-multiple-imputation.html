@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 22 Regression when data are missing: multiple imputation | Interpreting Regression</title>
-  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 22 Regression when data are missing: multiple imputation | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 22 Regression when data are missing: multiple imputation | Interpreting Regression" />
   
-  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
   
 
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-29">
+<meta name="date" content="2019-08-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation</a><ul>
 <li class="chapter" data-level="5.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a><ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parametric-families-of-distributions-1"><i class="fa fa-check"></i><b>6.1</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.2</b> Analyses under a Distributional Assumption</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.2.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
 <li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a><ul>
 <li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>7.1</b> Variable terminology</a><ul>
@@ -332,14 +338,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">Chapter 22</span> Regression when data are missing: multiple imputation</h1>
 <p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
 <p>(DSCI 562 Tutorial)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(tidyverse))</code></pre></div>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.5.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(mice))</code></pre></div>
 <p>Let’s take a closer look at mean imputation vs. multiple imputation.</p>
 <div id="mean-imputation" class="section level2">
 <h2><span class="header-section-number">22.1</span> Mean Imputation</h2>
 <p>Let’s consider a simple linear regression example, with one explanatory variable. We’ll generate 100 data points, and make 10 of the response values missing.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">13</span>)
 x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)
-y &lt;-<span class="st"> </span><span class="op">-</span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>x <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)
-y[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>] &lt;-<span class="st"> </span><span class="ot">NA</span></code></pre></div>
+y &lt;-<span class="st"> </span>-<span class="dv">1</span> +<span class="st"> </span><span class="dv">2</span> *<span class="st"> </span>x +<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">100</span>)
+y[<span class="dv">1</span>:<span class="dv">10</span>] &lt;-<span class="st"> </span><span class="ot">NA</span></code></pre></div>
 <p>Here are the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x</code></pre></div>
 <pre><code>##   [1]  0.55432694 -0.28027194  1.77516337  0.18732012  1.14252615
@@ -384,30 +397,30 @@ y[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>] 
 ##  [91]  0.761346358 -1.696197511 -2.962489498 -4.827255075 -3.221340010
 ##  [96] -1.494866659 -2.714534509  0.673879626 -1.598181064  0.641959448</code></pre>
 <p>Here’s the scatterplot with the missing data removed, and the corresponding linear regression fit:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">qplot</span>(x, y) <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">qplot</span>(x, y) +<span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>)
 p</code></pre></div>
 <pre><code>## Warning: Removed 10 rows containing non-finite values (stat_smooth).</code></pre>
 <pre><code>## Warning: Removed 10 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-61-1.png" width="672" /></p>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>The mean imputation method replaces the <code>NA</code>’s with an estimate for the mean of <span class="math inline">\(Y\)</span>. The simplest case is to use the sample average of the response. The imputed observations are shown in red, and the resulting <code>lm</code> fit is also in red.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ybar &lt;-<span class="st"> </span><span class="kw">mean</span>(y, <span class="dt">na.rm=</span><span class="ot">TRUE</span>)
 datrm &lt;-<span class="st"> </span><span class="kw">na.omit</span>(<span class="kw">data.frame</span>(<span class="dt">x=</span>x, <span class="dt">y=</span>y))
-datimp &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>], <span class="dt">y=</span>ybar)
-p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>datimp, <span class="dt">colour=</span><span class="st">&quot;red&quot;</span>) <span class="op">+</span>
+datimp &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x[<span class="dv">1</span>:<span class="dv">10</span>], <span class="dt">y=</span>ybar)
+p +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>datimp, <span class="dt">colour=</span><span class="st">&quot;red&quot;</span>) +
 <span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span><span class="kw">rbind</span>(datrm, datimp), <span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">colour=</span><span class="st">&quot;red&quot;</span>)</code></pre></div>
 <pre><code>## Warning: Removed 10 rows containing non-finite values (stat_smooth).</code></pre>
 <pre><code>## Warning: Removed 10 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-62-1.png" width="672" /></p>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>Notice that the new regression line is flatter.</p>
 <p>Another mean-imputation method is to replace the <code>NA</code>’s with an alternative mean estimate: the regression predictions.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(y <span class="op">~</span><span class="st"> </span>x, <span class="dt">na.action=</span>na.omit)
-yhat &lt;-<span class="st"> </span><span class="kw">predict</span>(fit2, <span class="dt">newdata=</span><span class="kw">data.frame</span>(<span class="dt">x=</span>x[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>]))
-datimp2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x[<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>], <span class="dt">y=</span>yhat)
-p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>datimp2, <span class="dt">colour=</span><span class="st">&quot;red&quot;</span>) <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(y ~<span class="st"> </span>x, <span class="dt">na.action=</span>na.omit)
+yhat &lt;-<span class="st"> </span><span class="kw">predict</span>(fit2, <span class="dt">newdata=</span><span class="kw">data.frame</span>(<span class="dt">x=</span>x[<span class="dv">1</span>:<span class="dv">10</span>]))
+datimp2 &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span>x[<span class="dv">1</span>:<span class="dv">10</span>], <span class="dt">y=</span>yhat)
+p +<span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">data=</span>datimp2, <span class="dt">colour=</span><span class="st">&quot;red&quot;</span>) +
 <span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">data=</span><span class="kw">rbind</span>(datrm, datimp2), <span class="dt">method=</span><span class="st">&quot;lm&quot;</span>, <span class="dt">se=</span><span class="ot">FALSE</span>, <span class="dt">colour=</span><span class="st">&quot;red&quot;</span>, <span class="dt">size=</span><span class="fl">0.5</span>)</code></pre></div>
 <pre><code>## Warning: Removed 10 rows containing non-finite values (stat_smooth).</code></pre>
 <pre><code>## Warning: Removed 10 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-63-1.png" width="672" /></p>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>The regression line has not changed. This method seems smarter, but it still has consequences, since the imputed data suggests that the dataset is bound closer to the regression line than reality. So the residual variance is biased to be smaller.</p>
 <p>These are both mean imputation methods. So, in your Lab 2 assignment, you can use any mean imputation method – your explanation of the comparison will just depend on what you choose.</p>
 </div>
@@ -433,7 +446,7 @@ p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point<
 <h3><span class="header-section-number">22.2.1</span> Patterns</h3>
 <p>Where are the <code>NA</code>s?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">md.pattern</span>(airquality)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-65-1.png" width="672" /></p>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <pre><code>##     Wind Temp Month Day Solar.R Ozone   
 ## 111    1    1     1   1       1     1  0
 ## 35     1    1     1   1       1     0  1
@@ -442,9 +455,9 @@ p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point<
 ##        0    0     0   0       7    37 44</code></pre>
 <p>A “1” indicates that an observation is present, and a “0” indicates absense. The periphery of the matrix are counts: to the right, are the number of <code>NA</code>s in the row; at the bottom, are the number of <code>NA</code>s in each column; to the left, are the number of observations having a missing data pattern indicated in the matrix.</p>
 <p>So we can see that there are 7 missing Solar Radiation observations, and 37 missing Ozone observations. We could check that in another way as follows:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(<span class="kw">is.na</span>(airquality<span class="op">$</span>Solar.R))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(<span class="kw">is.na</span>(airquality$Solar.R))</code></pre></div>
 <pre><code>## [1] 7</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(<span class="kw">is.na</span>(airquality<span class="op">$</span>Ozone))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(<span class="kw">is.na</span>(airquality$Ozone))</code></pre></div>
 <pre><code>## [1] 37</code></pre>
 </div>
 <div id="multiple-imputation-1" class="section level3">
@@ -470,7 +483,7 @@ p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point<
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(dats)</code></pre></div>
 <pre><code>## [1] &quot;mids&quot;</code></pre>
 <p>But we can extract the data sets. Want to see the fourth imputed data set? Here it is:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(mice<span class="op">::</span><span class="kw">complete</span>(dats, <span class="dv">4</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(mice::<span class="kw">complete</span>(dats, <span class="dv">4</span>))</code></pre></div>
 <pre><code>##   Ozone Solar.R Wind Temp Month Day
 ## 1    41     190  7.4   67     5   1
 ## 2    36     118  8.0   72     5   2
@@ -482,7 +495,7 @@ p <span class="op">+</span><span class="st"> </span><span class="kw">geom_point<
 <div id="pooling" class="section level3">
 <h3><span class="header-section-number">22.2.3</span> Pooling</h3>
 <p>The <code>mice</code> package allows you to pool many types of regression analyses. Let’s try a simple linear regression to predict <code>Ozone</code> from <code>Solar.R</code>, <code>Wind</code>, and <code>Temp</code>. You’ll need to use base R’s <code>with</code> function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fits &lt;-<span class="st"> </span><span class="kw">with</span>(dats, <span class="kw">lm</span>(Ozone <span class="op">~</span><span class="st"> </span>Solar.R <span class="op">+</span><span class="st"> </span>Wind <span class="op">+</span><span class="st"> </span>Temp))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fits &lt;-<span class="st"> </span><span class="kw">with</span>(dats, <span class="kw">lm</span>(Ozone ~<span class="st"> </span>Solar.R +<span class="st"> </span>Wind +<span class="st"> </span>Temp))</code></pre></div>
 <p>If you were to print <code>fits</code> to the screen, it would look like a list of 50 regression fits – one for each of the imputed data sets. But it’s not. Take a look:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(fits)</code></pre></div>
 <pre><code>## [1] &quot;call&quot;     &quot;call1&quot;    &quot;nmis&quot;     &quot;analyses&quot;</code></pre>
@@ -553,7 +566,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
 "toc": {
 "collapse": "subsection"
 }

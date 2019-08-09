@@ -168,7 +168,7 @@ We can use the `broom` package on `glm` objects, too. But, just like we had to s
 
 ```{r}
 res_glm %>% 
-  augment(type.predict = "response") %>% 
+  broom::augment(type.predict = "response") %>% 
   head()
 ```
 

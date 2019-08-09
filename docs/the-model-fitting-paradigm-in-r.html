@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 9 The Model-Fitting Paradigm in R | Interpreting Regression</title>
-  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 9 The Model-Fitting Paradigm in R | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 9 The Model-Fitting Paradigm in R | Interpreting Regression" />
   
-  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
   
 
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-29">
+<meta name="date" content="2019-08-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation</a><ul>
 <li class="chapter" data-level="5.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a><ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parametric-families-of-distributions-1"><i class="fa fa-check"></i><b>6.1</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.2</b> Analyses under a Distributional Assumption</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.2.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
 <li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a><ul>
 <li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>7.1</b> Variable terminology</a><ul>
@@ -331,6 +337,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="the-model-fitting-paradigm-in-r" class="section level1">
 <h1><span class="header-section-number">Chapter 9</span> The Model-Fitting Paradigm in R</h1>
 <p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(tidyverse))</code></pre></div>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.5.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Wage &lt;-<span class="st"> </span>ISLR::Wage
+NCI60 &lt;-<span class="st"> </span>ISLR::NCI60
+baseball &lt;-<span class="st"> </span>Lahman::Teams %&gt;%<span class="st"> </span>tbl_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="dt">runs=</span>R, <span class="dt">hits=</span>H)
+cow &lt;-<span class="st"> </span><span class="kw">suppressMessages</span>(<span class="kw">read_csv</span>(<span class="st">&quot;data/milk_fat.csv&quot;</span>))
+esoph &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(esoph) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">agegp =</span> <span class="kw">as.character</span>(agegp))
+titanic &lt;-<span class="st"> </span><span class="kw">na.omit</span>(titanic::titanic_train)</code></pre></div>
 <p>Scratch notes from our in-class activities in Lecture 3. This covers the model-fitting paradigm in R.</p>
 <p>Use the <code>iris</code> data to demonstrate. Split into training and test data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(iris)</code></pre></div>
@@ -344,23 +364,23 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">100</span>)
 iris &lt;-<span class="st"> </span><span class="kw">mutate</span>(
     iris, 
-    <span class="dt">training =</span> caTools<span class="op">::</span><span class="kw">sample.split</span>(Sepal.Width, <span class="dt">SplitRatio=</span><span class="fl">0.8</span>))
+    <span class="dt">training =</span> caTools::<span class="kw">sample.split</span>(Sepal.Width, <span class="dt">SplitRatio=</span><span class="fl">0.8</span>))
 <span class="co">#      training = sample(1:2, replace=TRUE, prob=c(0.8, 0.2), size=nrow(iris)))</span>
 iris_train &lt;-<span class="st"> </span><span class="kw">filter</span>(iris, training)
-iris_test &lt;-<span class="st"> </span><span class="kw">filter</span>(iris, <span class="op">!</span>training)
+iris_test &lt;-<span class="st"> </span><span class="kw">filter</span>(iris, !training)
 <span class="co">#caret::createDataPartition()</span></code></pre></div>
 <p>Fit a LOESS model:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">loess</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>Petal.Width, <span class="dt">data=</span>iris_train)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">loess</span>(Sepal.Width ~<span class="st"> </span>Petal.Width, <span class="dt">data=</span>iris_train)</code></pre></div>
 <p>Make predictions:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">yhat &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, <span class="dt">newdata=</span>iris_test)</code></pre></div>
 <p>Calculate error:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>((yhat <span class="op">-</span><span class="st"> </span>iris_test<span class="op">$</span>Sepal.Width)<span class="op">^</span><span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>((yhat -<span class="st"> </span>iris_test$Sepal.Width)^<span class="dv">2</span>)</code></pre></div>
 <pre><code>## [1] 0.08020987</code></pre>
 <div id="broom-package" class="section level2">
 <h2><span class="header-section-number">9.1</span> <code>broom</code> package</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#tidy(fit)</span>
 <span class="co">#glance(fit)</span>
-<span class="kw">augment</span>(fit, <span class="dt">newdata =</span> iris_test)</code></pre></div>
+broom::<span class="kw">augment</span>(fit, <span class="dt">newdata =</span> iris_test)</code></pre></div>
 <pre><code>## # A tibble: 30 x 8
 ##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species training
 ##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;   &lt;lgl&gt;   
@@ -376,17 +396,17 @@ iris_test &lt;-<span class="st"> </span><span class="kw">filter</span>(iris, <sp
 ## 10          4.8         3            1.4         0.3 setosa  FALSE   
 ## # … with 20 more rows, and 2 more variables: .fitted &lt;dbl&gt;, .se.fit &lt;dbl&gt;</code></pre>
 <p>With linear regression:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>Petal.Width, <span class="dt">data=</span>iris_train)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit2 &lt;-<span class="st"> </span><span class="kw">lm</span>(Sepal.Width ~<span class="st"> </span>Petal.Width, <span class="dt">data=</span>iris_train)
 <span class="co">#unclass(fit2)</span>
 <span class="co">#unclass(summary(fit2))</span>
 
-<span class="kw">tidy</span>(fit2)</code></pre></div>
+broom::<span class="kw">tidy</span>(fit2)</code></pre></div>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 (Intercept)    3.34     0.0717     46.6  7.64e-78
 ## 2 Petal.Width   -0.218    0.0500     -4.36 2.78e- 5</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">augment</span>(fit2)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">broom::<span class="kw">augment</span>(fit2)</code></pre></div>
 <pre><code>## # A tibble: 120 x 9
 ##    Sepal.Width Petal.Width .fitted .se.fit  .resid   .hat .sigma .cooksd
 ##          &lt;dbl&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
@@ -401,7 +421,7 @@ iris_test &lt;-<span class="st"> </span><span class="kw">filter</span>(iris, <sp
 ##  9         3.4         0.2    3.30  0.0634  0.103  0.0236  0.415 7.64e-4
 ## 10         3           0.1    3.32  0.0675 -0.319  0.0267  0.414 8.42e-3
 ## # … with 110 more rows, and 1 more variable: .std.resid &lt;dbl&gt;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glance</span>(fit2)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">broom::<span class="kw">glance</span>(fit2)</code></pre></div>
 <pre><code>## # A tibble: 1 x 11
 ##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
@@ -453,7 +473,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
 "toc": {
 "collapse": "subsection"
 }

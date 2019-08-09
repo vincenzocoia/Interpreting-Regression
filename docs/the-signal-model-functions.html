@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 8 The signal: model functions | Interpreting Regression</title>
-  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 8 The signal: model functions | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 8 The signal: model functions | Interpreting Regression" />
   
-  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
   
 
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-29">
+<meta name="date" content="2019-08-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation</a><ul>
 <li class="chapter" data-level="5.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a><ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parametric-families-of-distributions-1"><i class="fa fa-check"></i><b>6.1</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.2</b> Analyses under a Distributional Assumption</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.2.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
 <li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a><ul>
 <li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>7.1</b> Variable terminology</a><ul>
@@ -330,14 +336,28 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="the-signal-model-functions" class="section level1">
 <h1><span class="header-section-number">Chapter 8</span> The signal: model functions</h1>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(tidyverse))</code></pre></div>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.5.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Wage &lt;-<span class="st"> </span>ISLR::Wage
+NCI60 &lt;-<span class="st"> </span>ISLR::NCI60
+baseball &lt;-<span class="st"> </span>Lahman::Teams %&gt;%<span class="st"> </span>tbl_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="dt">runs=</span>R, <span class="dt">hits=</span>H)
+cow &lt;-<span class="st"> </span><span class="kw">suppressMessages</span>(<span class="kw">read_csv</span>(<span class="st">&quot;data/milk_fat.csv&quot;</span>))
+esoph &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(esoph) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">agegp =</span> <span class="kw">as.character</span>(agegp))
+titanic &lt;-<span class="st"> </span><span class="kw">na.omit</span>(titanic::titanic_train)</code></pre></div>
 <div id="linear-quantile-regression" class="section level2">
 <h2><span class="header-section-number">8.1</span> Linear Quantile Regression</h2>
 <p>The idea here is to model <span class="math display">\[Q(\tau)=\beta_0(\tau) + \beta_1(\tau) X_1 + \cdots + \beta_p(\tau) X_p,\]</span> where <span class="math inline">\(Q(\tau)\)</span> is the <span class="math inline">\(\tau\)</span>-quantile. In other words, <strong>each quantile level gets its own line</strong>, and are each fit independently of each other.</p>
 <p>Here are the 0.25-, 0.5-, and 0.75-quantile regression lines for the baseball data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(baseball, <span class="kw">aes</span>(hits, runs)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.1</span>, <span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_quantile</span>(<span class="dt">colour=</span><span class="st">&quot;black&quot;</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(baseball, <span class="kw">aes</span>(hits, runs)) +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.1</span>, <span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>) +
+<span class="st">    </span><span class="kw">geom_quantile</span>(<span class="dt">colour=</span><span class="st">&quot;black&quot;</span>) +
+<span class="st">    </span><span class="kw">theme_bw</span>() +
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Number of Hits (X)&quot;</span>,
          <span class="dt">y=</span><span class="st">&quot;Number of Runs (Y)&quot;</span>)</code></pre></div>
 <pre><code>## Loading required package: SparseM</code></pre>
@@ -347,9 +367,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## 
 ##     backsolve</code></pre>
 <pre><code>## Smoothing formula not specified. Using: y ~ x</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="070-The_signal_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>I did this easily with <code>ggplot2</code>, just by adding a layer <code>geom_quantile</code> to my scatterplot, specifying the quantile levels with the <code>quantiles=</code> argument. We could also use the function <code>rq</code> in the <code>quantreg</code> package in R:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(fit_rq &lt;-<span class="st"> </span>quantreg<span class="op">::</span><span class="kw">rq</span>(runs <span class="op">~</span><span class="st"> </span>hits, <span class="dt">data=</span>baseball, <span class="dt">tau=</span><span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>)))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(fit_rq &lt;-<span class="st"> </span>quantreg::<span class="kw">rq</span>(runs ~<span class="st"> </span>hits, <span class="dt">data=</span>baseball, <span class="dt">tau=</span><span class="kw">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>)))</code></pre></div>
 <pre><code>## Call:
 ## quantreg::rq(formula = runs ~ hits, tau = c(0.25, 0.5, 0.75), 
 ##     data = baseball)
@@ -383,18 +403,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="problem-crossing-quantiles" class="section level3">
 <h3><span class="header-section-number">8.1.2</span> Problem: Crossing quantiles</h3>
 <p>Because each quantile is allowed to have its own line, some of these lines might cross, giving an <strong>invalid result</strong>. Here is an example with the <code>iris</code> data set, fitting the 0.2- and 0.3-quantiles:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(iris, <span class="kw">aes</span>(Sepal.Length, Sepal.Width)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.25</span>, <span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_quantile</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;0.2&quot;</span>), <span class="dt">quantiles=</span><span class="fl">0.2</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_quantile</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;0.3&quot;</span>), <span class="dt">quantiles=</span><span class="fl">0.3</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_colour_discrete</span>(<span class="st">&quot;Quantile</span><span class="ch">\n</span><span class="st">Level&quot;</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(iris, <span class="kw">aes</span>(Sepal.Length, Sepal.Width)) +
+<span class="st">    </span><span class="kw">geom_point</span>(<span class="dt">alpha=</span><span class="fl">0.25</span>, <span class="dt">colour=</span><span class="st">&quot;orange&quot;</span>) +
+<span class="st">    </span><span class="kw">geom_quantile</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;0.2&quot;</span>), <span class="dt">quantiles=</span><span class="fl">0.2</span>) +
+<span class="st">    </span><span class="kw">geom_quantile</span>(<span class="kw">aes</span>(<span class="dt">colour=</span><span class="st">&quot;0.3&quot;</span>), <span class="dt">quantiles=</span><span class="fl">0.3</span>) +
+<span class="st">    </span><span class="kw">scale_colour_discrete</span>(<span class="st">&quot;Quantile</span><span class="ch">\n</span><span class="st">Level&quot;</span>) +
+<span class="st">    </span><span class="kw">theme_bw</span>() +
 <span class="st">    </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Sepal Length&quot;</span>,
          <span class="dt">y=</span><span class="st">&quot;Sepal Width&quot;</span>)</code></pre></div>
 <pre><code>## Smoothing formula not specified. Using: y ~ x
 ## Smoothing formula not specified. Using: y ~ x</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit_iris &lt;-<span class="st"> </span>quantreg<span class="op">::</span><span class="kw">rq</span>(Sepal.Width <span class="op">~</span><span class="st"> </span>Sepal.Length, <span class="dt">data=</span>iris, <span class="dt">tau=</span><span class="dv">2</span><span class="op">:</span><span class="dv">3</span><span class="op">/</span><span class="dv">10</span>)
+<p><img src="070-The_signal_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit_iris &lt;-<span class="st"> </span>quantreg::<span class="kw">rq</span>(Sepal.Width ~<span class="st"> </span>Sepal.Length, <span class="dt">data=</span>iris, <span class="dt">tau=</span><span class="dv">2</span>:<span class="dv">3</span>/<span class="dv">10</span>)
 b &lt;-<span class="st"> </span><span class="kw">coef</span>(fit_iris)
 at8 &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">predict</span>(fit_iris, <span class="dt">newdata=</span><span class="kw">data.frame</span>(<span class="dt">Sepal.Length=</span><span class="dv">8</span>)), <span class="dv">2</span>)</code></pre></div>
 <p>Quantile estimates of Sepal Width for plants with Sepal Length less than <code>7.3</code> are valid, but otherwise, are not. For example, for plants with a Sepal Length of 8, this model predicts 30% of such plants to have a Sepal Width of less than <code>2.75</code>, but only 20% of such plants should have Sepal Width less than <code>2.82</code>. This is an illogical statement.</p>
@@ -456,7 +476,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
 "toc": {
 "collapse": "subsection"
 }

@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 25 Regression when order matters: time series and spatial analysis | Interpreting Regression</title>
-  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 25 Regression when order matters: time series and spatial analysis | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 25 Regression when order matters: time series and spatial analysis | Interpreting Regression" />
   
-  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
   
 
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-29">
+<meta name="date" content="2019-08-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation</a><ul>
 <li class="chapter" data-level="5.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a><ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parametric-families-of-distributions-1"><i class="fa fa-check"></i><b>6.1</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.2</b> Analyses under a Distributional Assumption</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.2.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
 <li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a><ul>
 <li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>7.1</b> Variable terminology</a><ul>
@@ -337,57 +343,57 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>This tutorial demonstrates <code>timeseries</code> objects, and <code>stl</code> decomposition.</p>
 <p>Let’s make a periodic time series with a trend. The data can be contained in a vector:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="dv">10</span>
-n &lt;-<span class="st"> </span><span class="dv">20</span><span class="op">*</span>p
-dat &lt;-<span class="st"> </span><span class="dv">100</span> <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span><span class="op">:</span>n) <span class="op">+</span><span class="st"> </span><span class="dv">5</span><span class="op">*</span><span class="kw">sin</span>(<span class="dv">1</span><span class="op">:</span>n <span class="op">*</span><span class="st"> </span><span class="dv">2</span><span class="op">*</span>pi<span class="op">/</span>p) <span class="op">+</span><span class="st"> </span><span class="kw">rnorm</span>(n)</code></pre></div>
+n &lt;-<span class="st"> </span><span class="dv">20</span>*p
+dat &lt;-<span class="st"> </span><span class="dv">100</span> +<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span>:n) +<span class="st"> </span><span class="dv">5</span>*<span class="kw">sin</span>(<span class="dv">1</span>:n *<span class="st"> </span><span class="dv">2</span>*pi/p) +<span class="st"> </span><span class="kw">rnorm</span>(n)</code></pre></div>
 <p>It’s sometimes useful to make an object of type <code>timeseries</code>. Do this with the <code>ts</code> function in R. But, if there’s a cycle, we’ll need to indicate that in the <code>frequency</code> argument, which is the number of observations per cycle. In this case, the period is 10.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(datts &lt;-<span class="st"> </span><span class="kw">ts</span>(dat, <span class="dt">frequency =</span> p))</code></pre></div>
 <pre><code>## Time Series:
 ## Start = c(1, 1) 
 ## End = c(20, 10) 
 ## Frequency = 10 
-##   [1] 103.21754 105.91580 104.83864 104.95717 102.39761 100.16522  99.05889
-##   [8]  95.45752  98.82458 102.38751 105.87370 107.90868 107.99882 105.15553
-##  [15] 101.85446 100.97420  99.30592  99.43404 103.68415 103.96424 108.49725
-##  [22] 107.82864 110.13901 105.91080 104.69072 102.47787 100.28452 102.28791
-##  [29] 102.98962 105.07804 108.48962 109.90927 111.88973 107.97297 105.49662
-##  [36] 102.94541  99.37422 100.46106 101.93015 105.08458 108.37343 112.91619
-##  [43] 110.54639 109.85470 107.58933 104.30931 101.13197 103.51062 103.70481
-##  [50] 107.80956 112.64128 112.17872 111.69756 109.02738 107.65240 102.82118
-##  [57] 102.55838 101.59620 102.58794 108.39129 108.22220 111.68111 112.38680
-##  [64] 109.89085 107.64715 103.95064 104.05229 104.58863 105.80332 110.13285
-##  [71] 111.74829 113.48269 112.55860 112.38119 107.30248 106.90023 104.05653
-##  [78] 105.55904 105.79333 106.69931 112.30687 114.16458 112.60809 112.06290
-##  [85] 107.88068 106.05464 105.06568 104.82710 107.07606 109.59339 112.85742
-##  [92] 114.17000 116.02830 112.32351 111.54292 106.05268 103.95440 106.38489
-##  [99] 107.75039 108.63916 112.98128 115.25202 113.28984 113.32760 110.88573
-## [106] 107.29349 104.92971 106.31116 109.04618 110.50209 113.04955 116.03563
-## [113] 113.86822 114.25950 110.16575 108.30924 105.93633 105.57833 108.23428
-## [120] 111.13209 112.69828 116.58603 116.62520 114.48533 110.87280 109.05280
-## [127] 107.64914 108.50262 108.03575 110.17362 114.24526 114.86152 117.16433
-## [134] 115.62492 111.14091 108.68635 108.89239 106.14608 109.30500 111.86138
-## [141] 114.12111 116.30034 116.54151 114.48581 112.69920 108.40186 109.04775
-## [148] 108.65297 110.73409 110.89099 114.51551 115.45327 117.66094 115.21570
-## [155] 112.25735 109.01924 108.33898 105.89822 109.48126 114.40889 115.69664
-## [162] 116.23322 119.59398 116.06116 113.98155 109.75989 108.58419 106.47712
-## [169] 110.16012 113.75350 115.48076 117.40757 119.30334 116.94545 112.45239
-## [176] 110.55772 109.97846 108.06207 109.81071 114.74283 116.27391 116.81357
-## [183] 117.35878 114.74181 113.03169 109.94563 109.22033 109.27958 110.81624
-## [190] 112.57402 116.78555 117.82568 118.46380 117.92256 113.27395 110.26927
-## [197] 108.16507 109.00154 110.52807 112.46218</code></pre>
+##   [1] 103.32889 106.35013 107.56493 103.90212 100.44689 100.02040  99.23977
+##   [8]  99.90411  97.80701 103.04150 106.35105 107.54984 108.83248 107.28402
+##  [15] 104.74773  99.04764  98.83221  99.00899 102.65845 105.03137 105.70640
+##  [22] 109.51352 110.09315 107.64833 105.11708 102.74025 100.98054 100.02756
+##  [29] 102.57547 105.38420 109.28836 111.67652 110.79192 109.73707 105.71219
+##  [36] 102.52666 101.19743 100.97894 104.35514 106.08092 109.75667 110.64612
+##  [43] 110.29309 109.57699 107.70139 105.07604 101.30022 101.73367 105.26116
+##  [50] 107.37251 109.83265 113.43234 111.72398 110.63875 107.43417 105.13136
+##  [57] 100.99518 102.16019 105.10312 108.37546 110.74573 112.74182 112.81721
+##  [64] 111.79372 108.44135 104.31747 102.96235 103.99485 104.63046 108.23121
+##  [71] 112.70844 112.60766 114.51234 112.62513 110.42844 105.23155 105.18638
+##  [78] 104.41402 105.48675 109.18306 111.56031 116.14705 113.82024 111.36483
+##  [85] 109.70297 106.98137 105.36169 104.23700 105.93138 109.86967 112.81569
+##  [92] 113.54574 114.99730 112.79152 107.65767 108.65163 105.81281 105.98343
+##  [99] 106.28639 110.37149 114.01048 114.63328 116.05280 112.07958 109.50329
+## [106] 108.57387 104.97237 105.94653 108.26723 110.45921 112.70742 114.22830
+## [113] 114.03421 113.29996 108.59782 107.27047 105.88529 106.29127 108.42358
+## [120] 110.68839 115.04421 116.58580 115.79269 113.99425 111.45906 108.32603
+## [127] 106.13172 107.40980 110.04083 113.07690 116.02524 115.97180 118.54013
+## [134] 115.54017 111.46706 109.52001 107.51757 107.35546 108.65786 111.61801
+## [141] 115.57068 116.63465 116.86443 115.38791 111.22910 111.65136 107.54475
+## [148] 106.43798 110.13672 110.94354 114.09149 115.29062 117.36761 115.45760
+## [155] 110.61333 109.66325 107.49430 106.89842 108.69599 112.34607 114.89838
+## [162] 117.92475 118.06219 116.80134 110.62594 109.27855 109.48547 108.38689
+## [169] 109.08309 111.90395 115.71773 117.44988 118.47755 116.06137 111.37075
+## [176] 110.48622 109.81735 108.94256 111.51192 112.55261 116.78280 116.27828
+## [183] 118.25285 117.90620 113.42742 110.53220 108.48663 107.08068 112.21581
+## [190] 115.01808 116.84095 121.74166 119.46233 116.41862 113.42014 111.16250
+## [197] 107.89265 109.47532 110.18262 113.34804</code></pre>
 <p>You can plot this object too. You’ll get a nice looking time series plot:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(datts)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-104-1.png" width="672" /></p>
+<p><img src="221-Regression_when_order_matters_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>And now you can decompose the trend, seasonal component, and error terms with <code>stl</code>. Note that <code>stl</code> requires a <code>timeseries</code> object! Be sure to put <code>s.window=&quot;periodic&quot;</code> in the <code>stl</code> function to use the periodicity of the <code>timeseries</code> object. Notice that there are options to change the bandwidths of the loess estimation, along with the degree of the local polynomial, with the <code>_.degree</code> and <code>_.window</code> arguments.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">stl</span>(datts, <span class="dt">s.window=</span><span class="st">&quot;periodic&quot;</span>)</code></pre></div>
 <p>The estimates are contained in the <code>$time.series</code> part of the output:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(fit<span class="op">$</span>time.series)</code></pre></div>
-<pre><code>##         seasonal    trend  remainder
-## [1,]  2.81645334 100.9702 -0.5691419
-## [2,]  4.49487288 101.1557  0.2652700
-## [3,]  4.81270600 101.3411 -1.3151472
-## [4,]  2.85720184 101.5169  0.5830240
-## [5,] -0.09010948 101.6928  0.7949093
-## [6,] -2.98838094 101.8728  1.2808160</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(fit$time.series)</code></pre></div>
+<pre><code>##        seasonal    trend  remainder
+## [1,]  2.9368607 101.0823 -0.6902522
+## [2,]  4.7313532 101.3257  0.2931270
+## [3,]  5.0377200 101.5690  0.9581829
+## [4,]  3.0777250 101.8033 -0.9789428
+## [5,] -0.5403572 102.0377 -1.0504015
+## [6,] -2.7452879 102.2631  0.5025873</code></pre>
 </div>
 <div id="spatial-example" class="section level2">
 <h2><span class="header-section-number">25.2</span> Spatial Example</h2>
@@ -547,7 +553,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
 "toc": {
 "collapse": "subsection"
 }

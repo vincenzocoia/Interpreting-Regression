@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 15 Scales and the restricted range problem | Interpreting Regression</title>
-  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 15 Scales and the restricted range problem | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 15 Scales and the restricted range problem | Interpreting Regression" />
   
-  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
   
 
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-29">
+<meta name="date" content="2019-08-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation</a><ul>
 <li class="chapter" data-level="5.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a><ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parametric-families-of-distributions-1"><i class="fa fa-check"></i><b>6.1</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.2</b> Analyses under a Distributional Assumption</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.2.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
 <li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a><ul>
 <li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>7.1</b> Variable terminology</a><ul>
@@ -333,6 +339,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
 <p>link functions and alternative parameter interpretations (categorical data too)</p>
 <p>In Regression I, the response was allowed to take on any real number. But what if the range is restricted?</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(tidyverse))</code></pre></div>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.5.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Wage &lt;-<span class="st"> </span>ISLR::Wage
+NCI60 &lt;-<span class="st"> </span>ISLR::NCI60
+baseball &lt;-<span class="st"> </span>Lahman::Teams %&gt;%<span class="st"> </span>tbl_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="dt">runs=</span>R, <span class="dt">hits=</span>H)
+cow &lt;-<span class="st"> </span><span class="kw">suppressMessages</span>(<span class="kw">read_csv</span>(<span class="st">&quot;data/milk_fat.csv&quot;</span>))
+esoph &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(esoph) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">agegp =</span> <span class="kw">as.character</span>(agegp))
+titanic &lt;-<span class="st"> </span><span class="kw">na.omit</span>(titanic::titanic_train)</code></pre></div>
 <div id="problems" class="section level2">
 <h2><span class="header-section-number">15.1</span> Problems</h2>
 <p>Here are some common examples.</p>
@@ -356,18 +376,18 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ol>
 <p>Here is an example of the fat content of a cow’s milk, which was recorded over time. Data are from the paper <a href="https://core.ac.uk/download/pdf/79036775.pdf">“Transform or Link?”</a>. Let’s consider data as of week 10:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(plot_cow &lt;-<span class="st"> </span>cow <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">filter</span>(week <span class="op">&gt;=</span><span class="st"> </span><span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(week, fat<span class="op">*</span><span class="dv">100</span>)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme_bw</span>() <span class="op">+</span>
-<span class="st">    </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Fat Content (%)&quot;</span>) <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(plot_cow &lt;-<span class="st"> </span>cow %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">filter</span>(week &gt;=<span class="st"> </span><span class="dv">10</span>) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(week, fat*<span class="dv">100</span>)) +
+<span class="st">    </span><span class="kw">geom_point</span>() +
+<span class="st">    </span><span class="kw">theme_bw</span>() +
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;Fat Content (%)&quot;</span>) +
 <span class="st">    </span><span class="kw">ggtitle</span>(<span class="st">&quot;Fat content of cow milk&quot;</span>))</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
+<p><img src="130-Scales_and_the_restricted_range_problem_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>Let’s try fitting a linear regression model.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_cow <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">plot_cow +
 <span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+<p><img src="130-Scales_and_the_restricted_range_problem_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Notice the problem here – <strong>the regression lines extend beyond the possible range of the response</strong>. This is <em>mathematically incorrect</em>, since the expected value cannot extend outside of the range of Y. But what are the <em>practical</em> consequences of this?</p>
 <p>In practice, when fitting a linear regression model when the range of the response is restricted, we lose hope for extrapolation, as we obtain logical fallacies if we do. In this example, a cow is expected to produce <em>negative</em> fat content after week 35!</p>
 <p>Despite this, a linear regression model might still be useful in these settings. After all, the linear trend looks good for the range of the data.</p>
@@ -427,13 +447,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ##  - attr(*, &quot;na.action&quot;)= &#39;omit&#39; Named int  6 18 20 27 29 30 32 33 37 43 ...
 ##   ..- attr(*, &quot;names&quot;)= chr  &quot;6&quot; &quot;18&quot; &quot;20&quot; &quot;27&quot; ...</code></pre>
 <p>Consider the regression of <code>Survived</code> on <code>Age</code>. Let’s take a look at the data with jitter:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(titanic, <span class="kw">aes</span>(Age, Survived)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">geom_jitter</span>(<span class="dt">height=</span><span class="fl">0.1</span>, <span class="dt">alpha=</span><span class="fl">0.25</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span><span class="dv">0</span><span class="op">:</span><span class="dv">1</span>, <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Perished&quot;</span>, <span class="st">&quot;Survived&quot;</span>)) <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(titanic, <span class="kw">aes</span>(Age, Survived)) +
+<span class="st">    </span><span class="kw">geom_jitter</span>(<span class="dt">height=</span><span class="fl">0.1</span>, <span class="dt">alpha=</span><span class="fl">0.25</span>) +
+<span class="st">    </span><span class="kw">scale_y_continuous</span>(<span class="dt">breaks=</span><span class="dv">0</span>:<span class="dv">1</span>, <span class="dt">labels=</span><span class="kw">c</span>(<span class="st">&quot;Perished&quot;</span>, <span class="st">&quot;Survived&quot;</span>)) +
 <span class="st">    </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
+<p><img src="130-Scales_and_the_restricted_range_problem_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>Recall that the linear regression can be done with the <code>lm</code> function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(Survived <span class="op">~</span><span class="st"> </span>Age, <span class="dt">data=</span>titanic)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res_lm &lt;-<span class="st"> </span><span class="kw">lm</span>(Survived ~<span class="st"> </span>Age, <span class="dt">data=</span>titanic)
 <span class="kw">summary</span>(res_lm)</code></pre></div>
 <pre><code>## 
 ## Call:
@@ -455,7 +475,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## F-statistic: 4.271 on 1 and 712 DF,  p-value: 0.03912</code></pre>
 <p>In this case, the regression line is <code>0.4837526</code> + <code>-0.0026125</code> <code>Age</code>.</p>
 <p>A GLM can be fit in a similar way, using the <code>glm</code> function – we just need to indicate what type of regression we’re doing (binomial? poission?) and the link function. We are doing bernoulli (binomial) regression, since the response is binary (0 or 1); lets choose a <code>probit</code> link function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res_glm &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">factor</span>(Survived) <span class="op">~</span><span class="st"> </span>Age, <span class="dt">data=</span>titanic, <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&quot;probit&quot;</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res_glm &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">factor</span>(Survived) ~<span class="st"> </span>Age, <span class="dt">data=</span>titanic, <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&quot;probit&quot;</span>))</code></pre></div>
 <p>The <code>family</code> argument takes a <strong>function</strong>, indicating the type of regression. See <code>?family</code> for the various types of regression allowed by <code>glm()</code>.</p>
 <p>Let’s see a summary of the GLM regression:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(res_glm)</code></pre></div>
@@ -484,26 +504,26 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## Number of Fisher Scoring iterations: 4</code></pre>
 <p>We can make predictions too, but this is not as straight-forward as in <code>lm()</code> – here are the “predictions” using the <code>predict()</code> generic function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(res_glm)
-<span class="kw">qplot</span>(titanic<span class="op">$</span>Age, pred) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Age&quot;</span>, <span class="dt">y=</span><span class="st">&quot;Default Predictions&quot;</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-53-1.png" width="672" /></p>
+<span class="kw">qplot</span>(titanic$Age, pred) +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Age&quot;</span>, <span class="dt">y=</span><span class="st">&quot;Default Predictions&quot;</span>)</code></pre></div>
+<p><img src="130-Scales_and_the_restricted_range_problem_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>Why the negative predictions? It turns out this is just the linear predictor, <code>-0.0373331</code> + <code>-0.0067733</code> <code>Age</code>.</p>
 <p>The documentation for the <code>predict()</code> generic function on <code>glm</code> objects can be found by typing <code>?predict.glm</code>. Notice that the <code>predict()</code> generic function allows you to specify the <em>type</em> of predictions to be made. To make predictions on the mean (probability of <code>Survived=1</code>), indicate <code>type=&quot;response&quot;</code>, which is the equivalent of applying the inverse link function to the linear predictor.</p>
 <p>Here are those predictions again, this time indicating <code>type=&quot;response&quot;</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(res_glm, <span class="dt">type=</span><span class="st">&quot;response&quot;</span>)
-<span class="kw">qplot</span>(titanic<span class="op">$</span>Age, pred) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Age&quot;</span>, <span class="dt">y=</span><span class="st">&quot;Mean Estimates&quot;</span>)</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-54-1.png" width="672" /></p>
+<span class="kw">qplot</span>(titanic$Age, pred) +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Age&quot;</span>, <span class="dt">y=</span><span class="st">&quot;Mean Estimates&quot;</span>)</code></pre></div>
+<p><img src="130-Scales_and_the_restricted_range_problem_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>Look closely – these predictions don’t actually fall on a straight line. They follow an inverse probit function (i.e., a Gaussian cdf):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mu &lt;-<span class="st"> </span><span class="cf">function</span>(x) <span class="kw">pnorm</span>(res_glm<span class="op">$</span>coefficients[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>res_glm<span class="op">$</span>coefficients[<span class="dv">2</span>] <span class="op">*</span><span class="st"> </span>x)
-<span class="kw">qplot</span>(titanic<span class="op">$</span>Age, pred) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Age&quot;</span>, <span class="dt">y=</span><span class="st">&quot;Mean Estimates&quot;</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">stat_function</span>(<span class="dt">fun=</span>mu, <span class="dt">colour=</span><span class="st">&quot;blue&quot;</span>) <span class="op">+</span>
-<span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">limits=</span><span class="kw">c</span>(<span class="op">-</span><span class="dv">200</span>, <span class="dv">200</span>))</code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mu &lt;-<span class="st"> </span>function(x) <span class="kw">pnorm</span>(res_glm$coefficients[<span class="dv">1</span>] +<span class="st"> </span>res_glm$coefficients[<span class="dv">2</span>] *<span class="st"> </span>x)
+<span class="kw">qplot</span>(titanic$Age, pred) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">&quot;Age&quot;</span>, <span class="dt">y=</span><span class="st">&quot;Mean Estimates&quot;</span>) +
+<span class="st">    </span><span class="kw">stat_function</span>(<span class="dt">fun=</span>mu, <span class="dt">colour=</span><span class="st">&quot;blue&quot;</span>) +
+<span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">limits=</span><span class="kw">c</span>(-<span class="dv">200</span>, <span class="dv">200</span>))</code></pre></div>
+<p><img src="130-Scales_and_the_restricted_range_problem_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <div id="broomaugment" class="section level3">
 <h3><span class="header-section-number">15.3.1</span> <code>broom::augment()</code></h3>
 <p>We can use the <code>broom</code> package on <code>glm</code> objects, too. But, just like we had to specify <code>type=&quot;response&quot;</code> when using the <code>predict()</code> function in order to evaluate the model function, so to do we have to specify something in the <code>broom::augment()</code> function. Here, the <code>type.predict</code> argument gets passed to the <code>predict()</code> generic function (actually, the <code>predict.glm()</code> method). This means that indicating <code>type.predict=&quot;response&quot;</code> will evaluate the model function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res_glm <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw">augment</span>(<span class="dt">type.predict =</span> <span class="st">&quot;response&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res_glm %&gt;%<span class="st"> </span>
+<span class="st">  </span>broom::<span class="kw">augment</span>(<span class="dt">type.predict =</span> <span class="st">&quot;response&quot;</span>) %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw">head</span>()</code></pre></div>
 <pre><code>## # A tibble: 6 x 10
 ##   .rownames factor.Survived.   Age .fitted .se.fit .resid    .hat .sigma
@@ -583,7 +603,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
 "toc": {
 "collapse": "subsection"
 }

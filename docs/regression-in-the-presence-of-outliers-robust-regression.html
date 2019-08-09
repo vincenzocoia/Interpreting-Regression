@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 19 Regression in the presence of outliers: robust regression | Interpreting Regression</title>
-  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 19 Regression in the presence of outliers: robust regression | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 19 Regression in the presence of outliers: robust regression | Interpreting Regression" />
   
-  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
   
 
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-29">
+<meta name="date" content="2019-08-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation</a><ul>
 <li class="chapter" data-level="5.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a><ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parametric-families-of-distributions-1"><i class="fa fa-check"></i><b>6.1</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.2</b> Analyses under a Distributional Assumption</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.2.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
 <li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a><ul>
 <li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>7.1</b> Variable terminology</a><ul>
@@ -337,9 +343,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>There are many R packages out there to assist with robust estimation. It depends on the task at hand. We’ll go over a few.</p>
 <p>For robust linear regression, there are a few options.</p>
 <p>There’s the <code>rlm</code> function in the <code>MASS</code> package. It works in a similar way as the <code>lm</code> function. Can also use the functions <code>predict</code>, <code>residuals</code>, <code>coefficients</code>, etc. on the output. I like this option because it allows for different psi functions besides the Huber.</p>
-<pre><code>library(MASS)
-(fit6 &lt;- rlm(mpg ~ disp + wt, data=mtcars))
-(fit7 &lt;- rlm(mpg ~ disp + wt, data=mtcars, psi=psi.bisquare))</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(MASS)
+(fit6 &lt;-<span class="st"> </span><span class="kw">rlm</span>(mpg ~<span class="st"> </span>disp +<span class="st"> </span>wt, <span class="dt">data=</span>mtcars))</code></pre></div>
+<pre><code>## Call:
+## rlm(formula = mpg ~ disp + wt, data = mtcars)
+## Converged in 7 iterations
+## 
+## Coefficients:
+## (Intercept)        disp          wt 
+## 34.60475194 -0.01640037 -3.39317550 
+## 
+## Degrees of freedom: 32 total; 29 residual
+## Scale estimate: 3.15</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(fit7 &lt;-<span class="st"> </span><span class="kw">rlm</span>(mpg ~<span class="st"> </span>disp +<span class="st"> </span>wt, <span class="dt">data=</span>mtcars, <span class="dt">psi=</span>psi.bisquare))</code></pre></div>
+<pre><code>## Call:
+## rlm(formula = mpg ~ disp + wt, data = mtcars, psi = psi.bisquare)
+## Converged in 7 iterations
+## 
+## Coefficients:
+## (Intercept)        disp          wt 
+## 34.64727079 -0.01692585 -3.36447640 
+## 
+## Degrees of freedom: 32 total; 29 residual
+## Scale estimate: 3.22</code></pre>
 <p>The package <code>robustbase</code> has the function <code>lmrob</code> for linear models, but also has <code>glmrob</code> for GLM’s. Similarly, the <code>robust</code> package has similar functions <code>lmRob</code> and <code>glmRob</code>.</p>
 <p>A robust version of GAM’s can be obtained with the <code>robustgam</code> function in the <code>robustgam</code> package.</p>
 <p>A robust version of LME’s can be obtained with the <code>rlmer</code> function in the <code>robustlmm</code> package.</p>
@@ -393,7 +419,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
 "toc": {
 "collapse": "subsection"
 }

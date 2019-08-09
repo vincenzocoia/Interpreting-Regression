@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Chapter 10 Estimating parametric model functions | Interpreting Regression</title>
-  <meta name="description" content="My tutorials for regression analysis, in the form of a bookdown book.">
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis.">
   <meta name="generator" content="bookdown  and GitBook 2.6.7">
 
   <meta property="og:title" content="Chapter 10 Estimating parametric model functions | Interpreting Regression" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
   <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Chapter 10 Estimating parametric model functions | Interpreting Regression" />
   
-  <meta name="twitter:description" content="My tutorials for regression analysis, in the form of a bookdown book." />
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
   
 
 <meta name="author" content="Vincenzo Coia">
 
 
-<meta name="date" content="2019-05-29">
+<meta name="date" content="2019-08-09">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -132,7 +132,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="5" data-path="estimation.html"><a href="estimation.html"><i class="fa fa-check"></i><b>5</b> Estimation</a><ul>
 <li class="chapter" data-level="5.1" data-path="estimation.html"><a href="estimation.html#estimation-of-probabilistic-quantities"><i class="fa fa-check"></i><b>5.1</b> Estimation of Probabilistic Quantities</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a><ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parametric-families-of-distributions-1"><i class="fa fa-check"></i><b>6.1</b> Parametric Families of Distributions</a></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.2</b> Analyses under a Distributional Assumption</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.2.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.2.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
 <li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: including predictors</a><ul>
 <li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-including-predictors.html"><a href="reducing-uncertainty-of-the-outcome-including-predictors.html#variable-terminology"><i class="fa fa-check"></i><b>7.1</b> Variable terminology</a><ul>
@@ -331,6 +337,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="estimating-parametric-model-functions" class="section level1">
 <h1><span class="header-section-number">Chapter 10</span> Estimating parametric model functions</h1>
 <p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">suppressPackageStartupMessages</span>(<span class="kw">library</span>(tidyverse))</code></pre></div>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;tibble&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;purrr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;dplyr&#39; was built under R version 3.5.2</code></pre>
+<pre><code>## Warning: package &#39;stringr&#39; was built under R version 3.5.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Wage &lt;-<span class="st"> </span>ISLR::Wage
+NCI60 &lt;-<span class="st"> </span>ISLR::NCI60
+baseball &lt;-<span class="st"> </span>Lahman::Teams %&gt;%<span class="st"> </span>tbl_df %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="dt">runs=</span>R, <span class="dt">hits=</span>H)
+cow &lt;-<span class="st"> </span><span class="kw">suppressMessages</span>(<span class="kw">read_csv</span>(<span class="st">&quot;data/milk_fat.csv&quot;</span>))
+esoph &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(esoph) %&gt;%<span class="st"> </span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">agegp =</span> <span class="kw">as.character</span>(agegp))
+titanic &lt;-<span class="st"> </span><span class="kw">na.omit</span>(titanic::titanic_train)</code></pre></div>
 <div id="writing-the-sample-mean-as-an-optimization-problem" class="section level2">
 <h2><span class="header-section-number">10.1</span> Writing the sample mean as an optimization problem</h2>
 <p>(DSCI 561 lab2, 2018-2019)</p>
@@ -358,25 +378,25 @@ curve(sse, mu_y - 2*sd(y), mu_y + 2*sd(y))</code></pre>
 <p>If we’re predicting the <strong>median</strong>, then the <em>mean absolute error</em> works. This is like the MSE, but instead of <em>squaring</em> the errors, we take the <em>absolute value</em>.</p>
 <p>In general, a “correct” scoring rule for the <span class="math inline">\(\tau\)</span>-quantile is as follows: <span class="math display">\[ S = \sum_{i=1}^{n} \rho_{\tau}(Y_i - \hat{Q}_i(\tau)), \]</span> where <span class="math inline">\(Y_i\)</span> for <span class="math inline">\(i=1,\ldots,n\)</span> is the response data, <span class="math inline">\(\hat{Q}_i(\tau)\)</span> are the <span class="math inline">\(\tau\)</span>-quantile estimates, and <span class="math inline">\(\rho_{\tau}\)</span> is the <strong>check function</strong> (also known as the <em>absolute asymmetric deviation function</em> or <em>tick function</em>), given by <span class="math display">\[ \rho_{\tau}(s) = (\tau - I(s&lt;0))s \]</span> for real <span class="math inline">\(s\)</span>. This scoring rule is <strong>negatively oriented</strong>, meaning the lower the score, the better. It cannot be below 0.</p>
 <p>Here is a plot of various check functions. Notice that, when <span class="math inline">\(\tau=0.5\)</span> (corresponding to the median), this is proportional to the absolute value:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>)), <span class="kw">aes</span>(x)) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">theme_bw</span>() <span class="op">+</span>
-<span class="st">    </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">expression</span>(rho)) <span class="op">+</span>
-<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.title.y=</span><span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">0</span>, <span class="dt">vjust=</span><span class="fl">0.5</span>)) <span class="op">+</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">base &lt;-<span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">c</span>(-<span class="dv">2</span>,<span class="dv">2</span>)), <span class="kw">aes</span>(x)) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">theme_bw</span>() +
+<span class="st">    </span><span class="kw">labs</span>(<span class="dt">y=</span><span class="kw">expression</span>(rho)) +
+<span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.title.y=</span><span class="kw">element_text</span>(<span class="dt">angle=</span><span class="dv">0</span>, <span class="dt">vjust=</span><span class="fl">0.5</span>)) +
 <span class="st">    </span><span class="kw">ylim</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="fl">1.5</span>))
-rho &lt;-<span class="st"> </span><span class="cf">function</span>(tau) <span class="cf">function</span>(x) (tau <span class="op">-</span><span class="st"> </span>(x<span class="op">&lt;</span><span class="dv">0</span>))<span class="op">*</span>x
-cowplot<span class="op">::</span><span class="kw">plot_grid</span>(
-    base <span class="op">+</span><span class="st"> </span><span class="kw">stat_function</span>(<span class="dt">fun=</span><span class="kw">rho</span>(<span class="fl">0.2</span>)) <span class="op">+</span><span class="st"> </span>
+rho &lt;-<span class="st"> </span>function(tau) function(x) (tau -<span class="st"> </span>(x&lt;<span class="dv">0</span>))*x
+cowplot::<span class="kw">plot_grid</span>(
+    base +<span class="st"> </span><span class="kw">stat_function</span>(<span class="dt">fun=</span><span class="kw">rho</span>(<span class="fl">0.2</span>)) +<span class="st"> </span>
 <span class="st">        </span><span class="kw">ggtitle</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(tau, <span class="st">&quot;=0.2&quot;</span>))),
-    base <span class="op">+</span><span class="st"> </span><span class="kw">stat_function</span>(<span class="dt">fun=</span><span class="kw">rho</span>(<span class="fl">0.5</span>)) <span class="op">+</span><span class="st"> </span>
+    base +<span class="st"> </span><span class="kw">stat_function</span>(<span class="dt">fun=</span><span class="kw">rho</span>(<span class="fl">0.5</span>)) +<span class="st"> </span>
 <span class="st">        </span><span class="kw">ggtitle</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(tau, <span class="st">&quot;=0.5&quot;</span>))),
-    base <span class="op">+</span><span class="st"> </span><span class="kw">stat_function</span>(<span class="dt">fun=</span><span class="kw">rho</span>(<span class="fl">0.8</span>)) <span class="op">+</span><span class="st"> </span>
+    base +<span class="st"> </span><span class="kw">stat_function</span>(<span class="dt">fun=</span><span class="kw">rho</span>(<span class="fl">0.8</span>)) +<span class="st"> </span>
 <span class="st">        </span><span class="kw">ggtitle</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(tau, <span class="st">&quot;=0.8&quot;</span>))),
     <span class="dt">ncol=</span><span class="dv">3</span>
 )</code></pre></div>
 <pre><code>## Warning: Removed 4 rows containing missing values (geom_path).
 
 ## Warning: Removed 4 rows containing missing values (geom_path).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-15-1.png" width="768" /></p>
+<p><img src="080-Estimating_parametric_model_functions_files/figure-html/unnamed-chunk-2-1.png" width="768" /></p>
 <p>For quantile regression <strong>estimation</strong>, we minimize the sum of scores instead of the sum of squared residuals, as in the usual (mean) linear regression.</p>
 </div>
 <div id="simple-linear-regression" class="section level2">
@@ -565,7 +585,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
 "toc": {
 "collapse": "subsection"
 }
