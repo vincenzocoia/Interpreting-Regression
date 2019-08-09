@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/vincenzocoia/Interpreting-Regression.svg?branch=master)](https://travis-ci.com/vincenzocoia/Interpreting-Regression)
+
 Source for the "Interpreting Regression" book, which is under development. You can find the book here: https://vincenzocoia.github.io/Interpreting-Regression/
 
 ### How to render
