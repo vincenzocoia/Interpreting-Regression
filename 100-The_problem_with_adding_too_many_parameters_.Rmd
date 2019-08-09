@@ -6,6 +6,18 @@
 
 (BAIT 509 Class Meeting 02)
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+Wage <- ISLR::Wage
+NCI60 <- ISLR::NCI60
+baseball <- Lahman::Teams %>% tbl_df %>% 
+  select(runs=R, hits=H)
+cow <- suppressMessages(read_csv("data/milk_fat.csv"))
+esoph <- as_tibble(esoph) %>% 
+    mutate(agegp = as.character(agegp))
+titanic <- na.omit(titanic::titanic_train)
+```
+
 
 ```{r, include=FALSE}
 rotate_y <- theme(axis.title.y=element_text(angle=0, vjust=0.5))

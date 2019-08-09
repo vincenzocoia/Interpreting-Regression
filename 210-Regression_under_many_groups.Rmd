@@ -2,6 +2,11 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+
 ## Motivation for LME
 
 Let's take a look at the `esoph` data set, to see how the number of controls `ncontrols` affects the number of cases `ncases` of cancer for each age group `agegp`. Here's what the data look like (with a tad bit of vertical jitter):

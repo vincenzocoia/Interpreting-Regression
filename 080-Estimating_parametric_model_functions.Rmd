@@ -3,6 +3,18 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+Wage <- ISLR::Wage
+NCI60 <- ISLR::NCI60
+baseball <- Lahman::Teams %>% tbl_df %>% 
+  select(runs=R, hits=H)
+cow <- suppressMessages(read_csv("data/milk_fat.csv"))
+esoph <- as_tibble(esoph) %>% 
+    mutate(agegp = as.character(agegp))
+titanic <- na.omit(titanic::titanic_train)
+```
+
 ## Writing the sample mean as an optimization problem
 
 
@@ -18,7 +30,7 @@ We've defined sse() below, a function that takes some number and returns the sum
 
 We've also generated a quick plot of this function for you.
 
-```
+```{r}
 sse <- Vectorize(function(m) sum((y - m)^2))
 curve(sse, mu_y - 2*sd(y), mu_y + 2*sd(y))
 ```

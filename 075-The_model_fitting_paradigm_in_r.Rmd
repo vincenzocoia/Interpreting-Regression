@@ -2,6 +2,18 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+Wage <- ISLR::Wage
+NCI60 <- ISLR::NCI60
+baseball <- Lahman::Teams %>% tbl_df %>% 
+  select(runs=R, hits=H)
+cow <- suppressMessages(read_csv("data/milk_fat.csv"))
+esoph <- as_tibble(esoph) %>% 
+    mutate(agegp = as.character(agegp))
+titanic <- na.omit(titanic::titanic_train)
+```
+
 Scratch notes from our in-class activities in Lecture 3. This covers the model-fitting paradigm in R.
 
 Use the `iris` data to demonstrate. Split into training and test data:
