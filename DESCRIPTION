@@ -13,4 +13,5 @@ Imports:
     Lahman,
     titanic,
     evd,
-    extRemes
+    extRemes,
+    cowplot
