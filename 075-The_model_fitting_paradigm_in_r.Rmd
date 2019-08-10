@@ -18,7 +18,7 @@ Scratch notes from our in-class activities in Lecture 3. This covers the model-f
 
 Use the `iris` data to demonstrate. Split into training and test data:
 
-```{r}
+```
 head(iris)
 set.seed(100)
 iris <- mutate(
@@ -32,25 +32,25 @@ iris_test <- filter(iris, !training)
 
 Fit a LOESS model:
 
-```{r}
+```
 fit <- loess(Sepal.Width ~ Petal.Width, data=iris_train)
 ```
 
 Make predictions:
 
-```{r}
+```
 yhat <- predict(fit, newdata=iris_test)
 ```
 
 Calculate error:
 
-```{r}
+```
 mean((yhat - iris_test$Sepal.Width)^2)
 ```
 
 ## `broom` package
 
-```{r}
+```
 #tidy(fit)
 #glance(fit)
 broom::augment(fit, newdata = iris_test)
@@ -58,7 +58,7 @@ broom::augment(fit, newdata = iris_test)
 
 With linear regression:
 
-```{r}
+```
 fit2 <- lm(Sepal.Width ~ Petal.Width, data=iris_train)
 #unclass(fit2)
 #unclass(summary(fit2))
