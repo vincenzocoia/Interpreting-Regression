@@ -2,6 +2,10 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+```
+
 The problem with estimating extreme quantiles in the "usual" sense: 
 
 Here is a histogram of 100 observations generated from a Student's _t_(1) distribution (it's heavy-tailed):

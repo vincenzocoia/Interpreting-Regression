@@ -2,11 +2,23 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+Wage <- ISLR::Wage
+NCI60 <- ISLR::NCI60
+baseball <- Lahman::Teams %>% tbl_df %>% 
+  select(runs=R, hits=H)
+cow <- suppressMessages(read_csv("data/milk_fat.csv"))
+esoph <- as_tibble(esoph) %>% 
+    mutate(agegp = as.character(agegp))
+titanic <- na.omit(titanic::titanic_train)
+```
+
 Scratch notes from our in-class activities in Lecture 3. This covers the model-fitting paradigm in R.
 
 Use the `iris` data to demonstrate. Split into training and test data:
 
-```{r}
+```
 head(iris)
 set.seed(100)
 iris <- mutate(
@@ -20,39 +32,39 @@ iris_test <- filter(iris, !training)
 
 Fit a LOESS model:
 
-```{r}
+```
 fit <- loess(Sepal.Width ~ Petal.Width, data=iris_train)
 ```
 
 Make predictions:
 
-```{r}
+```
 yhat <- predict(fit, newdata=iris_test)
 ```
 
 Calculate error:
 
-```{r}
+```
 mean((yhat - iris_test$Sepal.Width)^2)
 ```
 
 ## `broom` package
 
-```{r}
+```
 #tidy(fit)
 #glance(fit)
-augment(fit, newdata = iris_test)
+broom::augment(fit, newdata = iris_test)
 ```
 
 With linear regression:
 
-```{r}
+```
 fit2 <- lm(Sepal.Width ~ Petal.Width, data=iris_train)
 #unclass(fit2)
 #unclass(summary(fit2))
 
-tidy(fit2)
-augment(fit2)
-glance(fit2)
+broom::tidy(fit2)
+broom::augment(fit2)
+broom::glance(fit2)
 ```
 

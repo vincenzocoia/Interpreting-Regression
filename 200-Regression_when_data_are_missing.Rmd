@@ -4,6 +4,12 @@
 
 (DSCI 562 Tutorial)
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(mice))
+```
+
+
 Let's take a closer look at mean imputation vs. multiple imputation.
 
 ## Mean Imputation

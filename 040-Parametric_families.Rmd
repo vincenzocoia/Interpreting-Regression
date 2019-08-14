@@ -8,6 +8,11 @@ Concepts:
 - Different data generating processes give rise to various _parametric families_ of distributions.  We'll explain a good chunk of them. 
 - These are useful in data analysis because they narrow down the things that need to be estimated. Improving estimator quality by parametric distributional assumptions and MLE
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+```
+
+
 ## Parametric Families of Distributions
 
 What is meant by "family"? This means that there are more than one of them, and that a specific distribution from the family can be characterized the family's parameters. This is what is meant by "parametric" -- the distribution can be distilled down to a set of parameters. 
@@ -40,7 +45,6 @@ Let's look at these steps in turn, together with the following examples.
 Consider the following data set of damages caused by hurricanes, in billions of USD. The distribution of the 144 observations is depicted in the following histogram:
 
 ```{r, warning=FALSE}
-# library(extRemes)
 suppressPackageStartupMessages(library(tidyverse))
 data(damage, package = "extRemes")
 house <- suppressMessages(read_csv("data/house.csv"))

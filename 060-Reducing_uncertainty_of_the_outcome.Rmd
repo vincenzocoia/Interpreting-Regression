@@ -1,5 +1,8 @@
 # Prediction: harnessing the signal {-}
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+```
 
 
 # Reducing uncertainty of the outcome: including predictors

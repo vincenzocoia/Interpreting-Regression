@@ -2,6 +2,19 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+Wage <- ISLR::Wage
+NCI60 <- ISLR::NCI60
+baseball <- Lahman::Teams %>% tbl_df %>% 
+  select(runs=R, hits=H)
+cow <- suppressMessages(read_csv("data/milk_fat.csv"))
+esoph <- as_tibble(esoph) %>% 
+    mutate(agegp = as.character(agegp))
+titanic <- na.omit(titanic::titanic_train)
+```
+
+
 ## What machine learning is
 
 What is Machine Learning (ML) (or Statistical Learning)? As the [ISLR book](http://www-bcf.usc.edu/~gareth/ISL/) puts it, it's a "vast set of tools for understanding data". Before we explain more, we need to consider the two main types of ML:

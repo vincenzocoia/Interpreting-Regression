@@ -2,6 +2,12 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+baseball <- Lahman::Teams %>% tbl_df %>% 
+  select(runs=R, hits=H)
+```
+
 
 Up until now, we've only seen different ways of using a predictor to give us more information the __mean__ and __mode__ of the response. The world holds a huge emphasis on the mean and mode, but these are not always what's important. Two alternatives are:
 
