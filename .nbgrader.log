@@ -1,0 +1,32 @@
+[LabApp | WARNING] No nbgrader_config.py file found (rerun with --debug to see where nbgrader is looking)
+[LabApp | INFO] Loading the validate_assignment nbgrader serverextension
+[LabApp | INFO] Serving notebooks from local directory: /Users/vincenzocoia/git_docs/Interpreting-Regression
+[LabApp | INFO] 0 active kernels
+[LabApp | INFO] The Jupyter Notebook is running at:
+[LabApp | INFO] http://localhost:8888/?token=c5ecc237ce1c529c01584cdf88e29a86f5f5b153df9983d3
+[LabApp | INFO] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[LabApp | CRITICAL] 
+    
+    Copy/paste this URL into your browser when you connect for the first time,
+    to login with a token:
+        http://localhost:8888/?token=c5ecc237ce1c529c01584cdf88e29a86f5f5b153df9983d3
+[LabApp | INFO] Accepting one-time-token-authenticated connection from ::1
+[LabApp | WARNING] 404 GET /metrics?1562953997580 (::1) 54.34ms referer=http://localhost:8888/lab
+[LabApp | WARNING] Could not determine jupyterlab build status without nodejs
+[LabApp | WARNING] 404 GET /metrics?1562954002643 (::1) 2.86ms referer=http://localhost:8888/lab
+[LabApp | WARNING] 404 GET /metrics?1562954007656 (::1) 2.19ms referer=http://localhost:8888/lab
+[LabApp | INFO] Creating new file in /
+[LabApp | WARNING] 404 GET /metrics?1562954012666 (::1) 2.81ms referer=http://localhost:8888/lab
+[LabApp | INFO] Saving file at /untitled.md
+[LabApp | WARNING] 404 GET /metrics?1562954017676 (::1) 2.80ms referer=http://localhost:8888/lab
+[LabApp | WARNING] 404 GET /metrics?1562954022689 (::1) 2.50ms referer=http://localhost:8888/lab
+[LabApp | WARNING] 404 GET /metrics?1562954027701 (::1) 2.75ms referer=http://localhost:8888/lab
+[LabApp | WARNING] 404 GET /metrics?1562954032712 (::1) 2.85ms referer=http://localhost:8888/lab
+[LabApp | WARNING] delete /untitled.md
+[LabApp | WARNING] 404 GET /metrics?1562954037722 (::1) 3.95ms referer=http://localhost:8888/lab
+[LabApp | WARNING] 404 GET /metrics?1562954042761 (::1) 2.77ms referer=http://localhost:8888/lab
+[LabApp | WARNING] 404 GET /metrics?1562954047772 (::1) 3.80ms referer=http://localhost:8888/lab
+[LabApp | WARNING] 404 GET /metrics?1562954052786 (::1) 2.74ms referer=http://localhost:8888/lab
+[LabApp | INFO] interrupted
+[LabApp | CRITICAL] Shutdown confirmed
+[LabApp | INFO] Shutting down 0 kernels
