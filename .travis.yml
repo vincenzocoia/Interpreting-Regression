@@ -1,13 +1,14 @@
 language: r
+sudo: false
 cache: packages
+
+before_install:
+- npm install netlify-cli -g
 
 script:
   - Rscript -e 'bookdown::render_book("index.Rmd")'
 
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  keep_history: true
-  on:
-    branch: master
+after_success:
+- netlify deploy --prod --dir _book
+
+# Thanks, https://github.com/rstudio-education/stat545-reboot/issues/1
