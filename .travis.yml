@@ -9,6 +9,6 @@ script:
   - Rscript -e 'bookdown::render_book("index.Rmd")'
 
 after_success:
-- netlify deploy --prod --dir _book
+- netlify deploy --prod --dir docs
 
 # Thanks, https://github.com/rstudio-education/stat545-reboot/issues/1
