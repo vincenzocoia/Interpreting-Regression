@@ -10,3 +10,116 @@ Concepts:
 - Distributions as the limiting collection of iid data. 
 - Ways to depict a distribution, and the interpretation of each. The concept that one tells you everything about the distribution, so you can in theory derive one form from another. One does not give you more information than another. 
 - These distributions might not seem practical, but they certainly are. Even in cases where we are considering many other pieces of information aside from the response, we are still dealing with univariate distributions -- we'll see later that the only difference is that they are no longer marginal distributions (they are _conditional_).
+
+
+## Defining Probability
+
+I like to play Mario Kart 8, a racing game with some "combat" involved using items. In the game, you are given an item at random whenever you get an "item box".
+
+Suppose you're playing the game, and so far have gotten the following items in total:
+
+|Item                                  | Name    | Count|
+|:------------------------------------:|:-------:|:----:|
+|<img src='./img/banana.png'> | Banana  |     7|
+|<img src='./img/bobomb.png'> | Bob-omb |     3|
+|<img src='./img/coin.png'>   | Coin    |    37|
+|<img src='./img/horn.png'>   | Horn    |     1|
+|<img src='./img/shell.png'>  | Shell   |     2|
+| Total: | | 50 |
+
+Attribution: images from [pngkey](https://www.pngkey.com/detail/u2w7e6o0i1q8i1y3_randome-clipart-mario-kart-mario-kart-8-deluxe/).
+
+
+- What's the probability that your next item is a coin? 
+- How would you find the _actual_ probability? 
+- From this, how might you define probability?
+
+In general, the probability of an event $A$ occurring is denoted $P(A)$ and is defined as $$\frac{\text{Number of times event } A \text{ is observed}}{\text{Total number of events observed}}$$ as the number of events goes to infinity.
+
+## Comparing Probabilities
+
+Suppose Vincenzo often wins at a game of solitaire---a one-player game---but that Tom is twice as good as Vincenzo. Does this means that $P(\text{Tom wins}) = 2 \times P(\text{Vincenzo wins})$?
+
+Probability is quite useful for communicating the chance of an event happening in an absolute sense, but is not useful for comparing probabilities. Odds, on the other hand, are useful for comparing the chance of two events. If $p$ is the chance that Vincenzo wins at solitaire, his _odds of winning_ is defined as $$\text{Odds} = \frac{p}{1-p}.$$ This means that, if his odds are $o$, then the probability of winning is $$\text{Probability} = \frac{o}{o+1}.$$
+
+For example, if Vincenzo wins 80% of the time, his odds are $0.8/0.2 = 4$. This is sometimes written as 4:1 odds -- that is, _four wins for every loss_. If Tom is twice as good as Vincenzo, it's _most useful_ to say that this means Tom wins twice as many games before experiencing a loss (on average) -- that is, 8:1 odds, or simply 8, and a probability of $8/9=0.888\ldots$.
+
+
+## Probability Distributions
+
+So far, we've been discussing probabilities of single events. But it's often useful to characterize the full "spectrum" of uncertainty associated with an outcome. The set of all outcomes and their corresponding probabilities is called a __probability distribution__ (or, often, just __distribution__). 
+
+The outcome itself, which is uncertain, is called a __random variable__. (Note: technically, this definition only holds if the outcome is _numeric_, not categorical like our Mario Kart example, but we won't concern ourselves with such details)
+
+When the outcomes are _discrete_, the distributions are called __probability mass functions__ (or _pmf_'s for short).
+
+### Examples of Probability Distributions (3 min)
+
+__Mario Kart Example__: The distribution of items is given by the above table.
+
+__Ship example__: Suppose a ship that arrives at the port of Vancouver will stay at port according to the following distribution:
+
+| Length of stay (days) | Probability |
+|---|------|
+| 1 | 0.25 |
+| 2 | 0.50 |
+| 3 | 0.15 |
+| 4 | 0.10 |
+
+The fact that the outcome is _numeric_ means that there are more ways we can talk about things, as we will see.
+
+
+## Measures of central tendency and uncertainty
+
+There are two concepts when communicating an uncertain outcome:
+
+- __Central tendency__: a "typical" value of the outcome.
+- __Uncertainty__: how "random" the outcome is.
+
+There are many ways to _measure_ these two concepts. They're defined using a probability distribution, but just as probability can be defined as the limit of a fraction based on a sample, these measures often have a _sample version_ (aka _empirical version_) from which they are derived. 
+
+As such, let's call $X$ the random outcome, and $X_1, \ldots, X_n$ a set of $n$ _observations_ that form a _sample_ (see the [terminology page](https://ubc-mds.github.io/resources_pages/terminology/#sample) for alternative uses of the word _sample_).
+
+### Mode and Entropy
+
+No matter what scale a distribution has, we can always calculate the mode and entropy. And, when the outcome is categorical (like the Mario Kart example), we are pretty much stuck with these as our choices.
+
+The __mode__ of a distribution is the outcome having highest probability.
+
+- A measure of central tendency.
+- The sample version is the observation you saw the most.
+- Measured as an _outcome_, not as the probabilities.
+
+The __entropy__ of a distribution is defined as $$-\displaystyle \sum_x P(X=x)\log(P(X=x)).$$
+
+- A measure of uncertainty.
+- Probably the only measure that didn't originate from a sample version (comes from information theory).
+- Measured as a transformation of probabilities, not as the outcomes -- so, hard to interpret on its own.
+- Cannot be negative; zero-entropy means no randomness.
+
+### Mean and Variance
+
+When our outcome is numeric, we can take advantage of the numeric property and calculate the _mean_ and _variance_: 
+
+The __mean__ (aka expected value, or expectation) is defined as $$\displaystyle \sum_x x\cdot P(X=x).$$
+
+- A measure of central tendency, denoted $E(X)$.
+- Its sample version is $\bar{X} = \frac{1}{n} \sum_{i=1}^n X_i,$ which gets closer and closer to the true mean as $n \rightarrow \infty$ (this is in fact how the mean is originally defined!)
+- Useful if you're wanting to compare _totals_ of a bunch of observations (just multiply the mean by the number of observations to get a sense of the total).
+- Probably the most popular measure of central tendency.
+- Note that the mean might not be a possible outcome!
+
+The __variance__ is defined as $$E[(X-E(X))^2],$$ or this works out to be equivalent to the (sometimes) more useful form, $$E[X^2]-E[X]^2.$$
+
+- A measure of uncertainty, denoted $\text{Var}(X)$.
+- Yes! This is an expectation -- of the squared deviation from the mean.
+- Its sample version is $s^2 = \frac{1}{n-1} \sum_{i=1}^n (X_i - \bar{X})^2$, or sometimes $s^2 = \frac{1}{n} \sum_{i=1}^n (X_i - \bar{X})^2$ -- both get closer and closer to the true variance as $n \rightarrow \infty$ (you'll be able to compare the goodness of these at estimating the true variance in DSCI 552 next block). 
+- Like entropy, cannot be negative, and a zero variance means no randomness.  
+- Unlike entropy, depends on the actual values of the random variable.
+
+The __standard deviation__ is the square root of the variance.
+
+- Useful because it's measured on the same scale as the outcome, as opposed to variance, which takes on squared outcome measurements.
+
+
+Note: you may have heard of the __median__ -- we'll hold off on this until later.
