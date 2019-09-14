@@ -8,6 +8,7 @@ Imports:
     mice,
     broom,
     lubridate,
+    lme4,
     quantreg,
     ISLR,
     Lahman,
