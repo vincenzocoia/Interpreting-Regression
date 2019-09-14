@@ -87,3 +87,19 @@ There have been several "adjustments" proposed to ensure that this doesn't happe
 Estimates of higher quantiles usually become worse for large/small values of $\tau$. This is especially true when data are heavy-tailed. 
 
 Check out the Chapter on Extreme Value Regression for more info.
+
+## Concepts
+
+- The conditional (population) variance can be estimated by regressing squared residuals as the response. This means that we have to (1) estimate a mean model function using any regression technique, (2) obtain the residuals, then (3) regress the squared residuals against the same predictors as in step (1). 
+- The tau-quantile (for tau between 0 and 1) is a number that will be exceeded (1-tau)\*100% of the time. That is, a proportion of tau outcomes will lie below the tau-quantile (on average).
+	- The median is a special case of this when tau=0.5.
+- The mean is (1) a measure of central tendency of a distribution, and (2) a number useful for calculating totals (for example, multiply by `n` to get an estimate of the sum of `n` outcomes).
+- Quantile regression is useful for: 
+	- for high-quantiles: giving us a conservative estimate of the outcome -- a number that is deliberately larger than expected. For example: a "worst-case scenario" for next month's expense / a value we can think of as having to pay "at most".
+	- for low-quantiles: giving us a liberal estimate of the outcome -- a number that is deliberately smaller than expected. For example: a "best-case scenario" for next month's expense / a value we can think of as having to pay "at least".
+	- for medians: giving us an outcome that you can put to a coin flip as to whether or not you'll "make the cut". For example: a coin flip would tell you whether or not you'll exceed the median salary for your new job; a coin flip would tell you whether or not you'll have to wait longer than the median wait time when sitting in the hospital. 
+- You can estimate conditional quantiles:
+	- from a GLM by plugging in the estimated distribution parameter(s) (just the mean in the case of Bernoulli or Poisson) to get the specific distribution, then extracting the desired quantile from the distribution.
+	- using a local regression method by obtaining an estimate of the univariate quantile that results from the relevant subsample of `y` occuring near a particular `x` value.
+- A 90% prediction band is the region between the 0.95- and 0.05-quantile model functions (similar calculation can be done for any level of confidence). The corresponding prediction interval for an outcome at a particular `x` can be obtained by evaluating the two quantile model functions. 
+

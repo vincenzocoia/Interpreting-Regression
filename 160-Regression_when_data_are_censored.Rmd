@@ -3,3 +3,251 @@
 
 
 # Regression when data are censored: survival analysis
+
+```{r, warning = FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(survival))
+suppressPackageStartupMessages(library(ggfortify))
+suppressPackageStartupMessages(library(broom))
+```
+
+In this case study, we will use the `ovarian` data from the `survival` R package to investigate survival times (`futime`) for ovarian cancer patients. Specifically, we will focus on both regression tasks:
+
+- prediction, given treatment (`rx`)
+- interpreting/inferring the effect of treatment (`rx`)
+
+To get started, ensure you have the requisite R packages installed. You probably already have `broom` and `tidyverse` installed, but not these:
+
+```
+install.packages("survival")
+install.packages("ggfortify")
+```
+
+## Data
+
+Here is a snippet of the relevant data. Notice a defining feature of this dataset: not all survival times are complete!
+
+__Censored observation__: a number for which we know the actual outcome is larger. An "incomplete" observation. Also called __survival data__.
+
+(Naturally, we can extend the notion of censoring to "smaller", and to other notions, but we won't consider this here)
+
+```{r}
+ovarian <- survival::ovarian %>% 
+    as_tibble() %>% 
+    select(futime, fustat, rx) %>% 
+    mutate(rx = factor(rx),
+           fustat = fustat)
+head(ovarian)
+```
+
+With R, we can indicate a response is censored using the `survival::Surv()` function. This forms the foundation to survival analysis in R. 
+
+`Surv()` takes the survival times and the censoring indicator
+
+```{r}
+Surv(ovarian$futime, 
+     event = (ovarian$fustat))
+```
+
+Here is a plot of the data:
+
+```{r, fig.width = 4, fig.height = 2}
+ovarian %>% 
+    mutate(censor = if_else(fustat == 1, "Died", "Ongoing")) %>% 
+    ggplot(aes(rx, futime)) +
+    geom_jitter(aes(colour = censor), width = 0.2) +
+    theme_bw() +
+    labs(x = "Treatment",
+         y = "Survival time") +
+    scale_colour_discrete("")
+```
+
+Other data examples:
+
+1. __Churn__. You want to keep subscribers to your YouTube channel. Google has given you the subscription date and drop-out date (if applicable) for all subscribers you've ever had.
+2. __Light Bulbs__. You've designed a new light bulb, and wish to tell buyers how long they will last. 
+
+## Univariate Estimation
+
+No matter whether we're interested in prediction or interpretation, we first need to be able to estimate things from univariate data.
+
+But how can we even estimate something as simple as the mean? What are the consequences for the following two approaches?
+
+1. Ignore the censoring:
+
+```{r}
+mean(ovarian$futime)
+```
+
+2. Remove censored data:
+
+```{r}
+ovarian %>% 
+    filter(fustat == 0) %>%
+    .[["futime"]] %>% 
+    mean()
+```
+
+
+### Non-parametric Estimates with Kaplan-Meier 
+
+**Survival Function**
+
+_Question_: In what ways can we define a distribution?
+
+Obtain the Kaplan-Meier estimate of the survival function using `survival::survfit()`. It's expecting a formula, but we're still working with the null model.
+
+```{r}
+(fit_km <- survfit(
+    Surv(futime, fustat) ~ 1, 
+    data = ovarian
+))
+```
+
+To obtain the survival function, we have two options.
+
+1. Obtain the heights of each "step" of the survival function, and their corresponding time-values (y). Use `summary()`, or better, `broom::tidy()`:
+
+```{r}
+tidy(fit_km)
+```
+
+2. Just want the plot? `ggfortify::autoplot()` to the rescue! You can even add other layers to the resulting `ggplot2` object. Notice the "notches" wherever there's a censored observation. 
+
+```{r}
+autoplot(fit_km) +
+    theme_bw() +
+    ylab("Survival Function") +
+    ylim(0, 1)
+```
+
+**Quantiles**
+
+You can find the median on the printout of `survfit` above. But in general, we can use the `survival::quantile()` S3 generic function.
+
+```{r}
+quantile(fit_km, 
+         probs = c(0.25, 0.5), 
+         conf.int = FALSE)
+```
+
+What quantiles do not exist?
+
+**Mean**
+
+Does the mean exist?
+
+Obtain the restricted mean using `print.survfit()`, or better, `broom::glance()`. Where is the restriction?
+
+```{r}
+glance(fit_km)
+```
+
+### Parametric Estimation
+
+The Weibull family of distributions is a flexible and popular distributional assumption to make. Fit using `survival::survreg()`, just like `survival::survfit()`, but with `dist="weibull"`.
+
+```{r}
+(fit_wei <- survreg(
+    Surv(futime, fustat) ~ 1, 
+    data = ovarian,
+    dist = "weibull"
+))
+```
+
+Get at the model parameters using `summary()`, or better, using `broom::tidy()`:
+
+```{r}
+tidy(fit_wei)
+```
+
+Lab assignment: calculate Weibull parameters using these estimates; then calculate estimates of probabilistic quantities. Hint: see the bottom of the `?survreg` documentation.
+
+## Regression with Survival Data
+
+The tricky part here? When there's a parametric assumption on the "model function" -- or perhaps it's more accurate here to say across the predictor space.
+
+**Question**: How can we set up a regression model with a linear predictor? Feel free to use a link function to solve the restricted range problem. 
+
+
+### Proportional Hazards Model
+
+We can add "hazard function" to our list of things that can define a distribution. Why is this useful to model?
+
+Fit a proportional hazards model with `survival::coxph()`. Our predictor is treatment (`rx`).
+
+```{r}
+(fit_ph <- coxph(
+    Surv(futime, fustat) ~ rx, 
+    data = ovarian
+))
+```
+
+_Question_: Linear regression over two categories is the same as estimating the mean for both categories. Is the Proportional Hazards regression model also estimating the hazard function separately for each category? 
+
+We can already see Treatment 2 is not significant (under a 0.05 level). If it was significant, we'd interpet the hazard function under Treatment 2 to be exp(-0.5964) = 0.55 as much as the hazard function under Treatment 1.
+
+### Prediction
+
+__Your turn__:
+
+Under the Proportional Hazards model, plot the survival function and obtain a mean estimate for Treatment 1 by filling in the following steps.
+
+1. Convert the fitted model to a `survfit` object (which you can think of as a specific distribution). 
+    - Be sure to specify the `newdata` argument like you would when using `predict()`.
+
+```{r}
+(fit_ph_survfit <- survfit(
+    fit_ph, 
+    newdata = data.frame(rx = 1)#ovarian[1, ]
+))
+```
+
+2. Plot the survival function that's stored in this new variable.
+    - Hint: there's a handy function for that.
+    
+```{r}
+fit_ph_survfit %>% 
+    autoplot()
+```
+
+3. Obtain a mean estimate using a function from the `broom` package.
+
+```{r}
+fit_ph_survfit %>% 
+    glance()
+```
+
+4. Obtain a median estimate using the `quantile` function.
+
+```{r}
+fit_ph_survfit %>% 
+    quantile(probs = 0.5)
+```
+
+
+
+
+## Concept list
+
+- A measurement is _censored_ if we only know that its true value lies above some point.
+    - For ease of discussion, we call the random variable of interest "time until event".
+    - There are other types of censoring, but they are a simple extension of this definition.
+- Removing censored data will result in uncertainty in our estimates to be larger than it could be, if we were to include the censored data.
+    - Removing censored data could also result in _biased_ estimates, if data have only been collected for a short duration.
+- Ignoring the censorship status (i.e., taking a censored observations to be the actual observations) will likely result in a biased (overly small) estimate.
+- There are many ways a distribution can be depicted. Aside from the density/pmf and cdf, there's also:
+    - The _survival function_ (= 1 - cdf) at `t` evaluates to the probability that the outcome exceeds `t`.
+    - The _hazard function_ (= density / survival function) at `t` can be interpreted as the instantaneous "chance" of the event occuring, given that the event has not occured up until time `t`.
+- Options for estimating quantities by incorporating the partial information contained in censored observations:
+    - Survival function: if no distributional assumption is made, the Kaplan-Meier method can be used to estimate the survival function.
+    - Mean: can be estimated as the area under an estimate of the survival function.
+    - Quantiles: can be estimated by inverting an estimate of the survival function.
+    - If a distributional assumption is made, the partial likelihood can be used to fit the distribution, and any quantity can be extracted from that distribution (not necessarily through the survival function).
+- The Kaplan-Meier estimate of the survival function does not always drop to zero (when the largest observation is censored), in which case estimates of some high quantiles and the mean would not exist. A common "fix" is to force the survival function to drop to zero at the largest observation.
+    - The mean estimate that results is called the _restricted_ mean.
+- The Cox proportional hazards model is a commonly used model that allows us to interpret how predictors influence a censored response. It models an individual's hazard function as some baseline hazard, multiplied by `exp(eta)`, where `eta` is a linear combination of predictors.
+    - The coefficient `beta` on a predictor `X` (contained in `eta`) has the following interpretation: an increase in `X` by one unit is associated with an increase in hazard (at any time) by `exp(beta)` times (i.e., the effect is multiplicative).
+    - This assumes that any two hazard functions on the predictor space are the same, up to some multiplicative constant.
+    - The hazard is useful to model due to its flexibility and interpretability.
+- We can obtain a prediction at `X=x` from a proportional hazards model by converting the estimated hazard function evaluated at `x` to a survival function, and obtaining a univariate estimate as described above. 

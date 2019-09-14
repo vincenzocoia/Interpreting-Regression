@@ -144,3 +144,170 @@ summary(fit)
 ```
 
 And there are the results of the pooled fit. This pooling works for more than just `lm`!
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(broom))
+suppressPackageStartupMessages(library(mice))
+```
+
+Consider predicting the air quality (ozone levels) in New York mid-year. We'll use the `airquality` dataset, recorded for mid 1973:
+
+```{r}
+airquality
+```
+
+## Step 0: What data are missing?
+
+There are some missing data. Use `md.pattern` to see patterns in missingness:
+
+```{r, fig.height=3.5}
+md.pattern(airquality)
+```
+
+Fill in the following:
+
+- There are **111** rows of complete data.
+- There are **35** rows where only ozone is missing.
+- There are **2** rows where both ozone and Solar.R are missing.
+- There are **37** rows missing an ozone measurement.
+- There are **44** `NA`'s in the dataset.
+
+## Step 1: Handling Missing Data
+
+### Any Ideas?
+
+Here is a scatterplot of `Solar.R` and `Ozone`, with missing values "pushed" to the intercepts:
+
+```{r, fig.height=3}
+airquality %>% 
+	mutate(missing = if_else(is.na(Solar.R) | is.na(Ozone), TRUE, FALSE),
+		   Solar.R = ifelse(is.na(Solar.R), 0, Solar.R),
+		   Ozone   = ifelse(is.na(Ozone), 0, Ozone)) %>% 
+	ggplot(aes(Solar.R, Ozone)) +
+	geom_hline(yintercept = 0, linetype = "dashed") +
+	geom_vline(xintercept = 0, linetype = "dashed") +
+	geom_point(aes(colour = missing)) +
+	theme_bw() +
+	scale_colour_discrete(guide = FALSE)
+```
+
+Discussion: What are some ways of handling the missing data? What are the consequences of these ways?
+
+1. Remove data.
+	- Remove rows with missing data (called the _complete case_).
+		- Consequence: We're throwing away information that could be used to reduce the final model function's SE.
+	- Remove rows where only the response is missing, and don't use `Solar.R` in your regression (because it has some missing values).
+		- Consequence: If `Solar.R` is predictive of `Ozone`, then we'd be losing that predictive power by not including it.
+2. Impute:
+	- Mean imputation: replace an `NA` with a prediction of its mean using other variables as predictors.
+		- Consequence: imputed data would fall artificially close to the center of the "data cloud". This means a fitted model function would have an artificially small SE.
+	- Multiple imputation: impute with multiple draws from a predictive distribution.
+		- A great choice! No real "consequences" here, aside from the inherent risk of biasing the model function that comes with imputing values.
+
+### `mice`
+
+First, remove the day and month columns (we won't be using them):
+
+```{r}
+airquality <- airquality %>% 
+	select(-Month, -Day)
+```
+
+Make `m` random imputations using `mice::mice()`:
+
+```{r}
+m <- 10
+(init <- mice(airquality, m = m, printFlag = FALSE))
+```
+
+Check out the first imputed data set using `mice::complete()`. **WARNING**: there's also a `tidyr::complete()`! Rows 5 and 6, for example, originally contained missing data.
+
+```{r}
+mice::complete(init, 1)
+```
+
+Plot one of them:
+
+```{r, fig.height=3}
+mice::complete(init, 1) %>% 
+	mutate(missing = if_else(is.na(airquality$Solar.R) | 
+							 	is.na(airquality$Ozone), TRUE, FALSE)) %>% 
+	ggplot(aes(Solar.R, Ozone)) +
+	geom_point(aes(colour = missing)) +
+	theme_bw()
+```
+
+Now, fit a linear model on each data set using the `with()` generic function (method `with.mids()`:
+
+```{r}
+(fits <- with(init, lm(Ozone ~ Solar.R + Wind + Temp)))
+```
+
+Looks can be deceiving. This is not actually a list of length `m`! Unveil its true nature:
+
+```{r}
+unclass(fits) %>% 
+	str(max.level = 1)
+```
+
+It's now easier to find the `lm` fit on the first dataset:
+
+```{r}
+fits$analyses[[1]]
+```
+
+Or, we can obtain a summary of each fitted model:
+
+```{r}
+summary(fits)
+```
+
+As an aside, let's demonstrate that we can also use `mice` to fit GLM's:
+
+```{r}
+with(init, glm(
+	Ozone ~ Solar.R + Wind + Temp, 
+	family = Gamma(link="log")
+)) %>% 
+	summary()
+```
+
+## Step 3: Pool results
+
+The last step is to pool the results together:
+
+```{r}
+pool(fits)
+```
+
+The `estimate` column you see are just the averages of all `m` models.
+
+Column names make more sense in light of the book "Multiple Imputation for Nonresponse in Surveys" by Rubin (1987), page 76-77:
+
+- `estimate`: the average of the regression coefficients across `m` models.
+- `ubar`: the average variance (i.e., average SE^2) across `m` models.
+- `b`: the sample variance of the `m` regression coefficients.
+- `t`: a final estimate of the SE^2 of each regression coefficient. 
+	- = `ubar + (1 + 1/m) b`
+- `df`: the degrees of freedom associated with the final regression coefficient estimates.
+	- An `alpha`-level CI: `estimate +/- qt(alpha/2, df) * sqrt(t)`.
+- `riv`: the relative increase in variance due to randomness. 
+	- = `t/ubar - 1`
+
+
+
+
+
+## Concepts
+
+- There are three common missing data mechanisms:
+	- Missing Completely At Random (MCAR): when the chance of missingness does not depend on any variable; missingness is totally random.
+	- Missing At Random (MAR): when the chance of missingness depends on other observed variables.
+	- Missing Not At Random (MNAR): when the chance of missingness depends on unobserved variables.
+- Proceeding with an analysis by removing missing data can result in a model with standard errors of the estimates that are larger than they could be by including partially complete records.
+- Proceeding with an analysis by imputing missing data by an estimate of the mean can result in a model with standard errors of the estimates that are smaller than they ought to be.
+- An approach that uses the information contained in partially complete records, yet does not assume any more information, is to use multiple imputations. The approach contains three steps:
+	1. Form multiple datasets containing imputed values. Each dataset should be formed by imputing the missing records in each unit/row with a random draw from a predictive distribution for those records.
+	2. Fit the model of interest on each imputed dataset.
+	3. Combine the models to obtain one final model.  
