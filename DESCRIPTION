@@ -14,5 +14,6 @@ Imports:
     titanic,
     evd,
     extRemes,
+    ggfortify,
     cowplot
 Remotes: rstudio/bookdown
