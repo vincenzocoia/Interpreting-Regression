@@ -15,5 +15,6 @@ Imports:
     evd,
     extRemes,
     ggfortify,
+    survival,
     cowplot
 Remotes: rstudio/bookdown
