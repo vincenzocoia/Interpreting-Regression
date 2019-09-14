@@ -5,9 +5,11 @@ bookdown::gitbook:
       before: |
         <li><a href="./">Interpreting Regression</a></li>
       after: |
-        <li><a href="https://github.com/vincenzocoia/Interpreting-Regression" target="blank">Published with bookdown</a></li>
+        <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
     edit: https://github.com/vincenzocoia/Interpreting-Regression/edit/master/%s
     download: ["pdf", "epub"]
+  includes:
+    in_header: [google_analytics.html]
 bookdown::pdf_book:
   includes:
     in_header: preamble.tex
