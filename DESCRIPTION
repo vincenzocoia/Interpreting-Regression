@@ -23,7 +23,8 @@ Imports:
     testthat,
     DT,
     cowplot,
-    janitor
+    janitor,
+    pbivnorm
 Remotes: 
     rstudio/bookdown,
     vincenzocoia/CopulaModel
