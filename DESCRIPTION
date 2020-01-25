@@ -18,5 +18,8 @@ Imports:
     ggfortify,
     survival,
     cowplot,
-    here
-Remotes: rstudio/bookdown
+    here,
+    CopulaModel
+Remotes: 
+    rstudio/bookdown,
+    vincenzocoia/CopulaModel
