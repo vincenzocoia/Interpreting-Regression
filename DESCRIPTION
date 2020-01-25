@@ -17,5 +17,6 @@ Imports:
     extRemes,
     ggfortify,
     survival,
-    cowplot
+    cowplot,
+    here
 Remotes: rstudio/bookdown
