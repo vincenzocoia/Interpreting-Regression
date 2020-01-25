@@ -4,6 +4,14 @@ How can we get a handle on an outcome that seems random? Although the score of a
 
 # Distributions: Uncertainty is worth explaining
 
+```{r, warning = FALSE, echo = FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.align = "center")
+here::here("supplementary", "expense.R") %>% source()
+here::here("supplementary", "octane.R") %>% source()
+here::here("supplementary", "ships.R") %>% source()
+```
+
 Concepts:
 
 - Variable types. Numeric variables vs. categorical. Ordinal as being "in between" numeric and categorical. Discrete as a special case of numeric, sometimes worth distinguishing.

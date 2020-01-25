@@ -8,6 +8,14 @@ Concepts:
 - Prediction as choosing a probabilistic quantity to put forth.
 - Irreducible error
 
+```{r, warning = FALSE, echo = FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.align = "center")
+here::here("supplementary", "expense.R") %>% source()
+here::here("supplementary", "octane.R") %>% source()
+here::here("supplementary", "ships.R") %>% source()
+```
+
 
 ## Probabilistic Quantities
 

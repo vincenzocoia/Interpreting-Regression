@@ -1,7 +1,17 @@
 # Prediction: harnessing the signal {-}
 
-```{r}
-suppressPackageStartupMessages(library(tidyverse))
+```{r, warning = FALSE, message = FALSE, echo = FALSE}
+library(tidyverse)
+library(pbv)
+library(CopulaModel) # Currently can download from https://copula.stat.ubc.ca/
+library(rgl)
+# knitr::knit_hooks$set(webgl = hook_webgl)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.align = "center")
+here::here("supplementary", "ggjointmarg.R") %>% source()
+here::here("supplementary", "snowflow.R") %>% source()
+here::here("supplementary", "expense.R") %>% source()
+here::here("supplementary", "octane.R") %>% source()
+here::here("supplementary", "ships.R") %>% source()
 ```
 
 
