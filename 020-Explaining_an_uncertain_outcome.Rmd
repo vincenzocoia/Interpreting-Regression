@@ -392,15 +392,7 @@ Let's set up the workspace for this lecture:
 
 ```{r, warning = FALSE}
 suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(reticulate))
 suppressPackageStartupMessages(library(testthat))
-```
-
-
-```{python}
-## Python:
-import numpy as np
-import scipy.stats
 ```
 
 
@@ -408,8 +400,8 @@ import scipy.stats
 
 From this lecture, students are expected to be able to:
 
-- Generate a random sample from a discrete distribution in both R and python.
-- Reproduce the same random sample each time you re-run your code in both R and python by setting the seed or random state. 
+- Generate a random sample from a discrete distribution in R
+- Reproduce the same random sample each time you re-run your code in R by setting the seed.
 - Evaluate whether or not a set of observations are iid.
 - Use simulation to approximate distribution properties (like mean and variance) using empirical quantities, especially for random variables involving multiple other random variables.
 
@@ -462,15 +454,15 @@ qplot(0:n, x) +
 
 Although this sequence is deterministic, it behaves like a random sample. But not entirely! All pseudorandom number generators have some pitfalls. In the case above, one pitfall is that neighbouring pairs are not independent from each other (by definition of the way the sequence was set up!). There are some sophisticated algorithms that produce outcomes that more closely resemble a random sample, so most of the time, we don't have to worry about the sample not being truly random.
 
-The __seed__ (or __random state__) in a pseudo-random number generator is some pre-specified initial value that determines the generated sequence. As long as the seed remains the same, the resulting sample will also be the same. In the case above, this is $x_0 = 0.3$. In R and python, if we don't explicitly set the seed, then the seed will be chosen for us.
+The __seed__ (or __random state__) in a pseudo-random number generator is some pre-specified initial value that determines the generated sequence. As long as the seed remains the same, the resulting sample will also be the same. In the case above, this is $x_0 = 0.3$. In R, if we don't explicitly set the seed, then the seed will be chosen for us.
 
-In R, we can set the seed using the `set.seed()` function, and in python, using the `numpy.random.seed()` function from `numpy`.
+In R, we can set the seed using the `set.seed()` function.
 
 The seed gives us an added advantage over truly random numbers: it allows our analysis to be reproducible! If we explicitly set a seed, then someone who re-runs the analysis will get the same results. 
 
 ### Generating Random Samples: Code
 
-Here, we'll look at some R and python functions that help us generate a random sample. We're still focussing on discrete distributions, here.
+Here, we'll look at some R functions that help us generate a random sample. We're still focussing on discrete distributions, here.
 
 #### From Finite Number of Categories (5 min)
 
@@ -493,44 +485,25 @@ sample(outcomes, size = n, replace = TRUE, prob = probs)
 ```
 
 
-In python, we can generate a random sample from a discrete distribution using the [`numpy.random.choice()` function](https://docs.scipy.org/doc/numpy-1.14.0/reference/generated/numpy.random.choice.html):
-
-- Put the outcomes in the first argument, `a`.
-- Put the desired sample size in the argument `size`.
-- Put the probabilities of the outcomes respective to `x` in the argument `p`.
-
-Using the Mario Kart example again:
-
-```{python}
-## Python:
-np.random.seed(1)
-outcomes = ["banana", "bob-omb", "coin", "horn", "shell"]
-probs = [0.12, 0.05, 0.75, 0.03, 0.05]
-n = 10
-np.random.choice(outcomes, size = n, p = probs)
-```
-
 #### From Distribution Families (5 min)
 
 In R, we can generate data from a distribution belonging to some parametric family using the `rdist()` function, where "`dist`" is replaced with a short-form of the distribution family's name. We can access the corresponding pmf with `ddist()`.
 
-In python, we can use the `stats` module from the `scipy` library.
 
 The following table summarizes the functions related to the distribution famlies we've seen so far:
 
-| Family | R function | python function |
-|--------|------------|-----------------|
-| Binomial          | `rbinom()`  | `scipy.stats.binom.rvs()` |
-| Geometric         | `rgeom()`   | `scipy.stats.geom.rvs()` |
-| Negative Binomial | `rnbinom()` | `scipy.stats.nbinom.rvs()` |
-| Poisson           | `rpois()`   | `scipy.stats.poisson.rvs()` |
+| Family | R function |
+|--------|------------|
+| Binomial          | `rbinom()`  | 
+| Geometric         | `rgeom()`   | 
+| Negative Binomial | `rnbinom()` | 
+| Poisson           | `rpois()`   | 
 
 Here's how to use these functions:
 
 - Sample size: 
 	- For R, put this in the argument `n`, which comes first.
-	- For python, put this in the argument `size`, which comes last. 
-- In both languages, each parameter has its own argument. Sometimes, like in R's `rnbinom()`, there are more parameters than needed, giving the option of different parameterizations. Be sure to only specify the exact number of parameters required to isolate a member of the distribution family!
+- Each parameter has its own argument. Sometimes, like in R's `rnbinom()`, there are more parameters than needed, giving the option of different parameterizations. Be sure to only specify the exact number of parameters required to isolate a member of the distribution family!
 
 __Example__: Generate 10 observations from a binomial distribution with probability of success 0.6 and 5 trials.
 
@@ -540,12 +513,6 @@ Using R:
 rbinom(10, size = 5, prob = 0.6)
 ```
 
-Using python:
-
-```{python}
-## Python:
-scipy.stats.binom.rvs(n = 5, p = 0.6, size = 10)
-```
 
 The Negative Binomial family is an example of a function in R that allows for a different parameterization. Notice that specifying too many or too few parameters results in an error (remember, we need to specify two parameters):
 
