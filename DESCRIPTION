@@ -8,11 +8,14 @@ Imports:
     mice,
     broom,
     lubridate,
+    lme4,
     quantreg,
     ISLR,
     Lahman,
     titanic,
     evd,
     extRemes,
+    ggfortify,
+    survival,
     cowplot
 Remotes: rstudio/bookdown

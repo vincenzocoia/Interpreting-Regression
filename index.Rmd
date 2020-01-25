@@ -33,6 +33,8 @@ Stage of development:
 
 There's a vast and powerful statistical framework out there. This book takes a modularized approach to making this framework accessible, so that as a problem solver, the reader can make a sequences of decisions to build models that are best suited to address the problem. 
 
+This book focuses on the _why_ of statistical framework. Why set up a model in a certain way? Why is this definition useful? What are the implications of this definition or this model?
+
 Regression analysis can help solve two main types of problems:
 
 1. Interpreting the relationship between variables.
