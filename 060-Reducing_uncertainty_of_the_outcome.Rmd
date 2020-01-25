@@ -2,9 +2,7 @@
 
 ```{r, warning = FALSE, message = FALSE, echo = FALSE}
 library(tidyverse)
-library(pbv)
-library(CopulaModel) # Currently can download from https://copula.stat.ubc.ca/
-library(rgl)
+library(CopulaModel) # Currently can download from github.com/vincenzocoia/CopulaModel
 # knitr::knit_hooks$set(webgl = hook_webgl)
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.align = "center")
 here::here("supplementary", "ggjointmarg.R") %>% source()

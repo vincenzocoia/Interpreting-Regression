@@ -19,7 +19,10 @@ Imports:
     survival,
     cowplot,
     here,
-    CopulaModel
+    CopulaModel,
+    testthat,
+    DT,
+    cowplot
 Remotes: 
     rstudio/bookdown,
     vincenzocoia/CopulaModel
