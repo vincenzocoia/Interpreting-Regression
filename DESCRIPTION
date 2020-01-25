@@ -22,7 +22,8 @@ Imports:
     CopulaModel,
     testthat,
     DT,
-    cowplot
+    cowplot,
+    janitor
 Remotes: 
     rstudio/bookdown,
     vincenzocoia/CopulaModel
