@@ -13,7 +13,13 @@ suppressPackageStartupMessages(library(tidyverse))
 ```
 
 
-## Parametric Families of Distributions
+## Concepts
+
+Aside from the Binomial family of distributions, there are many other families that come up in practice. Here are some of them. For a more complete list, check out [Wikipedia's list of probability distributions](https://en.wikipedia.org/wiki/List_of_probability_distributions).
+
+In practice, it's rare to encounter situations that are exactly described by a distribution family, but distribution families still act as useful approximations. 
+
+Details about these distributions are specified abundantly online. My favourite resource is Wikipedia, which organizes a distribution family's properties in a fairly consistent way -- for example [here](https://en.wikipedia.org/wiki/Binomial_distribution) is the page on the Binomial family. We won't bother transcribing these details here, but instead focus on some highlights.
 
 What is meant by "family"? This means that there are more than one of them, and that a specific distribution from the family can be characterized the family's parameters. This is what is meant by "parametric" -- the distribution can be distilled down to a set of parameters. 
 
@@ -89,14 +95,7 @@ Why is it useful to know about distribution families?
 
 In general when we're modelling something, like river flow or next month's net gains or the number of ships arriving at port tomorrow, you have the choice to make a distributional assumption or not. That is, do you want to declare the random variable of interest as belonging to a certain distribution family, or do you want to allow the random variable to have a fully general distribution? Both are good options depending on the scenario, and later in the program, we'll explore the tradeoff with both options in more detail.
 
-
-## Common Distribution Families
-
-Aside from the Binomial family of distributions, there are many other families that come up in practice. Here are some of them. For a more complete list, check out [Wikipedia's list of probability distributions](https://en.wikipedia.org/wiki/List_of_probability_distributions).
-
-In practice, it's rare to encounter situations that are exactly described by a distribution family, but distribution families still act as useful approximations. 
-
-Details about these distributions are specified abundantly online. My favourite resource is Wikipedia, which organizes a distribution family's properties in a fairly consistent way -- for example [here](https://en.wikipedia.org/wiki/Binomial_distribution) is the page on the Binomial family. We won't bother transcribing these details here, but instead focus on some highlights.
+## Common Parametric Families
 
 ### [Geometric](https://en.wikipedia.org/wiki/Geometric_distribution)
 
@@ -137,6 +136,169 @@ __Code__: The pmf can be calculated in R with `dpois()`; in python, `scipy.stats
 - Parameterized by $p$.
 - A special case of the Binomial family, with $N=1$.
 
+
+### <a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">Uniform</a> (3 min)
+
+A Uniform distribution has equal density in between two points $a$ and $b$ (for $a < b$), and is usually denoted by
+$$\text{Unif}(a, b).$$
+That means that there are two parameters: one for each end-point. Reference to a "Uniform distribution" usually implies _continuous_ uniform, as opposed to discrete uniform. 
+
+The density is 
+$$f(x) = \frac{1}{b - a} \text{ for } a \leq x \leq b.$$
+Here are some densities from members of this family:
+
+```{r, fig.width = 8, fig.height = 2}
+tibble(
+	x = seq(-3.5, 1.5, length.out = 1000),
+	`Unif(0,1)`      = dunif(x, min = 0,  max = 1),
+	`Unif(-3, 1)`    = dunif(x, min = -3, max = 1),
+	`Unif(-2, -1.5)` = dunif(x, min = -2, max = -1.5)
+) %>% 
+	pivot_longer(contains("Unif"), names_to = "distribution", values_to = "density") %>% 
+	ggplot(aes(x, density)) +
+	facet_wrap(~ distribution) +
+	geom_line() +
+	theme_bw()
+```
+
+
+### [Gaussian / Normal](https://en.wikipedia.org/wiki/Normal_distribution) (4 min)
+
+Probably the most famous family of distributions. Has a density that follows a "bell-shaped" curve. Is usually parameterized by its mean $\mu$ and variance $\sigma^2$ (or sometimes just the standard deviation). A Normal distribution is usually denoted as
+$$N(\mu, \sigma^2).$$
+
+The density is 
+$$f(x)=\frac{1}{\sqrt{2\pi \sigma^2}}\exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).$$
+Here are some densities from members of this family:
+
+```{r, fig.width = 6, fig.height = 3}
+expand_grid(mu = c(-3, 0, 3),
+			sd = c(0.5, 1, 2)) %>% 
+	mutate(f = map2(
+		mu, sd, 
+		~ tibble(
+			x       = seq(-8, 8, length.out = 1000),
+			density = dnorm(x, mean = .x, sd = .y)
+		)
+	)) %>% 
+	unnest(f) %>% 
+	mutate(mu  = str_c("mean = ", mu),
+		   var = str_c("variance = ", sd^2)) %>% 
+	ggplot(aes(x, density)) +
+	facet_grid(mu ~ var) +
+	geom_line() +
+	theme_bw()
+```
+
+### [Log-Normal](https://en.wikipedia.org/wiki/Log-normal_distribution) Family
+
+A random variable $X$ as a Log-Normal distribution if $\log X$ is Normal. This family is often parameterized by the mean $\mu$ and variance $\sigma^2$ of $\log X$. The Log-Normal family is sometimes denoted, and this course will denote this family, as
+$$LN(\mu, \sigma^2).$$
+
+Here are some densities from members of this family:
+
+```{r, fig.width = 6, fig.height = 3}
+expand_grid(meanlog = c(-0.5, 0, 1),
+			sdlog   = c(0.5, sqrt(0.75), 1.5)) %>% 
+	mutate(f = map2(
+		meanlog, sdlog, 
+		~ tibble(
+			x       = seq(0, 8, length.out = 1000),
+			density = dlnorm(x, meanlog = .x, sdlog = .y)
+		)
+	)) %>% 
+	unnest(f) %>% 
+	mutate(meanlog = str_c("mu = ", meanlog),
+		   varlog  = str_c("sigma^2 = ", sdlog^2)) %>% 
+	ggplot(aes(x, density)) +
+	facet_grid(meanlog ~ varlog) +
+	geom_line() +
+	theme_bw()
+```
+
+### [Exponential](https://en.wikipedia.org/wiki/Exponential_distribution) Family
+
+The exponential family is for positive random variables, often interpreted as "wait time" for some event to happen. Characterized by a "memoryless" property, where after waiting for a certain period of time, the remaining wait time has the same distribution. 
+
+The family is characterized by a single parameter, usually either the _mean_ wait time, or its reciprocal, the average _rate_ at which events happen. 
+
+The densities from this family all decay starting at $x=0$ for rate $\beta$:
+
+```{r, fig.width = 6, fig.height = 2}
+tibble(beta = c(1, 0.5, 0.25)) %>% 
+	mutate(f = map(
+		beta,
+		~ tibble(
+			x       = seq(0, 10, length.out = 1000),
+			density = dexp(x, rate = .x)
+		)
+	)) %>% 
+	unnest(f) %>% 
+	mutate(beta = str_c("beta = ", beta)) %>% 
+	ggplot(aes(x, density)) +
+	facet_wrap(~ beta) +
+	geom_line() +
+	theme_bw()
+```
+
+
+### [Weibull](https://en.wikipedia.org/wiki/Weibull_distribution) Family
+
+A generalization of the Exponential family, which allows for an event to be more or less likely the longer you wait. Because of this flexibility and interpretation, this family is used heavily in _survival analysis_ when modelling "time until an event".
+
+This family is characterized by two parameters, a _scale parameter_ $\lambda$ and a _shape parameter_ $k$ (where $k=1$ results in the Exponential family).
+
+Here are some densities:
+
+```{r, fig.width = 6, fig.height = 3}
+expand_grid(k      = c(0.5, 2, 5),
+			lambda = c(0.5, 1, 1.5)) %>% 
+	mutate(f = map2(
+		k, lambda, 
+		~ tibble(
+			x       = seq(0, 3, length.out = 1000),
+			density = dweibull(x, shape = .x, scale = .y)
+		)
+	)) %>% 
+	unnest(f) %>% 
+	mutate(k      = str_c("k = ", k),
+		   lambda = str_c("lambda = ", lambda)) %>% 
+	ggplot(aes(x, density)) +
+	facet_grid(k ~ lambda) +
+	geom_line() +
+	theme_bw() +
+	ylim(c(0, 5))
+```
+
+
+### [Beta](https://en.wikipedia.org/wiki/Beta_distribution) Family
+
+The Beta family of distributions is defined for random variables taking values between 0 and 1, so is useful for modelling the distribution of proportions. This family is quite flexible, and has the Uniform distribution as a special case.
+
+Characterized by two positive shape parameters, $\alpha$ and $\beta$.
+
+Examples of densities:
+
+```{r, fig.width = 6, fig.height = 3}
+expand_grid(alpha = c(0.5, 1, 2),
+			beta  = c(0.25, 1, 1.25)) %>% 
+	mutate(f = map2(
+		alpha, beta, 
+		~ tibble(
+			x       = seq(0, 1, length.out = 1000),
+			density = dbeta(x, shape1 = .x, shape2 = .y)
+		)
+	)) %>% 
+	unnest(f) %>% 
+	mutate(alpha = str_c("alpha = ", alpha),
+		   beta  = str_c("beta = ", beta)) %>% 
+	ggplot(aes(x, density)) +
+	facet_grid(beta ~ alpha) +
+	geom_line() +
+	theme_bw() +
+	ylim(c(0, 4))
+```
+
 ### Activity
 
 True or False?
@@ -145,6 +307,44 @@ True or False?
 2. A Binomial distribution only has one mean, but there are many Binomial distributions that have the same mean.
 3. A Poisson distribution only has one mean, but there are many Poisson distributions that have the same mean.
 
+
+## Relevant R functions (8 min)
+
+R has functions for many distribution families. We've seen a few already in the case of discrete families, but here's a more complete overview. The functions are of the form `<x><dist>`, where `<dist>` is an abbreviation of a distribution family, and `<x>` is one of `d`, `p`, `q`, or `r`, depending on exactly what about the distribution you'd like to calculate. 
+
+Possible prefixes `<x>`:
+
+- `d`: density function - we call this $p$
+- `p`: cumulative distribution function (cdf) - we call this $F$
+- `q`: quantile function (inverse cdf)
+- `r`: random sample generation
+
+Some abbreviations `<dist>`:
+
+- `unif`: Uniform (continuous)
+- `norm`: Normal (continuous)
+- `lnorm`: Log-Normal (continuous)
+- `geom`: Geometric (discrete)
+- `pois`: Poisson (discrete)
+- `binom`: Binomial (discrete)
+- etc.
+
+__Examples__:
+
+The uniform family:
+
+- `dunif()`, `punif()`, `qunif()`, `runif()`
+
+The Gaussian family:
+
+- `dnorm()`, `pnorm()`, `qnorm()`, `rnorm()`
+
+__Demonstration__:
+
+1. What's the density of the N(2, 4) distribution evaluated at the point $x = 3$?
+2. What's the cdf of the Unif(0, 1) distribution evaluated at the points $x = 0.25, 0.5, 0.75$?
+3. What's the median of the Unif(0, 2) distribution?
+4. Generate a random sample from the N(0, 1) distribution of size 10.
 
 ## Analyses under a Distributional Assumption
 

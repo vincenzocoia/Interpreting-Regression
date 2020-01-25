@@ -1,0 +1,1 @@
+After writing the DSCI 551 "book", I moved much of the content to Interpreting Regression. This content relied on content contained in folder called "supplementary". That's what this folder is and why it's here. At some point in the future, the contents here should be integrated with the IR book structure.

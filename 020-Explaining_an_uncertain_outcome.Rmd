@@ -55,3 +55,782 @@ Recall what quantiles are: the $\tau$-quantile (for $\tau$ between 0 and 1) is t
 $\tau$ is referred to as the _quantile level_, or sometimes the _quantile index_. 
 
 For example, a bus company might want to predict the 0.8-quantile of transit time -- 80% of busses will get to their destination within that time.
+
+
+## Continuous Distribution Properties (NEEDS CONSOLIDATING)
+
+With continuous random variables, it becomes easier to expand our "toolkit" of the way we describe a distribution / random variable. As before, each property always has a distribution-based definition that gives us an exact/true value, and sometimes has an empirically-based (data-based) definition that gives us an approximate value, but that approaches the true value as more and more observations are collected. 
+
+### Mean, Variance, Mode, and Entropy (again) (5 min)
+
+These are the properties of a distribution that we've already seen, but they do indeed extend to the continuous case. 
+
+Mode and entropy can be defined, but since these ignore the numeric property of continuous random variables, they tend to not be used. Also, these properties don't really have a natural empirical version.
+
+- __Mode__: The outcome having the highest density. That is, $$\text{Mode} = {\arg \max}_x f(x).$$
+- __Entropy__: The entropy can be defined by replacing the sum in the finite case with an integral: $$\text{Entropy} = \int_x f(x) \log f(x) \text{d}x.$$ 
+
+Instead, we prefer to describe a continuous random variable using properties that inform us about distances. The mean and variance are two such measures of central tendency and uncertainty, where the only difference with a continuous random variable is in the distribution-based definition, where the sum becomes an integral.
+
+- __Mean__: The distribution-based definition is $$E(X) = \int_x x \, f(x) \text{d}x.$$ 
+  - You may later learn that this is a point that is "as close as possible" to a randomly generated outcome, in the sense that its expected squared distance is as small as possible. 
+  - Ends up being the "center of mass" of a probability density function, meaning that you could "balance" the density function on this single point without it "toppling over due to gravity".
+  - Probably best interpreted as the long-run sample average (empirical mean).
+- __Variance__: The distribution-based definition is $$\text{Var}(X) = E \left( (X - \mu_X)^2 \right) = \int_x (x - \mu_X) ^ 2 \, f(x) \text{d}x,$$ where $\mu_X = E(X)$. While the mean minimizes the expected squared distance to a randomly generated outcome, this _is_ the expected squared distance.
+
+Going back to the octane purity example from Low Purity Octane gas station:
+
+- The mode is 1 (the highest purity possible!).
+- The entropy works out to be $$\int_0^1 2x \log(2x) \text{d}x \doteq 0.1931.$$
+- The mean ends up being not a very good purity (especially as compared to the mode!), and is $$\int_0^1 2x^2 \text{d}x = \frac{2}{3}.$$
+- The variance ends up being $$\int_0^1 2 x \left(x - \frac{2}{3}\right)^2 \text{d}x = \frac{1}{18}.$$
+
+### Median (5 min)
+
+The median is the outcome for which there's a 50-50 chance of seeing a greater or lesser value. So, its distribution-based definition satisfies 
+$$P(X \leq \text{Median}(X)) = 0.5.$$ 
+Its empirically-based definition is the "middle value" after sorting the outcomes from left-to-right. 
+
+Similar to the mean, you may later learn that the median is a point that is "as close as possible" to a randomly generated outcome, in the sense that its expected _absolute_ distance is as small as possible.
+
+The median is perhaps best for making a single decision about a random outcome. Making a decision is simplest when the possibilities are reduced down to two equally likely outcomes, and this is exactly what the median does. For example, if the median time it takes to complete a hike is 2 hours, then you know that there's a 50-50 chance that the hike will take over 2 hours. If you're instead told that the mean is 2 hours, this only tells us that the total amount of hiking time done by a bunch of people will be as if everyone takes 2 hours to do the hike -- this is still useful for making a decision about whether or not you should do the hike, but is more convoluted. 
+
+Using the purity example at Low Purity Octane, the median is about 0.7071:
+
+```{r, fig.width = 4, fig.height = 2}
+octane$plot_ddist +
+  geom_vline(xintercept = sqrt(0.5),
+             linetype = "dashed") +
+  geom_text(x = 0.5, y = 0.25, label = "50%") +
+  geom_text(x = 1 - (1 - sqrt(0.5))/2, y = 0.25, label = "50%") +
+  theme_bw()
+```
+
+
+### Quantiles (5 min)
+
+More general than a median is a _quantile_. The definition of a $p$-quantile $Q(p)$ is the outcome that has a $1-p$ probability of exceedance, or equivalently, for which there's a probability $p$ of getting a smaller outcome. So, its distribution-based definition satisfies 
+$$P(X \leq Q(p)) = p.$$ 
+The median is a special case, and is the 0.5-quantile.
+
+An empirically-based definition of the $p$-quantile is the $np$'th largest (rounded up) observation in a sample of size $n$.
+
+Some quantiles have a special name:
+
+- The 0.25-, 0.5-, and 0.75-quantiles are called _quartiles_.
+	- Sometimes named the first, second, and third quartiles, respectively.
+- The 0.01-, 0.02, ..., and 0.99-quantiles are called _percentiles_.
+	- Sometimes the $p$-quantile will be called the $100p$'th percentile; for example, the 40th percentile is the 0.4-quantile.
+- Less commonly, there are even _deciles_, as the 0.1, 0.2, ..., and 0.9-quantiles.
+
+For example, the 0.25-quantile of octane purity at Low Purity Octane is 0.5, since the area to the left of 0.5 is 0.25:
+
+```{r, fig.width = 4, fig.height = 2}
+octane$plot_ddist +
+  geom_vline(xintercept = sqrt(0.25),
+             linetype = "dashed") +
+  geom_text(x = 0.35, y = 0.25, label = "25%") +
+  geom_text(x = 1 - (1 - sqrt(0.25))/2, y = 0.25, label = "75%") +
+  theme_bw()
+```
+
+### Prediction Intervals (5 min)
+
+It's often useful to communicate an interval for which a random outcome will fall in with a pre-specified probability $p$. Such an interval is called a $p \times 100\%$ __Prediction Interval__. 
+
+Usually, we set this up in such a way that there's a $p/2$ chance of exceeding the interval, and $p/2$ chance of undershooting the interval. You can calculate the lower limit of this interval as the $(1 - p)/2$-Quantile, and the upper limit as the $1 - (1 - p)/2$-Quantile.
+
+__Example__: a 90% prediction interval for the purity of gasoline at "Low Purity Octane" is [0.2236, 0.9746], composed of the 0.05- and 0.95-quantiles. 
+
+```{r, fig.width = 4, fig.height = 2}
+octane$plot_ddist +
+  geom_vline(xintercept = sqrt(0.05),
+             linetype = "dashed") +
+  geom_vline(xintercept = sqrt(0.95),
+             linetype = "dashed") +
+  geom_text(x = (sqrt(0.05) + sqrt(0.95)) / 2, y = 0.5, label = "90%") +
+  theme_bw()
+```
+
+### Skewness (5 min)
+
+Skewness measures how "lopsided" a distribution is, as well as the direction of the skew. 
+
+- If the density is symmetric about a point, then the skewness is 0.
+- If the density is more "spread-out" towards the right / positive values, then the distribution is said to be _right-skewed_ (positive skewness).
+- If the density is more "spread-out" towards the left / negative values, then the distribution is said to be _left-skewed_ (negative skewness).
+
+```{r, fig.width = 8, fig.height = 2.2}
+tibble(rng = seq(-0.5, 1.5, length.out = 1000),
+       `Left-Skew`  = octane$ddist(rng),
+       Symmetric    = octane$ddist_symm(rng),
+       `Right-Skew` = octane$ddist_right(rng)) %>% 
+  pivot_longer(cols = c("Left-Skew", "Symmetric", "Right-Skew"),
+               values_to = "Density",
+               names_to = "type") %>% 
+  mutate(type = fct_relevel(type, "Left-Skew", "Symmetric", "Right-Skew")) %>% 
+  mutate(
+    mean = case_when(
+      type == "Left-Skew"  ~ 2/3,
+      type == "Symmetric"  ~ 1/2,
+      type == "Right-Skew" ~ 1/3
+    ),
+    median = case_when(
+      type == "Left-Skew"  ~ sqrt(0.5),
+      type == "Symmetric"  ~ 1/2,
+      type == "Right-Skew" ~ 1 - sqrt(0.5)
+    )
+  ) %>% 
+  ggplot(aes(rng, Density)) +
+  facet_wrap(~ type) +
+  geom_line() +
+  # geom_vline(aes(xintercept = mean), colour = "red") +
+  # geom_vline(aes(xintercept = median), colour = "blue") +
+  xlab("x") +
+  theme_bw()
+```
+
+It turns out that for symmetric distributions, the _mean and median_ are equivalent. But otherwise, the mean tends to be further into the skewed part of the distribution. Using the monthly expense example, the mean monthly expense is \$`r round(expense$mean, 2)`, which is bigger than the median monthly expense of \$`r round(expense$qdist(0.5), 2)`.
+
+```{r, fig.width = 5, fig.height = 2}
+expense$plot_ddist +
+  geom_vline(mapping = aes(
+    colour = "mean", 
+    xintercept = expense$mean
+  )) +
+  geom_vline(mapping = aes(
+    colour = "median", 
+    xintercept = expense$qdist(0.5)
+  )) +
+  scale_colour_discrete("")
+```
+
+Formally, skewness can be defined as 
+$$\text{Skewness} = E \left( \left( \frac{X - \mu_X}{\sigma_X} \right) ^ 3 \right),$$
+where $\mu_X = E(X)$ and $\sigma_X = \text{SD}(X)$.
+
+For example, the octane purity distribution is left-skewed, and has a skewness of $$\int_0^1 2  x  \left(\sqrt{18} (x - 2/3) \right) ^ 3 \text{d}x \doteq -0.5657.$$
+
+### Examples
+
+For the following situations, which quantity is most appropriate, and why?
+
+- You want to know your monthly expenses in the long run (say, for forecasting net gains after many months). How do you communicate total expense?
+- You want to ensure you put enough money aside on a given month to ensure you'll have enough money to pay your bills. How much should you put aside?
+- How should you communicate the cost of a typical house in North Vancouver?
+
+## Heavy-Tailed Distributions
+
+```{r, warning = FALSE, message = FALSE, echo = FALSE}
+library(tidyverse)
+library(CopulaModel)
+data(asianwklgret)  # object hksikotw
+knitr::opts_chunk$set(echo = FALSE, fig.width = 4, fig.height = 2, 
+					  fig.align = "center", warning = FALSE, message = FALSE)
+```
+
+Consider the weekly returns of the Singapore Straights (STI) market, depicted by the following histogram. You'll notice some extreme values that are far from the "bulk" of the data. 
+
+```{r}
+hksikotw %>% 
+	as_tibble() %>% 
+	ggplot(aes(si)) + 
+	geom_histogram() +
+	theme_bw() +
+	labs(x = "Returns")
+```
+
+Traditional practice was to view these extremes as "outliers" that are a nuisance for analysis, and therefore should be removed. But this can actually be detrimental to the analysis, because these outliers are real occurences that should be anticipated. 
+
+Instead, __Extreme Value Analysis__ is a practice that tries to get a sense of how big and how frequently extremes will happen.
+
+### Sensitivity of the mean to extremes
+
+Indeed, the empirical (arithmetic) mean is sensitive to outliers: consider the sample average of 100 observations coming from a N(0,1) distribution:
+
+```{r, echo = TRUE}
+set.seed(6)
+n <- 50
+x <- rnorm(n)
+mean(x)
+```
+
+Here's that mean depicted on a histogram of the data:
+
+```{r}
+x_df <- tibble(x = x)
+ggplot(x_df, aes(x)) +
+	geom_histogram(bins = 15, alpha = 0.5) +
+	geom_vline(xintercept = mean(x), colour = "maroon", size = 2) +
+	theme_bw()
+```
+
+Now consider calculating the mean by replacing the last observation with 50 (a very large number):
+
+```{r, echo = TRUE}
+x[n] <- 50
+mean(x)
+```
+
+This is a big difference made by a single observation! Let's take a look at the histogram now (outlier not shown). The "old" mean is the thin vertical line:
+
+```{r}
+ggplot(x_df, aes(x)) +
+	geom_histogram(bins = 20, alpha = 0.5) +
+	geom_vline(xintercept = mean(x_df$x), colour = "maroon", alpha = 0.75) +
+	geom_vline(xintercept = mean(x), colour = "maroon", size  = 2) +
+	theme_bw()
+```
+
+There are [robust and/or resistant ways of estimating the mean](https://en.wikipedia.org/wiki/Robust_statistics#Estimation_of_location) that are less sensitive to the outliers. But what's more interesting when you have extreme values in your data is to get a sense of how frequently extremes will happen, and the mean won't give you that sense. 
+
+### Heavy-tailed Distributions
+
+Distributions known as __heavy-tailed distributions__ give rise to extreme values. These are distributions whose tail(s) decay like a power decay. The slower the decay, the heavier the tail is, and the more prone extreme values are.
+
+For example, consider the member of the Pareto Type I family of distributions with survival function $S(x) = 1/x$ for $x \geq 1$. Here is this distribution compared to an Exponential(1) distribution (shifted to start at $x=1$):
+
+```{r}
+tibble(x = seq(1, 15, length.out = 500)) %>% 
+	ggplot(aes(x)) +
+	stat_function(fun = function(x) exp(-(x-1)), aes(colour = "Exponential")) +
+	stat_function(fun = function(x) 1/x, aes(colour = "Pareto")) +
+	ylab("Survival\nFunction") +
+	theme_bw() +
+	scale_colour_discrete("", breaks = c("Pareto", "Exponential"))
+```
+
+Notice that the Exponential survival function becomes essentially zero very quickly, whereas there's still lots of probability well into the tail of the Pareto distribution.  
+
+Also note that if a distribution's tail is "too heavy", then its mean will not exist! For example, the above Pareto distribution has no mean.
+
+### Heavy-tailed distribution families
+
+Here are some main families that include heavy-tailed distributions:
+
+- Family of [Generalized Pareto distributions](https://en.wikipedia.org/wiki/Generalized_Pareto_distribution)
+- Family of [Generalized Extreme Value distributions](https://en.wikipedia.org/wiki/Generalized_extreme_value_distribution)
+- Family of [Student's _t_ distributions](https://en.wikipedia.org/wiki/Student%27s_t-distribution)
+	- The Cauchy distribution is a special case of this.
+
+### Extreme Value Analysis
+
+There are two key approaches in Extreme Value Analysis:
+
+- _Model the tail_ of a distribution using a theoretical model. That is, choose some `x` value, and model the distribution _beyond_ that point. It turns out a [Generalized Pareto distribution](https://en.wikipedia.org/wiki/Generalized_Pareto_distribution) is theoretically justified.
+- The _peaks over thresholds_ method models the extreme observations occurring in a defined window of time. For example, the largest river flows each year. It turns out a [Generalized Extreme Value distribution](https://en.wikipedia.org/wiki/Generalized_extreme_value_distribution) is theoretically justified here. 
+
+### Multivariate Student's _t_ distributions
+
+Just like there's a multivariate Gaussian distribution, there's also a multivariate Student's _t_ distribution. And in fact, its contours are elliptical, too!
+
+Here's a comparison of a bivariate Gaussian and a bivariate Student's _t_ distribution, both of which are elliptical. One major difference is that a sample from a bivariate Gaussian distribution tends to be tightly packed, whereas data from a bivariate Student's _t_ distribution is prone to data deviating far from the main "data cloud". 
+
+```{r, fig.width = 3.5, fig.height = 2}
+crossing(x = seq(-3, 3, length.out = 100),
+				 y = seq(-3, 3, length.out = 100)) %>% 
+	mutate(`Student-t` = dbvtcop(pt(x, df = 1), pt(y, df = 1), c(0.5, 1)) * dt(x, df = 1) * dt(y, df = 1),
+		   Gaussian = dbvn2(x, y, 0.5)) %>% 
+	pivot_longer(cols = c("Student-t", "Gaussian"), names_to = "dist", values_to = "z") %>% 
+	ggplot(aes(x, y)) +
+	facet_wrap(~ dist) +
+	geom_contour(aes(z = z, colour = ..level..)) +
+	theme_bw() +
+	theme(axis.title.y = element_text(angle = 0, vjust = 0.5)) +
+	scale_colour_continuous(guide = FALSE)
+```
+
+And here are samples coming from these two distributions. Notice how tightly bundled the Gaussian distribution is compared to the _t_ distribution!
+
+```{r, fig.width = 3.5, fig.height = 2}
+n <- 500
+set.seed(1)
+bind_rows(
+	tibble(dist = "Gaussian",
+		   x = rnorm(n),
+		   u = pnorm(x),
+		   v = qcondbvncop(runif(n), u, 0.5),
+		   y = qnorm(v)
+	),
+	tibble(dist = "Student-t",
+		   x = rt(n, df = 1),
+		   u = pt(x, df = 1),
+		   v = qcondbvtcop(runif(n), u, c(0.5, 1)),
+		   y = qt(v, df = 1)
+	)
+) %>% 
+	ggplot(aes(x, y)) +
+	facet_wrap(~ dist) +
+	geom_point(alpha = 0.2) +
+	theme_bw() +
+	theme(axis.title.y = element_text(angle = 0, vjust = 0.5)) 
+```
+
+## Simulation
+
+So far, we've seen many quantities that help us communicating an uncertain outcome:
+
+- probability
+- probability mass function
+- odds
+- mode
+- entropy
+- mean
+- variance / standard deviation
+
+Sometimes, it's not easy to compute these things. In these situations, we can use __simulation__ to approximate these and other quantities. This is today's topic.
+
+Let's set up the workspace for this lecture:
+
+```{r, warning = FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(reticulate))
+suppressPackageStartupMessages(library(testthat))
+```
+
+
+```{python}
+## Python:
+import numpy as np
+import scipy.stats
+```
+
+
+### Learning Objectives
+
+From this lecture, students are expected to be able to:
+
+- Generate a random sample from a discrete distribution in both R and python.
+- Reproduce the same random sample each time you re-run your code in both R and python by setting the seed or random state. 
+- Evaluate whether or not a set of observations are iid.
+- Use simulation to approximate distribution properties (like mean and variance) using empirical quantities, especially for random variables involving multiple other random variables.
+
+### Review Activity (15 min)
+
+True or False?
+
+1. In general, 9 parameters must be specified in order to fully describe a distribution with 9 outcomes. 
+2. A Binomial distribution only has one mean, but there are many Binomial distributions that have the same mean.
+3. A Poisson distribution only has one mean, but there are many Poisson distributions that have the same mean.
+3. A Binomial distribution is also a Bernoulli distribution, but a Bernoulli distribution is not a Binomial distribution. 
+
+### Random Samples: Terminology (5 min)
+
+A __random sample__ is a collection of random outcomes/variables. Using symbols, a random sample of size $n$ is usually depicted as $X_1, \ldots, X_n$. We think of data as being a random sample. 
+
+Some examples of random samples: 
+
+- the first five items you get in a game of Mario Kart
+- the outcomes of ten dice rolls
+- the daily high temperature in Vancouver for each day in a year. 
+
+A random sample is said to be __independent and identically distributed__ (or __iid__) if
+
+1. each pair of observations are independent, and
+2. each observation comes from the same distribution.
+
+We'll define "independent" next class, but for now, you can think of this as meaning "not influencing each other". 
+
+Sometimes, when an outcome is said to be __random__, this can either mean the outcome has some distribution (with non-zero entropy), or that is has the distribution with maximum entropy. To avoid confusion, the word __stochastic__ refers to the former (as having some uncertain outcome). For example, if a die is weighted so that "1" appears very often, would you call this die "random"? Whether or not you do, it's always _stochastic_. 
+
+The opposite of stochastic is __deterministic__: an outcome that will be known with 100% certainty.
+
+
+### Seeds (5 min)
+
+Computers can't actually generate truly random outcomes. Instead, they use something called [pseudorandom numbers](https://en.wikipedia.org/wiki/Pseudorandom_number_generator). 
+
+As an example of a basic algorithm that produces pseudo-random numbers between 0 and 1, consider starting with your choice of number $x_0$ between 0 and 1, and iterating the following equation: $$x_{i+1} = 4 x_i (1 - x_i).$$ The result will appear to be random numbers between 0 and 1. Here is the resulting sequence when we start with $x_0 = 0.3$ and iterate 1000 times:
+
+```{r, echo = FALSE, fig.width = 8, fig.height = 2, fig.align = 'center'}
+n <- 1000
+x <- 0.3
+for (i in 1:n) x[i+1] <- 4 * x[i] * (1 - x[i])
+qplot(0:n, x) +
+	labs(x = "Iteration number",
+		 y = "Function evaluation") +
+	theme_bw()
+```
+
+Although this sequence is deterministic, it behaves like a random sample. But not entirely! All pseudorandom number generators have some pitfalls. In the case above, one pitfall is that neighbouring pairs are not independent from each other (by definition of the way the sequence was set up!). There are some sophisticated algorithms that produce outcomes that more closely resemble a random sample, so most of the time, we don't have to worry about the sample not being truly random.
+
+The __seed__ (or __random state__) in a pseudo-random number generator is some pre-specified initial value that determines the generated sequence. As long as the seed remains the same, the resulting sample will also be the same. In the case above, this is $x_0 = 0.3$. In R and python, if we don't explicitly set the seed, then the seed will be chosen for us.
+
+In R, we can set the seed using the `set.seed()` function, and in python, using the `numpy.random.seed()` function from `numpy`.
+
+The seed gives us an added advantage over truly random numbers: it allows our analysis to be reproducible! If we explicitly set a seed, then someone who re-runs the analysis will get the same results. 
+
+### Generating Random Samples: Code
+
+Here, we'll look at some R and python functions that help us generate a random sample. We're still focussing on discrete distributions, here.
+
+#### From Finite Number of Categories (5 min)
+
+In R, we can generate a random sample from a distribution with a finite number of outcomes using the [`sample()` function](https://www.rdocumentation.org/packages/base/versions/3.6.1/topics/sample):
+
+- Put the outcomes as a vector in the first argument, `x`.
+- Put the desired sample size in the argument `size`.
+- Put `replace = TRUE` so that sampling can happen with replacement.
+- Put the probabilities of the outcomes as a vector respective to `x` in the argument `prob`.
+	- Just a warning: if these probabilities do not add up to 1, R will not throw an error. Instead, R automatically adjusts the probabilities so that they add up to 1. 
+
+Here's an example of generating 10 items using the Mario Kart item distribution from Lecture 1. Notice that the seed is set, so that every time these lecture notes are rendered, the same results are obtained.
+
+```{r}
+set.seed(1)
+outcomes <- c("banana", "bob-omb", "coin", "horn", "shell")
+probs <- c(0.12, 0.05, 0.75, 0.03, 0.05)
+n <- 10
+sample(outcomes, size = n, replace = TRUE, prob = probs)
+```
+
+
+In python, we can generate a random sample from a discrete distribution using the [`numpy.random.choice()` function](https://docs.scipy.org/doc/numpy-1.14.0/reference/generated/numpy.random.choice.html):
+
+- Put the outcomes in the first argument, `a`.
+- Put the desired sample size in the argument `size`.
+- Put the probabilities of the outcomes respective to `x` in the argument `p`.
+
+Using the Mario Kart example again:
+
+```{python}
+## Python:
+np.random.seed(1)
+outcomes = ["banana", "bob-omb", "coin", "horn", "shell"]
+probs = [0.12, 0.05, 0.75, 0.03, 0.05]
+n = 10
+np.random.choice(outcomes, size = n, p = probs)
+```
+
+#### From Distribution Families (5 min)
+
+In R, we can generate data from a distribution belonging to some parametric family using the `rdist()` function, where "`dist`" is replaced with a short-form of the distribution family's name. We can access the corresponding pmf with `ddist()`.
+
+In python, we can use the `stats` module from the `scipy` library.
+
+The following table summarizes the functions related to the distribution famlies we've seen so far:
+
+| Family | R function | python function |
+|--------|------------|-----------------|
+| Binomial          | `rbinom()`  | `scipy.stats.binom.rvs()` |
+| Geometric         | `rgeom()`   | `scipy.stats.geom.rvs()` |
+| Negative Binomial | `rnbinom()` | `scipy.stats.nbinom.rvs()` |
+| Poisson           | `rpois()`   | `scipy.stats.poisson.rvs()` |
+
+Here's how to use these functions:
+
+- Sample size: 
+	- For R, put this in the argument `n`, which comes first.
+	- For python, put this in the argument `size`, which comes last. 
+- In both languages, each parameter has its own argument. Sometimes, like in R's `rnbinom()`, there are more parameters than needed, giving the option of different parameterizations. Be sure to only specify the exact number of parameters required to isolate a member of the distribution family!
+
+__Example__: Generate 10 observations from a binomial distribution with probability of success 0.6 and 5 trials.
+
+Using R:
+
+```{r}
+rbinom(10, size = 5, prob = 0.6)
+```
+
+Using python:
+
+```{python}
+## Python:
+scipy.stats.binom.rvs(n = 5, p = 0.6, size = 10)
+```
+
+The Negative Binomial family is an example of a function in R that allows for a different parameterization. Notice that specifying too many or too few parameters results in an error (remember, we need to specify two parameters):
+
+```{r, error = TRUE}
+rnbinom(10, size = 5)
+rnbinom(10, size = 5, prob = 0.6, mu = 4)
+```
+
+
+### Running Simulations
+
+So far, we've seen two ways to calculate quantities that help us communicate uncertainty (like means and probabilities):
+
+1. The __distribution-based approach__ (using the distribution), resulting in _true values_.
+2. The __empirical approach__ (using data), resulting in _approximate values_ that improve as the sample size increases.  
+
+For example, the true mean of a random variable $X$ can be calculated as $E(X) = \sum_x x P(X = x)$ using each pair of outcome and outcome's probability, or can be approximated using the empirical approach from a random sample $X_1, \ldots, X_n$ by $E(X) \approx (1/n) \sum_{i=1}^n X_i$.
+
+This means that we can approximate these quantities by generating a sample! An analysis that uses a randomly generated data set is called a __simulation__. 
+
+#### Code for empirical quantities (0 min)
+
+For your reference, here are some hints for calculating empirical quantities using R. We'll be going over these below in the "Basic Simulation" section.
+
+- `mean()` calculates the sample average.
+- `var()` calculates the sample variance (the $n-1$ version, not $n$), and `sd()` its square root for the standard deviation.
+- For a single probability, remember that a mean is just an average. Just calculate the mean of a condition.
+- For an entire pmf, use the `table()` function, or more conveniently, the `janitor::tabyl()` function.
+- For the mode, either get it manually using the `table()` or `janitor::tabyl()` function, or you can use `DescTools::Mode()`.
+
+#### Basic Simulation (10 min)
+
+Consider playing games with probability of success $p=0.7$ until you experience $k=5$ successes, and counting the number of failures. This random variable (say $X$) has a Negative Binomial distribution. 
+
+You can find an R script containing the code for the basic simulation [in the students' repo](https://github.ubc.ca/MDS-2019-20/DSCI_551_stat-prob-dsci_students/blob/master/supplementary/lec3-basic.R).
+
+Let's demonstrate both a distribution-based and empirical approach to computing the variance and pmf. First, let's obtain our random sample (of, say, 10000 observations).
+
+```{r}
+set.seed(88)
+k <- 5
+p <- 0.7
+n <- 10000
+rand_sample <- rnbinom(n, size = 5, prob = 0.7)
+head(rand_sample, 100)
+```
+
+ Mean
+
+```{r}
+(1 - p) * k / p   # True, distribution-based
+mean(rand_sample) # Approximate, empirical
+```
+
+Variance
+
+```{r}
+(1 - p) * k / p^2 # True, distribution-based
+var(rand_sample)  # Approximate, empirical
+```
+
+Standard deviation
+
+```{r}
+sqrt((1 - p) * k / p^2) # True, distribution-based
+sd(rand_sample)         # Approximate, empirical
+```
+
+ Probability of seeing 0
+
+```{r}
+mean(rand_sample == 0)         # Approximate, empirical
+dnbinom(0, size = k, prob = p) # True, distribution-based
+```
+
+pmf
+
+```{r}
+## Code without using the tidyverse:
+pmf <- janitor::tabyl(rand_sample)               # Empirical
+pmf$n <- NULL
+pmf <- setNames(pmf, c("x", "empirical"))
+pmf$actual <- dnbinom(pmf$x, size = k, prob = p) # True
+
+## Code using the tidyverse:
+pmf <- janitor::tabyl(rand_sample) %>% 
+	select(x = rand_sample, empirical = percent) %>% 
+	mutate(actual = dnbinom(x, size = k, prob = p))
+pmf %>% 
+	mutate(actual    = round(actual, 4),         # Empirical
+		   empirical = round(empirical, 4)) %>%  # True
+	DT::datatable(rownames = FALSE)
+```
+
+Here's a plot of the pmf:
+
+```{r, fig.width = 5, fig.height = 2, fig.align = "center"}
+pmf %>% 
+	gather(key = "method", value = "Probability", empirical, actual) %>% 
+	ggplot(aes(x, Probability)) +
+	facet_wrap(~ method) +
+	geom_col(fill = "maroon") +
+	theme_bw()
+```
+
+Entropy
+
+It turns out to be hard to calculate the actual entropy, so we will only compute the empirical:
+
+```{r}
+- sum(pmf$empirical * log(pmf$empirical))
+```
+
+Mode 
+
+
+```{r}
+## Actual
+pmf %>% 
+	filter(actual == max(actual)) %>% 
+	pull(x)
+## Empirical
+pmf %>% 
+	filter(empirical == max(empirical)) %>% 
+	pull(x)
+```
+
+Distribution-based calculations on empirical pmf
+
+What do you think you'll get if you use the definition of mean, variance, etc. _on the empirical distribution_? You get the empirical values! Here's an example with the mean -- notice that they are identical.
+
+```{r}
+sum(pmf$x * pmf$empirical)
+mean(rand_sample)
+```
+
+Law of Large Numbers
+
+To demonstrate that the a larger sample size improves the approximation of the empirical quantities, let's see how the sample average changes as we collect more and more data:
+
+```{r, fig.width = 8, fig.height = 3, fig.align = "center"}
+tibble(i    = 1:n, 
+	   mean = cumsum(rand_sample) / i) %>% 
+	ggplot(aes(i, mean)) +
+	geom_hline(yintercept = (1 - p) * k / p,
+			   colour = "maroon") +
+	geom_line() +
+	labs(x = "Sample size",
+		 y = "Empirical mean") +
+	theme_bw()
+```
+
+You can try this for yourself with [Chapter 1 -"expectation" in Seeing Theory ](https://seeing-theory.brown.edu/basic-probability/index.html).
+
+
+### Multi-Step Simulations (10 min)
+
+The simulation above was not all that useful, since we could calculate basically anything. Where it gets more interesting is when we want to calculate things for a random variable that transforms and/or combines multiple random variables.
+
+The idea is that some random variables will have a distribution that depends on other random variables, but in a way that's explicit. For example, consider a random variable $T$ that we can obtain as follows. Take $X \sim \text{Poisson}(5)$, and then $T = \sum_{i = 1}^{X} D_i$, where each $D_i$ are iid with some specified distribution. In this case, to generate $T$, you would first need to generate $X$, then generate $X$ values of $D_i$, then sum those up to get $T$. This is the example we'll see here, but in general, you can have any number of dependencies, each component of which you would have to generate.
+
+Consider an example that a Vancouver port faces with "gang demand". Whenever a ship arrives to the port of Vancouver, they request a certain number of "gangs" (groups of people) to help unload the ship. Let's suppose the number of gangs requested by a ship has the following distribution:
+
+```{r, fig.width = 3, fig.height = 2, fig.align = "center"}
+gang <- 1:4
+p <- c(0.2, 0.4, 0.3, 0.1)
+tibble(
+	gangs = gang,
+	p     = p
+) %>% 
+	ggplot(aes(gangs, p)) +
+	geom_col(fill = "maroon") +
+	labs(x = "Number of Gangs",
+		 y = "Probability") +
+	theme_bw()
+```
+
+The following function sums up simulated gangs requested by a certain number of ships, with the above probability distribution as a default. As an example, check out the simulated gang request from 10 ships:
+
+```{r}
+#' Generate gang demand
+#'
+#' Simulates the number of gangs requested, if each ship
+#' requests a random number of gangs.
+#' 
+#' @param n_ships Number of ships that are making demands
+#' @param gangs Possible gang demands made by a ship.
+#' @param prob Probabilities of gang demand corresponding to "gangs"
+#' 
+#' @return Number representing the total gang demand 
+demand_gangs <- function(n_ships, gangs = gang, prob = p) {
+	if (length(gangs) == 1) {
+		gangs <- c(gangs, gangs)
+		prob <- c(1,1)
+	}
+	requests <- sample(
+		gangs, 
+		size    = n_ships, 
+		replace = TRUE, 
+		prob    = prob
+	)
+	sum(requests)
+}
+
+test_that("demand_gangs output is as expected", {
+	expect_identical(demand_gangs(0), 0L)
+	expect_gte(demand_gangs(1), min(gang))
+	expect_lte(demand_gangs(1), max(gang))
+	expect_gte(demand_gangs(10), 10*min(gang))
+	expect_lte(demand_gangs(10), 10*max(gang))
+	expect_identical(length(demand_gangs(10)), 1L)
+	expect_identical(demand_gangs(10, gangs = 2, prob = 1), 20)
+})
+
+demand_gangs(10)
+```
+
+Now suppose that the number of ships that arrive on a given day follows the Poisson distribution with a mean of 5. What's the distribution of total gang request on a given day? Let's simulate the process to find out:
+
+1. Generate arrival quantities for many days from the Poisson(5) distribution.
+2. For each day, simulate total gang request for the simulated number of ships.
+3. You now have your random sample -- compute things as you normally would.
+
+Let's try this, obtaining a sample of 10000 days:
+
+```{r, fig.width = 6, fig.height = 2, fig.align = "center"}
+n_days <- 10000
+## Step 1: generate a bunch of ships arriving each day
+arrivals <- rpois(n_days, lambda = 5)
+## Step 2: Simulate total gang request on each day.
+total_requests <- purrr::map_int(arrivals, demand_gangs)
+## Step 3: Compute things like pmf, mean, variance:
+tibble(x = total_requests) %>% 
+	ggplot(aes(x, y = ..prop..)) +
+	geom_bar() +
+	labs(x = "Total Gang Request",
+		 y = "Probability") +
+	theme_bw()
+tibble(
+	mean     = mean(total_requests),
+	variance = var(total_requests)
+) %>% 
+	knitr::kable()
+```
+
+
+### Generating Continuous Data
+
+```{r, warning = FALSE, message = FALSE, echo = FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = FALSE, fig.align = "center")
+```
+
+
+Until now, we've sidestepped the actual procedure for how a random outcome is actually generated. For the discrete case, we could get by with the "drawing from a hat" analogy. But this won't get us far in the continuous case, because each outcome has 0 probability of occuring.
+
+The idea is to convert a random number between 0 and 1 into an outcome. Going back to the discrete case, using the Mario Kart example, we can break the interval [0, 1] into sub-intervals with widths equal to their probabilities. Visually, this might look like the following:
+
+```{r, fig.height = 3, fig.width = 8}
+mario <- tibble(
+	item = c("Banana", "Bob-omb", "Coin", "Horn", "Shell"),
+	prob = c(0.12, 0.05, 0.75, 0.03, 0.05)
+) %>% 
+	mutate(item = fct_reorder(item, prob)) %>% 
+	arrange(desc(item)) %>% 
+	mutate(right = cumsum(prob),
+		   left  = lag(right) %>% replace_na(0)) %>% 
+	gather(key = "position", value = "step", left, right) %>% 
+	group_by(item) %>% 
+	mutate(middle = mean(step))
+ggplot(mario, aes(x = step, y = item, group = item)) +
+	geom_line() +
+	geom_point() +
+	geom_text(aes(label = prob, x = middle), position = position_nudge(y = 0.25)) +
+	theme_minimal() +
+	labs(x = "Random number", y = "") +
+	scale_x_reverse(breaks = seq(0, 1, by = 0.25),
+					labels = seq(0, 1, by = 0.25) %>% rev())
+```
+
+We can make a similar plot for a Poisson(3) random variable (the y-axis is truncated because we can't plot all infinite outcomes):
+
+```{r, fig.height = 3, fig.width = 8}
+ggplot(tibble(x = 0:1), aes(x)) + 
+	stat_function(fun = function(x) qpois(x, lambda = 3), n = 1000) +
+	theme_minimal() +
+	scale_y_continuous("Outcome", breaks = 0:8, limits = c(0, 8)) +
+	xlab("Random number")
+```
+
+Indeed, this plot is nothing other than the quantile function! This idea extends to all random variables. If we want to generate an observation of a random variable $Y$ with quantile function $Q_Y$, just follow these two steps:
+
+1. Generate a number $U$ completely at random between 0 and 1. 
+2. Calculate the observation as $Y = Q_Y(U)$.
+
+For continuous random variables only, the opposite of this result also has important implications: if $Y$ is a continuous random variable with cdf $F_Y$, then $$F_Y(Y) \sim \text{Unif}(0,1).$$ This is important for p-values in hypothesis testing (DSCI 552+), transformations, and copulas (optional question on your lab assignment).
