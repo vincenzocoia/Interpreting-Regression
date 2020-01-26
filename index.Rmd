@@ -31,49 +31,46 @@ Stage of development:
 
 ## Purpose of the book
 
-There's a vast and powerful statistical framework out there. This book takes a modularized approach to making this framework accessible, so that as a problem solver, the reader can make a sequences of decisions to build models that are best suited to address the problem. 
+This book is aimed at practitioners trying to gain insight from numeric data. This task of "gaining insight from data" falls squarely in the field of Statistics, but this book is not designed to be a Statistics text book.
 
-This book focuses on the _why_ of statistical framework. Why set up a model in a certain way? Why is this definition useful? What are the implications of this definition or this model?
+While there's a vast and powerful statistical framework out there capable of providing insight to a vast array of data problem types, this framework remains difficult to navigate and piece together. This hinders the practitioner's ability to make effective modelling decisions, who faces putting their trust and confidence in the statust quo way of doing things.
+
+The statistical framework can be difficult to navigate for the following reasons:
+
+1. The statistical framework tends to be described from a method-first perspective. 
+
+Instead, this book takes a problem-first approach to exploring Statistics. For example, you can traditionally learn about the type of conclusions that can be drawn from linear regression, or from an ANOVA, but in this book ...
+
+2. Descriptions of statistical methods tend to emphasize the requirement of assumptions.
+
+The reality is, assumptions are never true in practice. Instead, this book evaluates assumptions as _approximations_ instead, commenting on whether and how important a good approximation is.
+
+3. Descriptions of statistical methods tend to emphasize the "what" and "how".
+
+Typical descriptions aim to describe what a model is and how to apply it, spending time on explaining the mechanical guts of the method. But a deeper discussion into _why_ the method is important and set up in a specific way, and how it fits into the statistical framework as a whole is lacking. This book places emphasis on the "why", and tends to assume you are smart and can figure out how the guts of a method works on your own by doing some googling.
+
+What's the result? A book that takes a modularized approach to statistical decision making, so that as a problem solver, the reader can make a sequences of decisions to build models that are best suited to address the problem at hand.
+
+As mentioned, the statistical framework that has been defined to date is vast. This book cannot realistically aim to cover everything. Instead, we'll focus on foundational ways of thinking through regression analysis, which itself is quite broad and useful for solving a wide array of problems. Some examples include linear regression, survival analysis, mixed effects models, and quantile regression. Using statistical jargon, the focus is on describing aspects of conditional distributions across a covariate space. More advanced statistical methods, like state space models or continuous time markov chains, tend to stem from concepts in regression analysis.
+
+Even if you have not taken a Statistics course before, you will find this book accessible because fundamental concepts like probability and distributions are defined from scratch. Even if you are somewhat familiar with Statistics, you may find these fundamental concepts worth revisiting, since you'll be challenged to re-think why well-known concepts such as the mean and variance are prominent. A basic knowledge of intro calculus is assumed throughout this book, but as a general rule, we will not need to delve into mathematical details.
+
+Methods are demonstrated using the R statistical software. This is because R has an extensive selection of packages available for statistical analysis, and the `tidyverse` and `tidymodels` meta-packages make data analysis readable and organized.
+
+## A focus on Interpretation
 
 Regression analysis can help solve two main types of problems:
 
 1. Interpreting the relationship between variables.
+
+For example, we might want to know how someone's age influences the click-through rate on an online advertisement, taking into account other factors like their location and the type of ad presented. Or, perhaps we would like to find the factors that are most highly related to fatal car crashes. Or, how does age influence the chance of pregnancy? How does time of insemination after a spike in Luteinizing hormone affect the chance of pregnancy, and how is this different for people over 40?
+
 2. Predicting a new outcome.
 
-This book primarily focusses on models for interpretation, and often references these two competing needs. The prediction problem is still discussed to some extent: once a model suited for interpretation is developed, it is still important to be able to use it to make predictions. For those interested primarily in prediction, check out resources on _supervised learning_, which aims to optimize predictions. 
+For example, we might want to predict the click-through rate of an online advertisement, given someone's age and location, and the type of ad presented. Or, we might want to predict the flow of a river given a certain amount of rainfall and snowmelt. 
 
-There is another layer to interpretation that this book adopts, in terms of describing and understanding the motivation and inner workings behind each method. This is in contrast to a purely mathematical presentation of statistical methods. This book presents both an interpretation of a the high-level idea behind amethod, as well as a mathematical presentation to make these concepts precise. For example, the Kaplan-Meier estimate of the survival function is explained both intuitively and mathematically. 
+Although both problem types are considered, this book primarily focusses on building models for interpretation. A focus on prediction lies in the realm of machine learning, and a large part of the decision making here involves optimizing a model's fit to new data -- a problem for which there are many resources available. 
 
-Most statistical methods are built on a foundation of assumptions imposed on the data. But an assumption is almost never _exactly_ true; so we instead explore consequences based on "how close" an assumption is to being true. In some cases, we even find that an anticipated assumption is not required at all, depending on how we would like to interpret the model -- an example being the "requirement" of linear data in linear regression. Consequenty, one aim of this book is to discourage the thinking that a method either "can" or "cannot" be applied, instead thinking about pros and cons of various methods.
-
-Methods are demonstrated using the R statistical software. This is because R has an extensive selection of packages available for statistical analysis, and the `tidyverse` and `tidymodels` meta-packages make data analysis readable and organized. Since this book does not focus on optimally flexing a model function to conform to data (non-parametric supervised learning), languages better suited for this task, such as python, are not considered.
-
-The audience of this book is quite wide, with the aspects of __modularization__, __interpretation__, and __non-binary view of assumptions__ perhaps appealing to various readers:
-
-1. Practitioners may find the modularization useful when making decisions when fitting models, the non-binary view of assumptions useful when evaluating the trustworthiness of their models, and the interpretation of their model useful when communicating their results.
-2. Experts in the field of Statistics might benefit from the unique modularized framework of the field, as they find well-used notions such as the expected value being challenged and expanded upon.
-3. Learners may find the modularization useful for compartmentalizing concepts, and the interpretation of methods useful for understanding concepts.
-
-## Tasks that motivate Regression
-
-Real world problems for which regression is an appropriate tool generally fall into two categories:
-
-1. Prediction: Predicting the response of a new unit/individual, sometimes also describing uncertainty in the prediction.
-2. Interpretation: Interpreting how predictors influence the response.
-
-For example, consider a person undergoing artificial insemination.
-
-- Prediction: Given the person's age, what is the chance of pregnancy?
-- Interpretation: How does age influence the chance of pregnancy? How does time of insemination after a spike in Luteinizing hormone affect the chance of pregnancy, and how is this different for people over 40?
-
-This book does not focus on optimizing predictions, but focusses on the other tasks. This means:
-
-1. describing the uncertainty in predictions, or estimates in general, and
-2. interpreting how predictors influence the response.
-
-Why not focus on optimizing predictions? This is the objective of _supervised learning_, an entire discipline in itself. The scope of this book would just be too big to include this, too.
-
-## Examples
 
 ```{r}
 library(mice)
