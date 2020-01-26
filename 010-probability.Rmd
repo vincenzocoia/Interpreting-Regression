@@ -1,0 +1,172 @@
+# An outcome on its own {-}
+
+How can we get a handle on an outcome that seems random? Although the score of a Canucks game, a stock price, or river flow is uncertain, this does not mean that these quantities are futile to predict or describe. This part of the book describes how to do just that, using only observations on a single outcome, by shedding light on concepts of probability and univariate analysis as they apply to data science. 
+
+# Probability: When an Outcome is Unknown
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
+__Status__: Topics are mostly all here. Needs some rearranging and emphasis on the importance of communicating univariate uncertainty.
+
+```{r, warning = FALSE, echo = FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.align = "center")
+here::here("supplementary", "expense.R") %>% source()
+here::here("supplementary", "octane.R") %>% source()
+here::here("supplementary", "ships.R") %>% source()
+```
+
+Concepts:
+
+- Variable types. Numeric variables vs. categorical. Ordinal as being "in between" numeric and categorical. Discrete as a special case of numeric, sometimes worth distinguishing.
+- Distributions as the limiting collection of iid data. 
+- Ways to depict a distribution, and the interpretation of each. The concept that one tells you everything about the distribution, so you can in theory derive one form from another. One does not give you more information than another. 
+- These distributions might not seem practical, but they certainly are. Even in cases where we are considering many other pieces of information aside from the response, we are still dealing with univariate distributions -- we'll see later that the only difference is that they are no longer marginal distributions (they are _conditional_).
+
+
+## Defining Probability
+
+I like to play Mario Kart 8, a racing game with some "combat" involved using items. In the game, you are given an item at random whenever you get an "item box".
+
+Suppose you're playing the game, and so far have gotten the following items in total:
+
+|Item                                  | Name    | Count|
+|:------------------------------------:|:-------:|:----:|
+|<img src='./img/banana.png'> | Banana  |     7|
+|<img src='./img/bobomb.png'> | Bob-omb |     3|
+|<img src='./img/coin.png'>   | Coin    |    37|
+|<img src='./img/horn.png'>   | Horn    |     1|
+|<img src='./img/shell.png'>  | Shell   |     2|
+| Total: | | 50 |
+
+Attribution: images from [pngkey](https://www.pngkey.com/detail/u2w7e6o0i1q8i1y3_randome-clipart-mario-kart-mario-kart-8-deluxe/).
+
+
+- What's the probability that your next item is a coin? 
+- How would you find the _actual_ probability? 
+- From this, how might you define probability?
+
+In general, the probability of an event $A$ occurring is denoted $P(A)$ and is defined as $$\frac{\text{Number of times event } A \text{ is observed}}{\text{Total number of events observed}}$$ as the number of events goes to infinity.
+
+
+
+
+## Probability Distributions
+
+So far, we've been discussing probabilities of single events. But it's often useful to characterize the full "spectrum" of uncertainty associated with an outcome. The set of all outcomes and their corresponding probabilities is called a __probability distribution__ (or, often, just __distribution__). 
+
+The outcome itself, which is uncertain, is called a __random variable__. (Note: technically, this definition only holds if the outcome is _numeric_, not categorical like our Mario Kart example, but we won't concern ourselves with such details)
+
+When the outcomes are _discrete_, the distributions are called __probability mass functions__ (or _pmf_'s for short).
+
+### Examples of Probability Distributions (3 min)
+
+__Mario Kart Example__: The distribution of items is given by the above table.
+
+__Ship example__: Suppose a ship that arrives at the port of Vancouver will stay at port according to the following distribution:
+
+| Length of stay (days) | Probability |
+|---|------|
+| 1 | 0.25 |
+| 2 | 0.50 |
+| 3 | 0.15 |
+| 4 | 0.10 |
+
+The fact that the outcome is _numeric_ means that there are more ways we can talk about things, as we will see.
+
+## Continuous random variables (10 min)
+
+What is the current water level of the Bow River at Banff, Alberta? How tall is a tree? What about the current atmospheric temperature in Vancouver, BC? These are examples of _continuous_ random variables, because there are an _uncountably infinite_ amount of outcomes. Discrete random variables, on the other hand, are _countable_, even if there are infinitely many outcomes, because each outcome can be accounted for one-at-a-time by some pattern. 
+
+__Example__: The positive integers are discrete/countable: just start with 1 and keep adding 1 to get 1, 2, 3, etc., and that covers all possible outcomes. Positive real numbers are not countable because there's no way to cover all possibilities by considering one outcome at a time. 
+
+It turns out that it's trickier to interpret probabilities for continuous random variables, but it also turns out that they're in general easier to work with. 
+
+Not all random variables with infinitely many outcomes are continuous. Take, for example, a Poisson random variable, that can take values $0, 1, 2, \ldots$ with no upper limit. The difference here is that a smaller range of values _does_ have a finite amount of variables. By the way, this type of infinity is called "countably infinite", and a continuous random variable has "uncountably infinite" amount of outcomes.
+
+In practice, we can never measure anything on a continuous scale, since any measuring instrument must always round to some precision. For example, your kitchen scale might only measure things to the nearest gram. But, these variables are well approximated by a continuous variable. As a rule of thumb, if the difference between neighbouring values isn't a big deal, consider the variable continuous. 
+
+__Example__:
+
+You'd like to get a handle on your monthly finances, so you record your total monthly expenses each month. You end up with `r length(expense$sample)` months worth of data:
+
+```{r, results = "as.is"}
+expense$sample %>% 
+  str_c("$", .)
+```
+
+Since a difference of $0.01 isn't a big deal, we may as well treat this as a continuous random variable. 
+
+__Example__:
+
+Back in the day when Canada had pennies, you liked to play "penny bingo", and wrote down your winnings after each day of playing the game with your friends. Here are your net winnings:
+
+```{r}
+set.seed(4)
+(rnorm(10, mean = 0, sd = 2.5)/100) %>% 
+  round(2)
+```
+
+Since a difference of $0.01 is a big deal, best to treat this as discrete. 
+
+
+## Density Functions (20 min)
+
+In the discrete case, we were able to specify a distribution by indicating a probability for each outcome. Even when there's an infinite amount of outcomes, such as in the case of a Poisson distribution, we can still place a non-zero probability on each outcome and have the probabilities sum to 1 (thanks to [convergent series](https://en.wikipedia.org/wiki/Convergent_series)). But an uncountable amount of outcomes cannot be all accounted for by a sum (i.e., the type of sum we denote by $\sum$), and this means that _continuous outcomes must have probability 0_. 
+
+__Example__: The probability that the temperature in Vancouver tomorrow will be 18 degrees celcius is 0. In fact, any temperature has a probability of 0 of occurring. 
+
+While individual outcomes have zero probability, _ranges_ can have non-zero probability. We can use this idea to figure out how "dense" the probability is at some areas of the outcome space. For example, if a randomly selected tree has a 0.05 probability of being within 0.1m of 5.0m, then as a rate, that's about 0.05/(0.1m) = 0.5 "probability per meter" here. Taking the limit as the range width $\rightarrow 0$, we obtain what's called the __density__ at 5m. 
+
+The density as a function over the outcome space is called the __probability density function__ (pdf), usually abbreviated to just the __density__, and denoted $f$. Sometimes we specify the random variable in the subscript, just to be clear about what random variable this density represents -- for example, $f_X$ is the density of random variable $X$.
+
+You'll see that the density is like a "continuous cousin" of the _probability mass function_ (pmf) in the case of discrete random variables. We'll also see in a future lecture that there are some random variables for which neither a density nor a pmf exist.
+
+ We can use the density to calculate probabilies of a range by integrating the density over that range: $$P(a < X < b) = \int_a^b f(x) \text{d}x.$$ This means that, integrating over the entire range of possibilities should give us 1:
+ $$\int_{-\infty}^\infty f(x) \text{d}x = 1$$
+This integral corresponds to the entire area under the density function.
+
+
+### Example: "Low Purity Octane"
+
+You just ran out of gas, but luckily, right in front of a gas station! Or maybe not so lucky, since the gas station is called "Low Purity Octane". They tell you that the octane purity of their gasoline is random, and has the following density:
+
+```{r, fig.width = 3, fig.height = 2}
+octane$plot_ddist
+```
+
+1. What's the probability of getting 25% purity? That is, $P(\text{Purity} = 0.25)$?
+2. The density evaluates to be >1 in some places. Does this mean that this is not a valid density? Why is the density in fact valid?
+3. Is it possible for the density to be negative? Why or why not?
+4. What's the probability of getting gas that's $<50\%$ pure? That is, $P(\text{Purity} < 0.5)$?
+5. What's the probability of getting gas that's $\leq 50\%$ pure? That is, $P(\text{Purity} \leq 0.5)$?
+6. What's the _support_ of this random variable? That is, the set of all outcomes that have non-zero density?
+7. You decide to spend the day at Low Purity Octane, measuring the octane purity for each customer. You end up getting `r octane$n` observations, placing each measurement along the x-axis. Which of the following plots would be more likely, and why?
+
+```{r, fig.width = 8, fig.height = 2.2}
+octane$plot_ddist + 
+  facet_wrap(~ scenario, nrow = 1) +
+  geom_jitter(aes(x = measurement, y = 0), 
+              alpha = 0.25, 
+              height = 0.05)
+```
+
+### Example: Monthly Expenses
+
+It turns out your monthly expenses have the following density, with your 20 observations plotted below it:
+
+```{r, fig.width = 5, fig.height = 2}
+expense$plot_ddist +
+  geom_jitter(
+    data    = tibble(x = expense$sample),
+    mapping = aes(x, y = 0), 
+    height  = 1e-5, 
+    alpha   = 0.5
+  )
+```
+
+
+
+
+
+

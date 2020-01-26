@@ -1,0 +1,185 @@
+# Explaining an uncertain outcome: interpretable quantities
+
+**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+
+```{r, warning = FALSE, echo = FALSE}
+suppressPackageStartupMessages(library(tidyverse))
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.align = "center")
+here::here("supplementary", "expense.R") %>% source()
+here::here("supplementary", "octane.R") %>% source()
+here::here("supplementary", "ships.R") %>% source()
+```
+
+So far, we've been saying that a pmf or a pdf is a distribution. Actually, there are more ways we can depict a distribution aside from the pmf/pdf. This section takes a deeper dive into alternative ways a probability distribution can be depicted, and their usefulness. Keep in mind that all of these depictions capture _everything_ about a distribution, which means that if one of them is given, then the other ones can be derived.
+
+__A note on depictions of multivariate distributions__: There _is_ such thing as a multivariate cdf. It comes in handy in copula theory, which is an optional question in a lab assignment. But otherwise, it's not as useful as a multivariate _density_, so we won't cover it. And, there's no such thing as a multivariate quantile function.
+
+### Cumulative Density Functions (cdf's) / Distribution Functions
+
+The __cdf__ is usually denoted by $F$, and is defined as $$F(x) = P(X \leq x).$$ We can calculate this using a density $f$ by $$F(x) = \int_{-\infty}^x f(t) \, \text{d}t.$$
+
+Unlike the pdf/pmf, the cdf always exists for any random variable. It just doesn't exist for categorical variables, because there's no such thing as "less than" or "greater than". For discrete random variables, the cdf is still a continuous function, but has a jump-discontinuity at the discrete values. 
+
+Here are the cdf's of the octane purity, monthly expenses, and length of stay (from last time):
+
+```{r, fig.width = 8, fig.height = 2}
+cowplot::plot_grid(
+  tibble(x = expense$qdist(c(0, 0.99))) %>% 
+    ggplot(aes(x)) +
+    stat_function(fun = expense$pdist) +
+    theme_bw() +
+    ylab("cdf") +
+    scale_x_continuous("Monthly Expense", labels = scales::dollar_format()), 
+  tibble(x = c(-0.5, 1.5)) %>% 
+    ggplot(aes(x)) +
+    stat_function(fun = octane$pdist) +
+    theme_bw() +
+    labs(x = "Octane Purity",
+         y = "cdf"),
+  ggplot(los$pmf) +
+		geom_segment(aes(x = left, y = lag(cdf), xend = right, yend = lag(cdf))) +
+		geom_point(data    = filter(los$pmf, left != -Inf, ndays != 6),
+				   mapping = aes(x = right, y = cdf)) +
+		geom_point(data    = filter(los$pmf, ndays != 6), 
+				   mapping = aes(x = right, y = lag(cdf)), shape = 1) +
+		scale_y_continuous("cdf", limits = c(0, 1)) +
+		scale_x_continuous("Length of Stay (days)", limits = c(0, 6), breaks = 0:6) +
+		theme_bw(),
+  nrow = 1
+)
+```
+
+For the discrete cdf, a hollow point is a limiting point -- the cdf does not evaluate to that point. Note that usually jump discontinuities in a cdf are connected with a straight vertical line, which we will do from now on after this plot.
+
+In order for a function $F$ to be a valid cdf, the function needs to satisfy the following requirements:
+
+1. Must never decrease.
+2. It must never evalute to be <0 or >1.
+3. $F(x) \rightarrow 0$ as $x \rightarrow -\infty$
+4. $F(x) \rightarrow 1$ as $x \rightarrow \infty$.
+
+The _empirical cdf_ (ecdf) for a sample of size $n$ treats the sample as if they are discrete values, each with probability $1/n$. Like the cdf of a discrete random variable, the ecdf is also a "step function". Here is the empirical cdf for the sample of 20 monthly expenses:
+
+```{r, fig.width = 4, fig.height = 2}
+ecdf_expense <- ecdf(expense$sample)
+tibble(x = range(expense$sample) + c(-1, 1)) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = ecdf_expense, n = 1000) +
+  theme_bw() +
+  labs(x = "Monthly Expense",
+       y = "Empirical cdf")
+```
+
+#### Exercise (10 min)
+
+On the board, let's calculate the cdf's of the following two distributions (that you've seen in lab):
+$$X \sim \text{Discrete Uniform}(0, 4)$$
+$$Y \sim \text{Continuous Uniform}(0, 4)$$
+
+
+#### Evaluating Properties using the cdf (5 min)
+
+It turns out that the mean can be calculated in a fairly simple way from the cdf. It's the area above the cdf and to the right of $x = 0$, _minus_ the area below the cdf and to the left of $x = 0$.
+
+In-class exercise: the cdf of octane purity is 
+$$
+F_{\text{Purity}}(x) = 
+\begin{cases}
+  0, \: x < 0\\
+  x^2, \: 0 \leq x \leq 1, \\
+  1, \: x > 1.
+\end{cases}
+$$
+
+1. What is $P(0.5 < \text{Octane} < 0.75)$?
+2. What is $P(0.5 < \text{Octane} \leq 0.75)$?
+3. What is $P(\text{Octane} > 0.75)$?
+4. What is the median? 0.25-quantile?
+5. True or False: knowing the density of a distribution means that we also know the cdf; but knowing the cdf does not imply knowing the density.
+
+### Survival Function (2 min)
+
+The __survival function__ $S$ is just the cdf "flipped upside down". For random variable $X$, the survival function is defined as
+$$S(x) = P(X > x) = 1 - F(x).$$
+
+The name comes from Survival Analysis (covered in DSCI 562), where $X$ is interpreted as a "time of death", so that the survival function is the probability of surviving beyond $x$. Aside from Survival Analysis, the survival function is also useful for Extreme Value Theory.
+
+Here are the survival functions of our three examples:
+
+```{r, fig.width = 8, fig.height = 2}
+sf_layers <- list(
+	ylab("Survival Function"),
+	theme_bw()
+)
+cowplot::plot_grid(
+	tibble(x = expense$qdist(c(0, 0.99))) %>% 
+		ggplot(aes(x)) +
+		stat_function(fun = function(x) 1 - expense$pdist(x)) +
+		scale_x_continuous("Monthly Expense", labels = scales::dollar_format()) +
+		sf_layers,
+	tibble(x = c(-0.5, 1.5)) %>% 
+		ggplot(aes(x)) +
+		stat_function(fun = function(x) 1 - octane$pdist(x)) +
+		sf_layers +
+		xlab("Octane Purity"),
+	ggplot(los$pmf) +
+		geom_segment(aes(x = left, y = 1 - lag(cdf), xend = right, yend = 1 - lag(cdf))) +
+		geom_point(data    = filter(los$pmf, left != -Inf, ndays != 6),
+				   mapping = aes(x = right, y = 1 - cdf)) +
+		geom_point(data    = filter(los$pmf, ndays != 6), 
+				   mapping = aes(x = right, y = 1 - lag(cdf)), shape = 1) +
+		scale_y_continuous("Survival Function", limits = c(0, 1)) +
+		scale_x_continuous("Length of Stay (days)", limits = c(0, 6), breaks = 0:6) +
+		theme_bw(),
+	nrow = 1
+)
+```
+
+
+
+### Quantile Function (5 min)
+
+The __quantile function__ $Q$ takes a probability $p$ and maps it to the $p$-quantile. It turns out that this is the inverse of the cdf!
+$$Q(p) = F^{-1}(p)$$
+
+Note that this function does not exist outside of $0 \leq p \leq 1$! This is unlike the other functions (density, cdf, and survival function), which exist on all real numbers. 
+
+Here are the quantile functions of the examples we are working with:
+
+```{r, fig.width = 8, fig.height = 2}
+cowplot::plot_grid(
+	tibble(x = 0:1) %>% 
+		ggplot(aes(x)) +
+		stat_function(fun = expense$qdist) +
+		xlab("Quantile Probability") +
+		scale_y_continuous("Monthly Expense", labels = scales::dollar_format()) +
+		theme_bw(),
+	tibble(x = 0:1) %>% 
+		ggplot(aes(x)) +
+		stat_function(fun = octane$qdist) +
+		xlab("Quantile Probability") +
+		ylab("Octane Purity") +
+		theme_bw(),
+	los$pmf %>% 
+		pivot_longer(cols = right:left, names_to = "position", values_to = "ndays_double") %>% 
+		ggplot(aes(ndays_double + 1, cdf)) +
+		geom_line() + 
+		coord_flip() +
+		ylab("Quantile Probability") +
+		scale_x_continuous("Length of Stay", limits = c(0, 6), breaks = 0:6) +
+		theme_bw(),
+	nrow = 1
+)
+```
+
+
+### Other ways of depicting a distribution (Optional) (1 min)
+
+There are even more ways to depict a distribution that we won't be going into, that you might have heard of. Denote $X$ as a random variable. Some are:
+
+- Moment generating function (useful in mathematical statistics): $$M(t) = E(e^{Xt})$$
+- Characteristic function (useful in mathematical statistics): $$\chi(t) = E(e^{Xti}),$$ where $i^2=1$.
+- Hazard function (useful in survival analysis; wait for DSCI 562): $$h(t) = \frac{f(t)}{S(t)}$$
+
+
+

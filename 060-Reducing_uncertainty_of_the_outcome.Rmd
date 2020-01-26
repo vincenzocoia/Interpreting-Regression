@@ -1119,3 +1119,12 @@ Part 2: Your snowmelt-recording device is broken, so you don't know how much sno
 3. Make a prediction of river flow. 
 4. What distribution describes your current understanding of what the river flow will be?
 5. Someone tells you that a 90% prediction interval is [70, 170]. What do we know about the median?
+
+
+## Comparing Probabilities
+
+Suppose Vincenzo often wins at a game of solitaire---a one-player game---but that Tom is twice as good as Vincenzo. Does this means that $P(\text{Tom wins}) = 2 \times P(\text{Vincenzo wins})$?
+
+Probability is quite useful for communicating the chance of an event happening in an absolute sense, but is not useful for comparing probabilities. Odds, on the other hand, are useful for comparing the chance of two events. If $p$ is the chance that Vincenzo wins at solitaire, his _odds of winning_ is defined as $$\text{Odds} = \frac{p}{1-p}.$$ This means that, if his odds are $o$, then the probability of winning is $$\text{Probability} = \frac{o}{o+1}.$$
+
+For example, if Vincenzo wins 80% of the time, his odds are $0.8/0.2 = 4$. This is sometimes written as 4:1 odds -- that is, _four wins for every loss_. If Tom is twice as good as Vincenzo, it's _most useful_ to say that this means Tom wins twice as many games before experiencing a loss (on average) -- that is, 8:1 odds, or simply 8, and a probability of $8/9=0.888\ldots$.
