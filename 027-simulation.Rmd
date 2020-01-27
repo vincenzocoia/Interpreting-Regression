@@ -2,7 +2,7 @@
 
 **Caution: in a highly developmental stage! See Section  \@ref(caution).**
 
-__Status__: Not sure whether this topic belongs in this book yet. Needs framing from the context of this book if so (as opposed to DSCI 551, its original context).
+__Status__: Needs framing from the context of this book if so (as opposed to DSCI 551, its original context). Should prepare for bootstrap.
 
 
 So far, we've seen many quantities that help us communicating an uncertain outcome:
