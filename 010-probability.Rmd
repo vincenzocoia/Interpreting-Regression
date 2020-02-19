@@ -4,9 +4,8 @@ How can we get a handle on an outcome that seems random? Although the score of a
 
 # Probability: When an Outcome is Unknown
 
-**Caution: in a highly developmental stage! See Section  \@ref(caution).**
+**Status: needs some elaborating and some good examples. See Section  \@ref(caution).**
 
-__Status__: Topics are mostly all here. Needs some rearranging and emphasis on the importance of communicating univariate uncertainty.
 
 ```{r, warning = FALSE, echo = FALSE}
 suppressPackageStartupMessages(library(tidyverse))
@@ -16,15 +15,15 @@ here::here("supplementary", "octane.R") %>% source()
 here::here("supplementary", "ships.R") %>% source()
 ```
 
-Concepts:
+Imagine what life would be like if nothing was certain. If you let go of a ball, sometimes it falls, stays put, or adopts some other motion. If you wrap yourself in a blanket, sometimes it warms you up, and sometimes it cools you down. Or, taking pain medicine sometimes eases your pain, and sometimes makes it worse. Indeed, we rely on known cause-and-effect relationships in order to operate day to day. And whatever cause-and-effect relationships we don't know, we can learn them to allow us to expand our ability to operate in this world of ours. Don't know how to ski? Just learn the motions that will result in you descending a snowy mountain with control and a lot of fun. 
 
-- Variable types. Numeric variables vs. categorical. Ordinal as being "in between" numeric and categorical. Discrete as a special case of numeric, sometimes worth distinguishing.
-- Distributions as the limiting collection of iid data. 
-- Ways to depict a distribution, and the interpretation of each. The concept that one tells you everything about the distribution, so you can in theory derive one form from another. One does not give you more information than another. 
-- These distributions might not seem practical, but they certainly are. Even in cases where we are considering many other pieces of information aside from the response, we are still dealing with univariate distributions -- we'll see later that the only difference is that they are no longer marginal distributions (they are _conditional_).
+<!-- Taking pain medicine lightens the pain from a surgical wound. Wrapping yourself in a cozy blanket will warm you up. Letting go of a ball results in the ball falling. We operate day to day based on this cause-and-effect framework, and we expand this framework as we learn new things. We can learn the motions of skiing that will result in descending a mountain with control. -->
 
+But there are many things that _are_ in fact uncertain. Maybe your income relies on how many clients you get, so that you don't even know your income next month. Maybe you don't know whether breast feeding your baby will result in less colic than bottle feeding, because you've seen your friends' colicky babies in both cases. Does uncertainty mean we should resort to claiming ignorance? That you have no idea what your income will be in a month? That it's impossible to know whether the way your baby is fed impacts colic? These might sound like realistic claims holding a rudimentary cause-and-effect mindset, but the reality is that we often _can_ in fact garner information from uncertain outcomes if we adopt a probabilistic mindset. 
 
-## Defining Probability
+When the result of an outcome is known, it is referred to as _deterministic_, whereas an unknown outcome is referred to as _stochastic_. To understand a stochastic outcome and what influences it, it's key to understand _probability distributions_, which are the topic of this chapter.
+
+## Probability Distributions
 
 I like to play Mario Kart 8, a racing game with some "combat" involved using items. In the game, you are given an item at random whenever you get an "item box".
 
@@ -41,6 +40,7 @@ Suppose you're playing the game, and so far have gotten the following items in t
 
 Attribution: images from [pngkey](https://www.pngkey.com/detail/u2w7e6o0i1q8i1y3_randome-clipart-mario-kart-mario-kart-8-deluxe/).
 
+### Probability
 
 - What's the probability that your next item is a coin? 
 - How would you find the _actual_ probability? 
@@ -48,10 +48,7 @@ Attribution: images from [pngkey](https://www.pngkey.com/detail/u2w7e6o0i1q8i1y3
 
 In general, the probability of an event $A$ occurring is denoted $P(A)$ and is defined as $$\frac{\text{Number of times event } A \text{ is observed}}{\text{Total number of events observed}}$$ as the number of events goes to infinity.
 
-
-
-
-## Probability Distributions
+### Probability Distributions
 
 So far, we've been discussing probabilities of single events. But it's often useful to characterize the full "spectrum" of uncertainty associated with an outcome. The set of all outcomes and their corresponding probabilities is called a __probability distribution__ (or, often, just __distribution__). 
 
@@ -59,7 +56,7 @@ The outcome itself, which is uncertain, is called a __random variable__. (Note: 
 
 When the outcomes are _discrete_, the distributions are called __probability mass functions__ (or _pmf_'s for short).
 
-### Examples of Probability Distributions (3 min)
+### Examples of Probability Distributions
 
 __Mario Kart Example__: The distribution of items is given by the above table.
 
@@ -83,6 +80,8 @@ __Example__: The positive integers are discrete/countable: just start with 1 and
 It turns out that it's trickier to interpret probabilities for continuous random variables, but it also turns out that they're in general easier to work with. 
 
 Not all random variables with infinitely many outcomes are continuous. Take, for example, a Poisson random variable, that can take values $0, 1, 2, \ldots$ with no upper limit. The difference here is that a smaller range of values _does_ have a finite amount of variables. By the way, this type of infinity is called "countably infinite", and a continuous random variable has "uncountably infinite" amount of outcomes.
+
+#### Advanced and Optional: Is anything actually continuous?
 
 In practice, we can never measure anything on a continuous scale, since any measuring instrument must always round to some precision. For example, your kitchen scale might only measure things to the nearest gram. But, these variables are well approximated by a continuous variable. As a rule of thumb, if the difference between neighbouring values isn't a big deal, consider the variable continuous. 
 
@@ -166,7 +165,10 @@ expense$plot_ddist +
 ```
 
 
+## Summary and take-aways
 
+- These distributions might not seem practical, but they certainly are. Even in cases where we are considering many other pieces of information aside from the response, we are still dealing with univariate distributions -- we'll see later that the only difference is that they are no longer marginal distributions (they are _conditional_).
+- It's important to consider whether you are interested in the result of a single observation, or whether you are more interested in outcomes observed in the long run. While Statistics uses repeated observations in the long run to identify patterns and distributions, how you use those distributions will depend on your interest.
 
 
 
