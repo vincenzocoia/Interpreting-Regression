@@ -25,6 +25,20 @@ When the result of an outcome is known, it is referred to as _deterministic_, wh
 
 ## Probability Distributions
 
+Before abstracting probability distributions to real examples, it's perhaps best to explore probability distributions using simple examples where probabilities are known. 
+
+A probability distribution is a complete indication of how much probability is associated with certain outcomes.
+
+If we roll a 6-sided die, since each of the six outcomes (the numbers 1 through 6) are equally likely, each outcome has a probability of 1/6. The _distribution_ of the dice roll is the specification of probabilities for each outcome:
+
+| Outcome | Probability |
+|---|---|
+| 1 | 1/6 |
+| 2 | 1/6 |
+
+
+
+
 I like to play Mario Kart 8, a racing game with some "combat" involved using items. In the game, you are given an item at random whenever you get an "item box".
 
 Suppose you're playing the game, and so far have gotten the following items in total:
