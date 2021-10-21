@@ -19,43 +19,28 @@ description: "A book about the why of regression to help you make decisions abou
 
 Currently, much of the book is a stitching together of previous pieces of my writing that I think might be relevant to this book. These chapters will be updated to consider the different context, audience, and content organization that's best for this book.
 
-Stage of development:
 
-1. ~~Gather existing and potentially relevant pieces of writing~~
-2. ~~Create a new chapter structure~~
-3. ~~Parse existing writing into new chapters~~
-4. Writing:
-    1. Write concepts/objectives of each chapter
-    2. Fill in content
-    3. Write preambles for each chapter and part
+## Preamble
 
-## Purpose of the book
+This book explores statistics from a problem-first perspective, a topic I like to call "statistical data science". The wider topic of data science is concerned with drawing insights from data, often relying on numerical quantities to be calculated and interpreted -- whether that quantity be a prediction, a regression coefficient, or a mean squared error. That part of the data science process that provides precise interpretation is the topic of this book. 
 
-This book is aimed at practitioners trying to gain insight from numeric data. This task of "gaining insight from data" falls squarely in the field of Statistics, but this book is not designed to be a Statistics text book.
+The book aims to cover foundational topics in statistical data science, spanning a variety of regression models that are often seen in practice, and tying them together. Of course, there are many, many more advanced statistical topics that will not be covered in this book, including spatial statistics, state space models, etc.
 
-While there's a vast and powerful statistical framework out there capable of providing insight to a vast array of data problem types, this framework remains difficult to navigate and piece together. This hinders the practitioner's ability to make effective modelling decisions, who faces putting their trust and confidence in the statust quo way of doing things.
+This book is written for data analysts who need to make decisions with data in hand, and for statistics and data science students who want to learn a unifying landscape of statistical methods. The practicality of the book comes by presenting a toolkit for making decisions on key model components, so that a model can be designed rather than simply chosen from a list of possibilities. Because many of the models taught in statistics courses can be arrived at through specific combinations of these decisions, the book provides a framework whereby seemingly different statistical methods can be related back to the bigger picture framework.
 
-The statistical framework can be difficult to navigate for the following reasons:
+<!-- Components: the quantity being modeled (mean, hazard function, odds, ...), the relationship to covariates (linear, exponential, ...), and distributional assumptions. Decisions on each of these key components results in  -->
 
-1. The statistical framework tends to be described from a method-first perspective. 
+Texts in the traditional statistical sciences tend to use a lot of math. This is necessary, because statistical science tends to start with model assumptions, and work towards deriving results -- a process that requires mathematical precision. Take, for instance, linear regression. The topic is introduced by writing a linear equation relating a response to covariates, after which attention is turned to estimating the regression coefficients. Confidence intervals and hypothesis tests can then be derived, along with diagnostic checks on the model assumptions.
 
-Instead, this book takes a problem-first approach to exploring Statistics. For example, you can traditionally learn about the type of conclusions that can be drawn from linear regression, or from an ANOVA, but in this book ...
+Because statistical data science is not concerned with deriving results, but rather simply using them, mathematics becomes less relevant. As such, this book will not contain much math. Whenever equations are included, they are interpreted using language and diagrams. Or, sometimes equations will be included for those interested in seeing precise formulations, but are not needed to understand concepts. 
 
-2. Descriptions of statistical methods tend to emphasize the requirement of assumptions.
+Another consequence coming from treating statistics from a problem-first approach is that model assumptions never truly hold in practice. In practice, it's more realistic to ask whether an assumption is a realistic approximation to the truth. This question is in stark contrast to traditional statistical methods, which try to determine whether an assumption is true for your data. In reality, making an approximation results in a tradeoff, which unfortunately cannot be optimized based on your data. This book aims to provide guideance as to how to make a decision regarding model approximations. 
 
-The reality is, assumptions are never true in practice. Instead, this book evaluates assumptions as _approximations_ instead, commenting on whether and how important a good approximation is.
+Methods are demonstrated using the R Project for Statistical Computing, freely available online. This is because R has an extensive selection of packages available for statistical analysis, amongst which we will focus on the `tidyverse` and `tidymodels` meta-packages, and the `distplyr` package for working with distributions. 
 
-3. Descriptions of statistical methods tend to emphasize the "what" and "how".
+Even if you have not taken a statistics course before, I hope you find this book accessible, because fundamental concepts like probability and distributions are defined from scratch. Even if you are somewhat familiar with statistics, you may find these fundamental concepts worth revisiting, since you'll be challenged to re-think why well-known concepts such as the mean and variance are prominent, for example. 
 
-Typical descriptions aim to describe what a model is and how to apply it, spending time on explaining the mechanical guts of the method. But a deeper discussion into _why_ the method is important and set up in a specific way, and how it fits into the statistical framework as a whole is lacking. This book places emphasis on the "why", and tends to assume you are smart and can figure out how the guts of a method works on your own by doing some googling.
 
-What's the result? A book that takes a modularized approach to statistical decision making, so that as a problem solver, the reader can make a sequences of decisions to build models that are best suited to address the problem at hand.
-
-As mentioned, the statistical framework that has been defined to date is vast. This book cannot realistically aim to cover everything. Instead, we'll focus on foundational ways of thinking through regression analysis, which itself is quite broad and useful for solving a wide array of problems. Some examples include linear regression, survival analysis, mixed effects models, and quantile regression. Using statistical jargon, the focus is on describing aspects of conditional distributions across a covariate space. More advanced statistical methods, like state space models or continuous time markov chains, tend to stem from concepts in regression analysis.
-
-Even if you have not taken a Statistics course before, you will find this book accessible because fundamental concepts like probability and distributions are defined from scratch. Even if you are somewhat familiar with Statistics, you may find these fundamental concepts worth revisiting, since you'll be challenged to re-think why well-known concepts such as the mean and variance are prominent. A basic knowledge of intro calculus is assumed throughout this book, but as a general rule, we will not need to delve into mathematical details.
-
-Methods are demonstrated using the R statistical software. This is because R has an extensive selection of packages available for statistical analysis, and the `tidyverse` and `tidymodels` meta-packages make data analysis readable and organized.
 
 ## A focus on Interpretation
 
@@ -72,18 +57,18 @@ For example, we might want to predict the click-through rate of an online advert
 Although both problem types are considered, this book primarily focusses on building models for interpretation. A focus on prediction lies in the realm of machine learning, and a large part of the decision making here involves optimizing a model's fit to new data -- a problem for which there are many resources available. 
 
 
-```{r}
-library(mice)
-library(broom)
-library(tidyverse)
-Wage <- ISLR::Wage
-NCI60 <- ISLR::NCI60
-baseball <- Lahman::Teams %>% tbl_df %>% 
-  select(runs=R, hits=H)
-cow <- suppressMessages(read_csv("data/milk_fat.csv"))
-esoph <- as_tibble(esoph) %>% 
-    mutate(agegp = as.character(agegp))
-titanic <- na.omit(titanic::titanic_train)
+```{r, include = FALSE}
+# library(mice)
+# library(broom)
+# library(tidyverse)
+# Wage <- ISLR::Wage
+# NCI60 <- ISLR::NCI60
+# baseball <- Lahman::Teams %>% tbl_df %>% 
+#   select(runs=R, hits=H)
+# cow <- suppressMessages(read_csv("data/milk_fat.csv"))
+# esoph <- as_tibble(esoph) %>% 
+#     mutate(agegp = as.character(agegp))
+# titanic <- na.omit(titanic::titanic_train)
 ```
 
 
