@@ -1,18 +1,18 @@
-# An outcome on its own {-}
+# Interpreting a Random Quantity {-}
 
-How can we get a handle on an outcome that seems random? Although the score of a Canucks game, a stock price, or river flow is uncertain, this does not mean that these quantities are futile to predict or describe. This part of the book describes how to do just that, using only observations on a single outcome, by shedding light on concepts of probability and univariate analysis as they apply to data science. 
+How can we get a handle on an outcome that seems random? Although the score of a Canucks game, a stock price, or river flow is uncertain, their outcomes can still be described. For example, we can discover a range of likely possibilities, or what the most likely outcome is, or even get a sense of a worst-case scenario. This part of the book describes how to do just that, by shedding light on concepts of probability and univariate analysis as they apply to data science. 
 
 # Probability: When an Outcome is Unknown
 
 **Status: needs some elaborating and some good examples. See Section  \@ref(caution).**
 
 
-```{r, warning = FALSE, echo = FALSE}
-suppressPackageStartupMessages(library(tidyverse))
+```{r, warning = FALSE, echo = FALSE, message = FALSE}
+library(tidyverse)
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, fig.align = "center")
-here::here("supplementary", "expense.R") %>% source()
-here::here("supplementary", "octane.R") %>% source()
-here::here("supplementary", "ships.R") %>% source()
+source(here::here("supplementary", "expense.R"))
+source(here::here("supplementary", "octane.R"))
+source(here::here("supplementary", "ships.R"))
 ```
 
 Imagine what life would be like if nothing was certain. If you let go of a ball, sometimes it falls, stays put, or adopts some other motion. If you wrap yourself in a blanket, sometimes it warms you up, and sometimes it cools you down. Or, taking pain medicine sometimes eases your pain, and sometimes makes it worse. Indeed, we rely on known cause-and-effect relationships in order to operate day to day. And whatever cause-and-effect relationships we don't know, we can learn them to allow us to expand our ability to operate in this world of ours. Don't know how to ski? Just learn the motions that will result in you descending a snowy mountain with control and a lot of fun. 

@@ -1,11 +1,22 @@
 # The signal: model functions
 
-```{r}
+
+```r
 suppressPackageStartupMessages(library(tidyverse))
 Wage <- ISLR::Wage
 NCI60 <- ISLR::NCI60
 baseball <- Lahman::Teams %>% tbl_df %>% 
   select(runs=R, hits=H)
+```
+
+```
+## Warning: `tbl_df()` was deprecated in dplyr 1.0.0.
+## Please use `tibble::as_tibble()` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
+```
+
+```r
 cow <- suppressMessages(read_csv("data/milk_fat.csv"))
 esoph <- as_tibble(esoph) %>% 
     mutate(agegp = as.character(agegp))
@@ -21,7 +32,8 @@ where $Q(\tau)$ is the $\tau$-quantile. In other words, __each quantile level ge
 
 Here are the 0.25-, 0.5-, and 0.75-quantile regression lines for the baseball data:
 
-```{r}
+
+```r
 ggplot(baseball, aes(hits, runs)) +
     geom_point(alpha=0.1, colour="orange") +
     geom_quantile(colour="black") +
@@ -30,16 +42,43 @@ ggplot(baseball, aes(hits, runs)) +
          y="Number of Runs (Y)")
 ```
 
+```
+## Smoothing formula not specified. Using: y ~ x
+```
+
+<img src="070-The_signal_files/figure-html/unnamed-chunk-2-1.png" width="672" />
+
 I did this easily with `ggplot2`, just by adding a layer `geom_quantile` to my scatterplot, specifying the quantile levels with the `quantiles=` argument. We could also use the function `rq` in the `quantreg` package in R:
 
-```{r, echo=TRUE}
+
+```r
 (fit_rq <- quantreg::rq(runs ~ hits, data=baseball, tau=c(0.25, 0.5, 0.75)))
+```
+
+```
+## Call:
+## quantreg::rq(formula = runs ~ hits, tau = c(0.25, 0.5, 0.75), 
+##     data = baseball)
+## 
+## Coefficients:
+##             tau= 0.25  tau= 0.50  tau= 0.75
+## (Intercept)    -71.40 19.9208524 57.5090543
+## hits             0.52  0.4855403  0.4969819
+## 
+## Degrees of freedom: 2955 total; 2953 residual
 ```
 
 If we were to again focus on the two teams (one with 1000 hits, and one with 1500 hits), we have (by evaluating the above three lines):
 
-```{r}
+
+```r
 predict(fit_rq, newdata=data.frame(hits=c(1000, 1500)))
+```
+
+```
+##   tau= 0.25 tau= 0.50 tau= 0.75
+## 1     448.6  505.4612  554.4909
+## 2     708.6  748.2314  802.9819
 ```
 
 So, we could say that the team with 1000 hits: 
@@ -60,7 +99,8 @@ amongst other things.
 
 Because each quantile is allowed to have its own line, some of these lines might cross, giving an __invalid result__. Here is an example with the `iris` data set, fitting the 0.2- and 0.3-quantiles:
 
-```{r, warning=FALSE}
+
+```r
 ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
     geom_point(alpha=0.25, colour="orange") +
     geom_quantile(aes(colour="0.2"), quantiles=0.2) +
@@ -69,12 +109,22 @@ ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
     theme_bw() +
     labs(x="Sepal Length",
          y="Sepal Width")
+```
+
+```
+## Smoothing formula not specified. Using: y ~ x
+## Smoothing formula not specified. Using: y ~ x
+```
+
+<img src="070-The_signal_files/figure-html/unnamed-chunk-5-1.png" width="672" />
+
+```r
 fit_iris <- quantreg::rq(Sepal.Width ~ Sepal.Length, data=iris, tau=2:3/10)
 b <- coef(fit_iris)
 at8 <- round(predict(fit_iris, newdata=data.frame(Sepal.Length=8)), 2)
 ```
 
-Quantile estimates of Sepal Width for plants with Sepal Length less than ```r round((b[1,1]-b[1,2])/(b[2,2]-b[2,1]), 2)``` are valid, but otherwise, are not. For example, for plants with a Sepal Length of 8, this model predicts 30% of such plants to have a Sepal Width of less than ```r at8[2]```, but only 20% of such plants should have Sepal Width less than ```r at8[1]```. This is an illogical statement. 
+Quantile estimates of Sepal Width for plants with Sepal Length less than ``7.3`` are valid, but otherwise, are not. For example, for plants with a Sepal Length of 8, this model predicts 30% of such plants to have a Sepal Width of less than ``2.75``, but only 20% of such plants should have Sepal Width less than ``2.82``. This is an illogical statement. 
 
 There have been several "adjustments" proposed to ensure that this doesn't happen (see below), but ultimately, this suggests an inadequacy in the model assumptions. Luckily, this usually only happens at extreme values of the predictor space, and/or for large quantile levels, so is usually not a problem. 
 
