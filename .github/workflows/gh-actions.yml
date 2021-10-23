@@ -48,4 +48,5 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         run: |
           npm install netlify-cli -g
-          netlify deploy --prod --dir _book
+          netlify deploy --prod --dir docs
+          netlify deploy --dir docs --prod --message "$DEPLOY_MSG"
