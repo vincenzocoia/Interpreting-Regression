@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 12 Regression when data are missing: multiple imputation | Interpreting Regression</title>
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 12 Regression when data are missing: multiple imputation | Interpreting Regression" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
+  <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 12 Regression when data are missing: multiple imputation | Interpreting Regression" />
+  
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
+  
+
+<meta name="author" content="Vincenzo Coia" />
+
+
+<meta name="date" content="2021-10-25" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="regression-when-data-are-ordinal.html"/>
+<link rel="next" href="regression-on-an-entire-distribution-probabilistic-forecasting.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.19/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-111476782-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Interpreting Regression</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preamble</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#caution"><i class="fa fa-check"></i><b>1.1</b> Caution</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#preamble-1"><i class="fa fa-check"></i><b>1.2</b> Preamble</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#a-focus-on-interpretation"><i class="fa fa-check"></i><b>1.3</b> A focus on Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="interpreting-a-random-quantity.html"><a href="interpreting-a-random-quantity.html"><i class="fa fa-check"></i>Interpreting a Random Quantity</a></li>
+<li class="chapter" data-level="2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html"><i class="fa fa-check"></i><b>2</b> Probability: When an Outcome is Unknown</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#probability-distributions"><i class="fa fa-check"></i><b>2.1</b> Probability Distributions</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#probability"><i class="fa fa-check"></i><b>2.1.1</b> Probability</a></li>
+<li class="chapter" data-level="2.1.2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#probability-distributions-1"><i class="fa fa-check"></i><b>2.1.2</b> Probability Distributions</a></li>
+<li class="chapter" data-level="2.1.3" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#examples-of-probability-distributions"><i class="fa fa-check"></i><b>2.1.3</b> Examples of Probability Distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#continuous-random-variables-10-min"><i class="fa fa-check"></i><b>2.2</b> Continuous random variables (10 min)</a></li>
+<li class="chapter" data-level="2.3" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#density-functions-20-min"><i class="fa fa-check"></i><b>2.3</b> Density Functions (20 min)</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#example-low-purity-octane"><i class="fa fa-check"></i><b>2.3.1</b> Example: “Low Purity Octane”</a></li>
+<li class="chapter" data-level="2.3.2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#example-monthly-expenses"><i class="fa fa-check"></i><b>2.3.2</b> Example: Monthly Expenses</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#summary-and-take-aways"><i class="fa fa-check"></i><b>2.4</b> Summary and take-aways</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html"><i class="fa fa-check"></i><b>3</b> Distribution Properties: Quantities we can Interpret</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#probabilistic-quantities"><i class="fa fa-check"></i><b>3.1</b> Probabilistic Quantities</a></li>
+<li class="chapter" data-level="3.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#measures-of-central-tendency-and-uncertainty"><i class="fa fa-check"></i><b>3.2</b> Measures of central tendency and uncertainty</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#mode-and-entropy"><i class="fa fa-check"></i><b>3.2.1</b> Mode and Entropy</a></li>
+<li class="chapter" data-level="3.2.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#mean-and-variance"><i class="fa fa-check"></i><b>3.2.2</b> Mean and Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#what-is-the-mean-anyway"><i class="fa fa-check"></i><b>3.3</b> What is the mean, anyway?</a></li>
+<li class="chapter" data-level="3.4" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#quantiles"><i class="fa fa-check"></i><b>3.4</b> Quantiles</a></li>
+<li class="chapter" data-level="3.5" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#continuous-distribution-properties"><i class="fa fa-check"></i><b>3.5</b> Continuous Distribution Properties</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#mean-variance-mode-and-entropy-5-min"><i class="fa fa-check"></i><b>3.5.1</b> Mean, Variance, Mode, and Entropy (5 min)</a></li>
+<li class="chapter" data-level="3.5.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#median-5-min"><i class="fa fa-check"></i><b>3.5.2</b> Median (5 min)</a></li>
+<li class="chapter" data-level="3.5.3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#quantiles-5-min"><i class="fa fa-check"></i><b>3.5.3</b> Quantiles (5 min)</a></li>
+<li class="chapter" data-level="3.5.4" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#prediction-intervals-5-min"><i class="fa fa-check"></i><b>3.5.4</b> Prediction Intervals (5 min)</a></li>
+<li class="chapter" data-level="3.5.5" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#skewness-5-min"><i class="fa fa-check"></i><b>3.5.5</b> Skewness (5 min)</a></li>
+<li class="chapter" data-level="3.5.6" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#examples"><i class="fa fa-check"></i><b>3.5.6</b> Examples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#heavy-tailed-distributions"><i class="fa fa-check"></i><b>3.6</b> Heavy-Tailed Distributions</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#sensitivity-of-the-mean-to-extremes"><i class="fa fa-check"></i><b>3.6.1</b> Sensitivity of the mean to extremes</a></li>
+<li class="chapter" data-level="3.6.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#heavy-tailed-distributions-1"><i class="fa fa-check"></i><b>3.6.2</b> Heavy-tailed Distributions</a></li>
+<li class="chapter" data-level="3.6.3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#heavy-tailed-distribution-families"><i class="fa fa-check"></i><b>3.6.3</b> Heavy-tailed distribution families</a></li>
+<li class="chapter" data-level="3.6.4" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#extreme-value-analysis"><i class="fa fa-check"></i><b>3.6.4</b> Extreme Value Analysis</a></li>
+<li class="chapter" data-level="3.6.5" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#multivariate-students-t-distributions"><i class="fa fa-check"></i><b>3.6.5</b> Multivariate Student’s <em>t</em> distributions</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html"><i class="fa fa-check"></i><b>4</b> Explaining an uncertain outcome: interpretable quantities</a>
+<ul>
+<li class="chapter" data-level="4.0.1" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#cumulative-density-functions-cdfs-distribution-functions"><i class="fa fa-check"></i><b>4.0.1</b> Cumulative Density Functions (cdf’s) / Distribution Functions</a></li>
+<li class="chapter" data-level="4.0.2" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#survival-function-2-min"><i class="fa fa-check"></i><b>4.0.2</b> Survival Function (2 min)</a></li>
+<li class="chapter" data-level="4.0.3" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#quantile-function-5-min"><i class="fa fa-check"></i><b>4.0.3</b> Quantile Function (5 min)</a></li>
+<li class="chapter" data-level="4.0.4" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#other-ways-of-depicting-a-distribution-optional-1-min"><i class="fa fa-check"></i><b>4.0.4</b> Other ways of depicting a distribution (Optional) (1 min)</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html"><i class="fa fa-check"></i><b>5</b> Simulation: When calculations are difficult</a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#learning-objectives"><i class="fa fa-check"></i><b>5.0.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="5.0.2" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#review-activity-15-min"><i class="fa fa-check"></i><b>5.0.2</b> Review Activity (15 min)</a></li>
+<li class="chapter" data-level="5.0.3" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#random-samples-terminology-5-min"><i class="fa fa-check"></i><b>5.0.3</b> Random Samples: Terminology (5 min)</a></li>
+<li class="chapter" data-level="5.0.4" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#seeds-5-min"><i class="fa fa-check"></i><b>5.0.4</b> Seeds (5 min)</a></li>
+<li class="chapter" data-level="5.0.5" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#generating-random-samples-code"><i class="fa fa-check"></i><b>5.0.5</b> Generating Random Samples: Code</a></li>
+<li class="chapter" data-level="5.0.6" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#running-simulations"><i class="fa fa-check"></i><b>5.0.6</b> Running Simulations</a></li>
+<li class="chapter" data-level="5.0.7" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#multi-step-simulations-10-min"><i class="fa fa-check"></i><b>5.0.7</b> Multi-Step Simulations (10 min)</a></li>
+<li class="chapter" data-level="5.0.8" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#generating-continuous-data"><i class="fa fa-check"></i><b>5.0.8</b> Generating Continuous Data</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#concepts"><i class="fa fa-check"></i><b>6.1</b> Concepts</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#binomial-distribution"><i class="fa fa-check"></i><b>6.1.1</b> Binomial Distribution</a></li>
+<li class="chapter" data-level="6.1.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#families-vs.-distributions"><i class="fa fa-check"></i><b>6.1.2</b> Families vs. distributions</a></li>
+<li class="chapter" data-level="6.1.3" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parameters"><i class="fa fa-check"></i><b>6.1.3</b> Parameters</a></li>
+<li class="chapter" data-level="6.1.4" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parameterization"><i class="fa fa-check"></i><b>6.1.4</b> Parameterization</a></li>
+<li class="chapter" data-level="6.1.5" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#distribution-families-in-practice"><i class="fa fa-check"></i><b>6.1.5</b> Distribution Families in Practice</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#common-parametric-families"><i class="fa fa-check"></i><b>6.2</b> Common Parametric Families</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#geometric"><i class="fa fa-check"></i><b>6.2.1</b> <span>Geometric</span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#negative-binomial"><i class="fa fa-check"></i><b>6.2.2</b> <span>Negative Binomial</span></a></li>
+<li class="chapter" data-level="6.2.3" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#poisson"><i class="fa fa-check"></i><b>6.2.3</b> <span>Poisson</span></a></li>
+<li class="chapter" data-level="6.2.4" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#bernoulli"><i class="fa fa-check"></i><b>6.2.4</b> Bernoulli</a></li>
+<li class="chapter" data-level="6.2.5" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#uniform-3-min"><i class="fa fa-check"></i><b>6.2.5</b> <a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">Uniform</a> (3 min)</a></li>
+<li class="chapter" data-level="6.2.6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#gaussian-normal-4-min"><i class="fa fa-check"></i><b>6.2.6</b> <span>Gaussian / Normal</span> (4 min)</a></li>
+<li class="chapter" data-level="6.2.7" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#log-normal-family"><i class="fa fa-check"></i><b>6.2.7</b> <span>Log-Normal</span> Family</a></li>
+<li class="chapter" data-level="6.2.8" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#exponential-family"><i class="fa fa-check"></i><b>6.2.8</b> <span>Exponential</span> Family</a></li>
+<li class="chapter" data-level="6.2.9" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#weibull-family"><i class="fa fa-check"></i><b>6.2.9</b> <span>Weibull</span> Family</a></li>
+<li class="chapter" data-level="6.2.10" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#beta-family"><i class="fa fa-check"></i><b>6.2.10</b> <span>Beta</span> Family</a></li>
+<li class="chapter" data-level="6.2.11" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#activity"><i class="fa fa-check"></i><b>6.2.11</b> Activity</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#relevant-r-functions-8-min"><i class="fa fa-check"></i><b>6.3</b> Relevant R functions (8 min)</a></li>
+<li class="chapter" data-level="6.4" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.4</b> Analyses under a Distributional Assumption</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.4.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.4.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.4.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
+<li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: conditional distributions</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#conditional-distributions"><i class="fa fa-check"></i><b>7.1</b> Conditional Distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#joint-distributions"><i class="fa fa-check"></i><b>7.2</b> Joint Distributions</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#example-length-of-stay-vs.-gang-demand"><i class="fa fa-check"></i><b>7.2.1</b> Example: Length of Stay vs. Gang Demand</a></li>
+<li class="chapter" data-level="7.2.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-distributions"><i class="fa fa-check"></i><b>7.2.2</b> Marginal Distributions</a></li>
+<li class="chapter" data-level="7.2.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#calculating-marginals-from-the-joint"><i class="fa fa-check"></i><b>7.2.3</b> Calculating Marginals from the Joint</a></li>
+<li class="chapter" data-level="7.2.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#conditioning-on-one-variable"><i class="fa fa-check"></i><b>7.2.4</b> Conditioning on one Variable</a></li>
+<li class="chapter" data-level="7.2.5" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#law-of-total-probabilityexpectation"><i class="fa fa-check"></i><b>7.2.5</b> Law of Total Probability/Expectation</a></li>
+<li class="chapter" data-level="7.2.6" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#exercises"><i class="fa fa-check"></i><b>7.2.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#multivariate-densitiespdfs"><i class="fa fa-check"></i><b>7.3</b> Multivariate Densities/pdf’s</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#conditional-distributions-revisited"><i class="fa fa-check"></i><b>7.3.1</b> Conditional Distributions, revisited</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#dependence-concepts"><i class="fa fa-check"></i><b>7.4</b> Dependence concepts</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#independence"><i class="fa fa-check"></i><b>7.4.1</b> Independence</a></li>
+<li class="chapter" data-level="7.4.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#measures-of-dependence"><i class="fa fa-check"></i><b>7.4.2</b> Measures of dependence</a></li>
+<li class="chapter" data-level="7.4.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#dependence-as-separate-from-the-marginals"><i class="fa fa-check"></i><b>7.4.3</b> Dependence as separate from the marginals</a></li>
+<li class="chapter" data-level="7.4.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#dependence-as-giving-us-more-information"><i class="fa fa-check"></i><b>7.4.4</b> Dependence as giving us more information</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#harvesting-dependence"><i class="fa fa-check"></i><b>7.5</b> Harvesting Dependence</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#example-river-flow"><i class="fa fa-check"></i><b>7.5.1</b> Example: River Flow</a></li>
+<li class="chapter" data-level="7.5.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#direction-of-dependence"><i class="fa fa-check"></i><b>7.5.2</b> Direction of Dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-distributions-1"><i class="fa fa-check"></i><b>7.6</b> Marginal Distributions</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-distribution-from-conditional"><i class="fa fa-check"></i><b>7.6.1</b> Marginal Distribution from Conditional</a></li>
+<li class="chapter" data-level="7.6.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-mean-from-conditional"><i class="fa fa-check"></i><b>7.6.2</b> Marginal Mean from Conditional</a></li>
+<li class="chapter" data-level="7.6.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-quantiles-from-conditional"><i class="fa fa-check"></i><b>7.6.3</b> Marginal Quantiles from Conditional</a></li>
+<li class="chapter" data-level="7.6.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#activity-1"><i class="fa fa-check"></i><b>7.6.4</b> Activity</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html"><i class="fa fa-check"></i><b>8</b> Estimating parametric model functions</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#writing-the-sample-mean-as-an-optimization-problem"><i class="fa fa-check"></i><b>8.1</b> Writing the sample mean as an optimization problem</a></li>
+<li class="chapter" data-level="8.2" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#evaluating-model-goodness-quantiles"><i class="fa fa-check"></i><b>8.2</b> Evaluating Model Goodness: Quantiles</a></li>
+<li class="chapter" data-level="8.3" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#simple-linear-regression"><i class="fa fa-check"></i><b>8.3</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#model-specification"><i class="fa fa-check"></i><b>8.3.1</b> Model Specification</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#linear-models-in-general"><i class="fa fa-check"></i><b>8.4</b> Linear models in general</a></li>
+<li class="chapter" data-level="8.5" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#reference-treatment-parameterization"><i class="fa fa-check"></i><b>8.5</b> reference-treatment parameterization</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#more-than-one-category-lab-2"><i class="fa fa-check"></i><b>8.5.1</b> More than one category (Lab 2)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#concepts-1"><i class="fa fa-check"></i><b>8.6</b> Concepts</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><i class="fa fa-check"></i><b>9</b> Estimating assumption-free: the world of supervised learning techniques</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#what-machine-learning-is"><i class="fa fa-check"></i><b>9.1</b> What machine learning is</a></li>
+<li class="chapter" data-level="9.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#types-of-supervised-learning"><i class="fa fa-check"></i><b>9.2</b> Types of Supervised Learning</a></li>
+<li class="chapter" data-level="9.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#local-regression"><i class="fa fa-check"></i><b>9.3</b> Local Regression</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#knn"><i class="fa fa-check"></i><b>9.3.1</b> kNN</a></li>
+<li class="chapter" data-level="9.3.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess"><i class="fa fa-check"></i><b>9.3.2</b> loess</a></li>
+<li class="chapter" data-level="9.3.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#in-class-exercises"><i class="fa fa-check"></i><b>9.3.3</b> In-Class Exercises</a></li>
+<li class="chapter" data-level="9.3.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#hyperparameters-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>9.3.4</b> Hyperparameters and the bias/variance tradeoff</a></li>
+<li class="chapter" data-level="9.3.5" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#extensions-to-knn-and-loess"><i class="fa fa-check"></i><b>9.3.5</b> Extensions to kNN and loess</a></li>
+<li class="chapter" data-level="9.3.6" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#model-assumptions-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>9.3.6</b> Model assumptions and the bias/variance tradeoff</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#splines-and-loess-regression"><i class="fa fa-check"></i><b>9.4</b> Splines and Loess Regression</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess-1"><i class="fa fa-check"></i><b>9.4.1</b> Loess</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="special-cases.html"><a href="special-cases.html"><i class="fa fa-check"></i>Special cases</a></li>
+<li class="chapter" data-level="10" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html"><i class="fa fa-check"></i><b>10</b> Regression when data are censored: survival analysis</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#data"><i class="fa fa-check"></i><b>10.1</b> Data</a></li>
+<li class="chapter" data-level="10.2" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#univariate-estimation"><i class="fa fa-check"></i><b>10.2</b> Univariate Estimation</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#non-parametric-estimates-with-kaplan-meier"><i class="fa fa-check"></i><b>10.2.1</b> Non-parametric Estimates with Kaplan-Meier</a></li>
+<li class="chapter" data-level="10.2.2" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#parametric-estimation"><i class="fa fa-check"></i><b>10.2.2</b> Parametric Estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#regression-with-survival-data"><i class="fa fa-check"></i><b>10.3</b> Regression with Survival Data</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#proportional-hazards-model"><i class="fa fa-check"></i><b>10.3.1</b> Proportional Hazards Model</a></li>
+<li class="chapter" data-level="10.3.2" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#prediction"><i class="fa fa-check"></i><b>10.3.2</b> Prediction</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#concept-list"><i class="fa fa-check"></i><b>10.4</b> Concept list</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html"><i class="fa fa-check"></i><b>11</b> Regression when data are ordinal</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html#concept-list-1"><i class="fa fa-check"></i><b>11.1</b> Concept list</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html"><i class="fa fa-check"></i><b>12</b> Regression when data are missing: multiple imputation</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#mean-imputation"><i class="fa fa-check"></i><b>12.1</b> Mean Imputation</a></li>
+<li class="chapter" data-level="12.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#multiple-imputation"><i class="fa fa-check"></i><b>12.2</b> Multiple Imputation</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#patterns"><i class="fa fa-check"></i><b>12.2.1</b> Patterns</a></li>
+<li class="chapter" data-level="12.2.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#multiple-imputation-1"><i class="fa fa-check"></i><b>12.2.2</b> Multiple Imputation</a></li>
+<li class="chapter" data-level="12.2.3" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#pooling"><i class="fa fa-check"></i><b>12.2.3</b> Pooling</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#step-0-what-data-are-missing"><i class="fa fa-check"></i><b>12.3</b> Step 0: What data are missing?</a></li>
+<li class="chapter" data-level="12.4" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#step-1-handling-missing-data"><i class="fa fa-check"></i><b>12.4</b> Step 1: Handling Missing Data</a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#any-ideas"><i class="fa fa-check"></i><b>12.4.1</b> Any Ideas?</a></li>
+<li class="chapter" data-level="12.4.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#mice"><i class="fa fa-check"></i><b>12.4.2</b> <code>mice</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#step-3-pool-results"><i class="fa fa-check"></i><b>12.5</b> Step 3: Pool results</a></li>
+<li class="chapter" data-level="12.6" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#concepts-2"><i class="fa fa-check"></i><b>12.6</b> Concepts</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html"><i class="fa fa-check"></i><b>13</b> Regression on an entire distribution: Probabilistic Forecasting</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasting-what-it-is"><i class="fa fa-check"></i><b>13.1</b> Probabilistic Forecasting: What it is</a></li>
+<li class="chapter" data-level="13.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#review-univariate-distribution-estimates"><i class="fa fa-check"></i><b>13.2</b> Review: Univariate distribution estimates</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#continuous-response"><i class="fa fa-check"></i><b>13.2.1</b> Continuous response</a></li>
+<li class="chapter" data-level="13.2.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discrete-response"><i class="fa fa-check"></i><b>13.2.2</b> Discrete Response</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasts-subset-based-learning-methods"><i class="fa fa-check"></i><b>13.3</b> Probabilistic Forecasts: subset-based learning methods</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#the-techniques"><i class="fa fa-check"></i><b>13.3.1</b> The techniques</a></li>
+<li class="chapter" data-level="13.3.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#exercise"><i class="fa fa-check"></i><b>13.3.2</b> Exercise</a></li>
+<li class="chapter" data-level="13.3.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>13.3.3</b> Bias-variance tradeoff</a></li>
+<li class="chapter" data-level="13.3.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#evaluating-model-goodness"><i class="fa fa-check"></i><b>13.3.4</b> Evaluating Model Goodness</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discussion-points"><i class="fa fa-check"></i><b>13.4</b> Discussion Points</a></li>
+<li class="chapter" data-level="13.5" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#when-are-they-not-useful"><i class="fa fa-check"></i><b>13.5</b> When are they not useful?</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Interpreting Regression</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="regression-when-data-are-missing-multiple-imputation" class="section level1" number="12">
+<h1><span class="header-section-number">Chapter 12</span> Regression when data are missing: multiple imputation</h1>
+<p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<p>(DSCI 562 Tutorial)</p>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb174-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(tidyverse))</span>
+<span id="cb174-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb174-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(mice))</span></code></pre></div>
+<p>Let’s take a closer look at mean imputation vs. multiple imputation.</p>
+<div id="mean-imputation" class="section level2" number="12.1">
+<h2><span class="header-section-number">12.1</span> Mean Imputation</h2>
+<p>Let’s consider a simple linear regression example, with one explanatory variable. We’ll generate 100 data points, and make 10 of the response values missing.</p>
+<div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">13</span>)</span>
+<span id="cb175-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb175-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb175-3"><a href="regression-when-data-are-missing-multiple-imputation.html#cb175-3" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> <span class="dv">2</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="dv">100</span>)</span>
+<span id="cb175-4"><a href="regression-when-data-are-missing-multiple-imputation.html#cb175-4" aria-hidden="true" tabindex="-1"></a>y[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span></code></pre></div>
+<p>Here are the data:</p>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb176-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb176-1" aria-hidden="true" tabindex="-1"></a>x</span></code></pre></div>
+<pre><code>##   [1]  0.55432694 -0.28027194  1.77516337  0.18732012  1.14252615  0.41552613
+##   [7]  1.22950656  0.23667967 -0.36538277  1.10514427 -1.09359397  0.46187091
+##  [13] -1.36098453 -1.85602715 -0.43985541 -0.19394690  1.39643151  0.10066325
+##  [19] -0.11443881  0.70222523  0.26254267  1.83616330  0.35740242 -1.04541013
+##  [25]  0.62018413  0.14935453 -1.45931685 -2.02704380 -1.05695776 -0.72814372
+##  [31] -0.00821067  0.84779738 -0.38349150 -0.52651151 -0.27322596 -0.60574161
+##  [37] -0.33286731 -0.24153755 -0.86277540 -0.84697075  0.10034035  1.59003353
+##  [43]  0.56649488  1.61447949 -0.46865016 -0.72610140 -1.02333900 -1.93781553
+##  [49]  0.27714729  1.40835367  0.27312919  0.75552507 -0.34901841 -0.54619076
+##  [55]  0.23436199 -0.29782822 -0.84047613  0.82651036  1.48369123  0.69967564
+##  [61] -1.26157415  0.29827174 -0.14780711 -0.88892233  1.01306586 -0.92052508
+##  [67] -0.57389450  1.15036548  1.14382456 -0.23944276 -1.08680215 -0.06144699
+##  [73] -0.51669734 -1.90767369  0.10715648 -1.17737519  1.74542691 -0.39869853
+##  [79]  0.44243942  0.45027946 -0.07606216  0.29751322 -1.19435471 -1.99687548
+##  [85]  1.38851305 -0.08248357  0.39251449 -1.08276971  1.60212039  1.00406897
+##  [91]  0.37989570 -0.56550536 -1.21377810 -1.36430159 -1.41613295 -0.25557803
+##  [97] -1.22542595  0.21383426  0.06722356  0.85663511</code></pre>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb178-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb178-1" aria-hidden="true" tabindex="-1"></a>y</span></code></pre></div>
+<pre><code>##   [1]           NA           NA           NA           NA           NA
+##   [6]           NA           NA           NA           NA           NA
+##  [11] -4.053704654  1.559887706 -4.743071625 -5.523818780 -1.930473677
+##  [16] -1.500485206  2.645513317 -0.051326812 -0.839409352  0.218430884
+##  [21]  0.850566209  3.126514212 -0.368543711 -3.162228622 -1.105128040
+##  [26] -0.902167648 -4.154972172 -5.111932100 -4.145855361 -3.322836591
+##  [31] -0.168810384  0.819016643 -1.365461091 -1.130697319  0.240141538
+##  [36] -2.390779077 -2.058218000 -0.761012345 -1.767026541 -3.989408584
+##  [41] -0.459957593  1.032304370 -0.957928133  0.235330176 -1.507042163
+##  [46] -0.745023600 -4.628929629 -5.232634575 -2.144358973  0.664736992
+##  [51] -3.298505466  2.225627728 -2.926853644 -2.406454479 -0.601188334
+##  [56] -2.433257875 -2.434091710 -1.922107514  1.971684397  2.745313865
+##  [61] -3.459211491  0.705772270 -1.719688562 -2.123423177  1.619808115
+##  [66] -3.826059870 -1.864032144  1.330204157  2.087342480 -2.782158129
+##  [71] -0.403227138 -1.468562228 -1.026899366 -2.000743246  0.042009453
+##  [76] -0.473418979  2.841051621 -2.703355211  0.700489075 -0.592450346
+##  [81] -1.683073694  0.229914942 -5.462264420 -5.187776409  1.969480413
+##  [86] -2.450285233 -0.005289845 -3.465216049  1.160366954  1.827202816
+##  [91]  0.761346358 -1.696197511 -2.962489498 -4.827255075 -3.221340010
+##  [96] -1.494866659 -2.714534509  0.673879626 -1.598181064  0.641959448</code></pre>
+<p>Here’s the scatterplot with the missing data removed, and the corresponding linear regression fit:</p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb180-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">qplot</span>(x, y) <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">&quot;lm&quot;</span>, <span class="at">se=</span><span class="cn">FALSE</span>)</span>
+<span id="cb180-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb180-2" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 10 rows containing non-finite values (stat_smooth).</code></pre>
+<pre><code>## Warning: Removed 10 rows containing missing values (geom_point).</code></pre>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>The mean imputation method replaces the <code>NA</code>’s with an estimate for the mean of <span class="math inline">\(Y\)</span>. The simplest case is to use the sample average of the response. The imputed observations are shown in red, and the resulting <code>lm</code> fit is also in red.</p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb184-1" aria-hidden="true" tabindex="-1"></a>ybar <span class="ot">&lt;-</span> <span class="fu">mean</span>(y, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb184-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb184-2" aria-hidden="true" tabindex="-1"></a>datrm <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(<span class="fu">data.frame</span>(<span class="at">x=</span>x, <span class="at">y=</span>y))</span>
+<span id="cb184-3"><a href="regression-when-data-are-missing-multiple-imputation.html#cb184-3" aria-hidden="true" tabindex="-1"></a>datimp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], <span class="at">y=</span>ybar)</span>
+<span id="cb184-4"><a href="regression-when-data-are-missing-multiple-imputation.html#cb184-4" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">data=</span>datimp, <span class="at">colour=</span><span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb184-5"><a href="regression-when-data-are-missing-multiple-imputation.html#cb184-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">data=</span><span class="fu">rbind</span>(datrm, datimp), <span class="at">method=</span><span class="st">&quot;lm&quot;</span>, <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">colour=</span><span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 10 rows containing non-finite values (stat_smooth).</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 10 rows containing missing values (geom_point).</code></pre>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Notice that the new regression line is flatter.</p>
+<p>Another mean-imputation method is to replace the <code>NA</code>’s with an alternative mean estimate: the regression predictions.</p>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb189-1" aria-hidden="true" tabindex="-1"></a>fit2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">na.action=</span>na.omit)</span>
+<span id="cb189-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb189-2" aria-hidden="true" tabindex="-1"></a>yhat <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit2, <span class="at">newdata=</span><span class="fu">data.frame</span>(<span class="at">x=</span>x[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]))</span>
+<span id="cb189-3"><a href="regression-when-data-are-missing-multiple-imputation.html#cb189-3" aria-hidden="true" tabindex="-1"></a>datimp2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x=</span>x[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], <span class="at">y=</span>yhat)</span>
+<span id="cb189-4"><a href="regression-when-data-are-missing-multiple-imputation.html#cb189-4" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">data=</span>datimp2, <span class="at">colour=</span><span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb189-5"><a href="regression-when-data-are-missing-multiple-imputation.html#cb189-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">data=</span><span class="fu">rbind</span>(datrm, datimp2), <span class="at">method=</span><span class="st">&quot;lm&quot;</span>, <span class="at">se=</span><span class="cn">FALSE</span>, <span class="at">colour=</span><span class="st">&quot;red&quot;</span>, <span class="at">size=</span><span class="fl">0.5</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 10 rows containing non-finite values (stat_smooth).</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 10 rows containing missing values (geom_point).</code></pre>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>The regression line has not changed. This method seems smarter, but it still has consequences, since the imputed data suggests that the dataset is bound closer to the regression line than reality. So the residual variance is biased to be smaller.</p>
+<p>These are both mean imputation methods. So, in your Lab 2 assignment, you can use any mean imputation method – your explanation of the comparison will just depend on what you choose.</p>
+</div>
+<div id="multiple-imputation" class="section level2" number="12.2">
+<h2><span class="header-section-number">12.2</span> Multiple Imputation</h2>
+<p>Recall that <em>multiple imputation</em> is a technique for handling missing data. It replaces the missing data with <em>many</em> plausible values, to obtain mutliple data sets. An analysis is done on each data set, and the results are combined.</p>
+<p>A very powerful R package to assist with multiple imputation is the <code>mice</code> package. Some key things that it does:</p>
+<ul>
+<li>Displays patterns in missing data.</li>
+<li>Imputes data to obtain multiple data sets.</li>
+<li>Pools multiple analyses into one.</li>
+</ul>
+<p>We’ll look at the <code>airquality</code> dataset in R.</p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(airquality)</span></code></pre></div>
+<pre><code>##   Ozone Solar.R Wind Temp Month Day
+## 1    41     190  7.4   67     5   1
+## 2    36     118  8.0   72     5   2
+## 3    12     149 12.6   74     5   3
+## 4    18     313 11.5   62     5   4
+## 5    NA      NA 14.3   56     5   5
+## 6    28      NA 14.9   66     5   6</code></pre>
+<div id="patterns" class="section level3" number="12.2.1">
+<h3><span class="header-section-number">12.2.1</span> Patterns</h3>
+<p>Where are the <code>NA</code>s?</p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md.pattern</span>(airquality)</span></code></pre></div>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre><code>##     Wind Temp Month Day Solar.R Ozone   
+## 111    1    1     1   1       1     1  0
+## 35     1    1     1   1       1     0  1
+## 5      1    1     1   1       0     1  1
+## 2      1    1     1   1       0     0  2
+##        0    0     0   0       7    37 44</code></pre>
+<p>A “1” indicates that an observation is present, and a “0” indicates absense. The periphery of the matrix are counts: to the right, are the number of <code>NA</code>s in the row; at the bottom, are the number of <code>NA</code>s in each column; to the left, are the number of observations having a missing data pattern indicated in the matrix.</p>
+<p>So we can see that there are 7 missing Solar Radiation observations, and 37 missing Ozone observations. We could check that in another way as follows:</p>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb198-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(airquality<span class="sc">$</span>Solar.R))</span></code></pre></div>
+<pre><code>## [1] 7</code></pre>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb200-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb200-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(airquality<span class="sc">$</span>Ozone))</span></code></pre></div>
+<pre><code>## [1] 37</code></pre>
+</div>
+<div id="multiple-imputation-1" class="section level3" number="12.2.2">
+<h3><span class="header-section-number">12.2.2</span> Multiple Imputation</h3>
+<p>There are many methods of doing an imputation. But generally, they use other columns in the data set to do prediction on the missing data.</p>
+<p>The function to do this is <code>mice</code>. Let’s impute 50 data sets using the “Predictive Mean Matching” method.</p>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb202-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb202-1" aria-hidden="true" tabindex="-1"></a>(dats <span class="ot">&lt;-</span> <span class="fu">mice</span>(airquality, <span class="at">m=</span><span class="dv">50</span>, <span class="at">method=</span><span class="st">&quot;pmm&quot;</span>, <span class="at">seed=</span><span class="dv">123</span>, <span class="at">printFlag=</span><span class="cn">FALSE</span>))</span></code></pre></div>
+<pre><code>## Class: mids
+## Number of multiple imputations:  50 
+## Imputation methods:
+##   Ozone Solar.R    Wind    Temp   Month     Day 
+##   &quot;pmm&quot;   &quot;pmm&quot;      &quot;&quot;      &quot;&quot;      &quot;&quot;      &quot;&quot; 
+## PredictorMatrix:
+##         Ozone Solar.R Wind Temp Month Day
+## Ozone       0       1    1    1     1   1
+## Solar.R     1       0    1    1     1   1
+## Wind        1       1    0    1     1   1
+## Temp        1       1    1    0     1   1
+## Month       1       1    1    1     0   1
+## Day         1       1    1    1     1   0</code></pre>
+<p>The <code>m</code> argument is the number of imputed datasets. <code>method</code> is the method (you can check out the other methods in the “Details” part of the documentation of <code>mice</code>). Because there’s a random component to the imputation, <code>seed</code> indicates the seed to initiate the random number generator – useful for reproducibility! Finally, I didn’t want <code>mice</code> to be verbose with its output, so I silenced it with <code>printFlag=FALSE</code>.</p>
+<p><code>dats</code> isn’t just a list of 50 datasets. It has more information bundled in it. The info is bundled in an object of type “mids”:</p>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb204-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(dats)</span></code></pre></div>
+<pre><code>## [1] &quot;mids&quot;</code></pre>
+<p>But we can extract the data sets. Want to see the fourth imputed data set? Here it is:</p>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb206-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb206-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mice<span class="sc">::</span><span class="fu">complete</span>(dats, <span class="dv">4</span>))</span></code></pre></div>
+<pre><code>##   Ozone Solar.R Wind Temp Month Day
+## 1    41     190  7.4   67     5   1
+## 2    36     118  8.0   72     5   2
+## 3    12     149 12.6   74     5   3
+## 4    18     313 11.5   62     5   4
+## 5     6     320 14.3   56     5   5
+## 6    28     276 14.9   66     5   6</code></pre>
+</div>
+<div id="pooling" class="section level3" number="12.2.3">
+<h3><span class="header-section-number">12.2.3</span> Pooling</h3>
+<p>The <code>mice</code> package allows you to pool many types of regression analyses. Let’s try a simple linear regression to predict <code>Ozone</code> from <code>Solar.R</code>, <code>Wind</code>, and <code>Temp</code>. You’ll need to use base R’s <code>with</code> function.</p>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb208-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb208-1" aria-hidden="true" tabindex="-1"></a>fits <span class="ot">&lt;-</span> <span class="fu">with</span>(dats, <span class="fu">lm</span>(Ozone <span class="sc">~</span> Solar.R <span class="sc">+</span> Wind <span class="sc">+</span> Temp))</span></code></pre></div>
+<p>If you were to print <code>fits</code> to the screen, it would look like a list of 50 regression fits – one for each of the imputed data sets. But it’s not. Take a look:</p>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb209-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fits)</span></code></pre></div>
+<pre><code>## [1] &quot;call&quot;     &quot;call1&quot;    &quot;nmis&quot;     &quot;analyses&quot;</code></pre>
+<p>Like <code>dats</code>, <code>fits</code> has more info in it. But it <em>does</em> have the 50 regression fits. And they can be pooled using the <code>pool</code> function:</p>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb211-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb211-1" aria-hidden="true" tabindex="-1"></a>(fit <span class="ot">&lt;-</span> <span class="fu">pool</span>(fits))</span></code></pre></div>
+<pre><code>## Class: mipo    m = 50 
+##          term  m     estimate         ubar            b            t dfcom
+## 1 (Intercept) 50 -61.74901609 3.860658e+02 1.525150e+02 5.416310e+02   149
+## 2     Solar.R 50   0.05819172 4.158538e-04 1.053628e-04 5.233239e-04   149
+## 3        Wind 50  -3.13670807 3.187991e-01 1.513848e-01 4.732116e-01   149
+## 4        Temp 50   1.59560738 4.740713e-02 1.286813e-02 6.053263e-02   149
+##          df       riv    lambda       fmi
+## 1  89.08804 0.4029502 0.2872163 0.3026968
+## 2 106.16681 0.2584324 0.2053606 0.2199188
+## 3  81.51324 0.4843567 0.3263075 0.3422504
+## 4 103.69822 0.2768675 0.2168334 0.2315134</code></pre>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb213-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb213-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit)</span></code></pre></div>
+<pre><code>##          term     estimate   std.error statistic        df      p.value
+## 1 (Intercept) -61.74901609 23.27296769 -2.653251  89.08804 9.439329e-03
+## 2     Solar.R   0.05819172  0.02287627  2.543759 106.16681 1.240661e-02
+## 3        Wind  -3.13670807  0.68790380 -4.559806  81.51324 1.782885e-05
+## 4        Temp   1.59560738  0.24603380  6.485318 103.69822 3.068203e-09</code></pre>
+<p>And there are the results of the pooled fit. This pooling works for more than just <code>lm</code>!</p>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb215-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(tidyverse))</span>
+<span id="cb215-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb215-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(broom))</span>
+<span id="cb215-3"><a href="regression-when-data-are-missing-multiple-imputation.html#cb215-3" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(mice))</span></code></pre></div>
+<p>Consider predicting the air quality (ozone levels) in New York mid-year. We’ll use the <code>airquality</code> dataset, recorded for mid 1973:</p>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb216-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb216-1" aria-hidden="true" tabindex="-1"></a>airquality</span></code></pre></div>
+<pre><code>##     Ozone Solar.R Wind Temp Month Day
+## 1      41     190  7.4   67     5   1
+## 2      36     118  8.0   72     5   2
+## 3      12     149 12.6   74     5   3
+## 4      18     313 11.5   62     5   4
+## 5      NA      NA 14.3   56     5   5
+## 6      28      NA 14.9   66     5   6
+## 7      23     299  8.6   65     5   7
+## 8      19      99 13.8   59     5   8
+## 9       8      19 20.1   61     5   9
+## 10     NA     194  8.6   69     5  10
+## 11      7      NA  6.9   74     5  11
+## 12     16     256  9.7   69     5  12
+## 13     11     290  9.2   66     5  13
+## 14     14     274 10.9   68     5  14
+## 15     18      65 13.2   58     5  15
+## 16     14     334 11.5   64     5  16
+## 17     34     307 12.0   66     5  17
+## 18      6      78 18.4   57     5  18
+## 19     30     322 11.5   68     5  19
+## 20     11      44  9.7   62     5  20
+## 21      1       8  9.7   59     5  21
+## 22     11     320 16.6   73     5  22
+## 23      4      25  9.7   61     5  23
+## 24     32      92 12.0   61     5  24
+## 25     NA      66 16.6   57     5  25
+## 26     NA     266 14.9   58     5  26
+## 27     NA      NA  8.0   57     5  27
+## 28     23      13 12.0   67     5  28
+## 29     45     252 14.9   81     5  29
+## 30    115     223  5.7   79     5  30
+## 31     37     279  7.4   76     5  31
+## 32     NA     286  8.6   78     6   1
+## 33     NA     287  9.7   74     6   2
+## 34     NA     242 16.1   67     6   3
+## 35     NA     186  9.2   84     6   4
+## 36     NA     220  8.6   85     6   5
+## 37     NA     264 14.3   79     6   6
+## 38     29     127  9.7   82     6   7
+## 39     NA     273  6.9   87     6   8
+## 40     71     291 13.8   90     6   9
+## 41     39     323 11.5   87     6  10
+## 42     NA     259 10.9   93     6  11
+## 43     NA     250  9.2   92     6  12
+## 44     23     148  8.0   82     6  13
+## 45     NA     332 13.8   80     6  14
+## 46     NA     322 11.5   79     6  15
+## 47     21     191 14.9   77     6  16
+## 48     37     284 20.7   72     6  17
+## 49     20      37  9.2   65     6  18
+## 50     12     120 11.5   73     6  19
+## 51     13     137 10.3   76     6  20
+## 52     NA     150  6.3   77     6  21
+## 53     NA      59  1.7   76     6  22
+## 54     NA      91  4.6   76     6  23
+## 55     NA     250  6.3   76     6  24
+## 56     NA     135  8.0   75     6  25
+## 57     NA     127  8.0   78     6  26
+## 58     NA      47 10.3   73     6  27
+## 59     NA      98 11.5   80     6  28
+## 60     NA      31 14.9   77     6  29
+## 61     NA     138  8.0   83     6  30
+## 62    135     269  4.1   84     7   1
+## 63     49     248  9.2   85     7   2
+## 64     32     236  9.2   81     7   3
+## 65     NA     101 10.9   84     7   4
+## 66     64     175  4.6   83     7   5
+## 67     40     314 10.9   83     7   6
+## 68     77     276  5.1   88     7   7
+## 69     97     267  6.3   92     7   8
+## 70     97     272  5.7   92     7   9
+## 71     85     175  7.4   89     7  10
+## 72     NA     139  8.6   82     7  11
+## 73     10     264 14.3   73     7  12
+## 74     27     175 14.9   81     7  13
+## 75     NA     291 14.9   91     7  14
+## 76      7      48 14.3   80     7  15
+## 77     48     260  6.9   81     7  16
+## 78     35     274 10.3   82     7  17
+## 79     61     285  6.3   84     7  18
+## 80     79     187  5.1   87     7  19
+## 81     63     220 11.5   85     7  20
+## 82     16       7  6.9   74     7  21
+## 83     NA     258  9.7   81     7  22
+## 84     NA     295 11.5   82     7  23
+## 85     80     294  8.6   86     7  24
+## 86    108     223  8.0   85     7  25
+## 87     20      81  8.6   82     7  26
+## 88     52      82 12.0   86     7  27
+## 89     82     213  7.4   88     7  28
+## 90     50     275  7.4   86     7  29
+## 91     64     253  7.4   83     7  30
+## 92     59     254  9.2   81     7  31
+## 93     39      83  6.9   81     8   1
+## 94      9      24 13.8   81     8   2
+## 95     16      77  7.4   82     8   3
+## 96     78      NA  6.9   86     8   4
+## 97     35      NA  7.4   85     8   5
+## 98     66      NA  4.6   87     8   6
+## 99    122     255  4.0   89     8   7
+## 100    89     229 10.3   90     8   8
+## 101   110     207  8.0   90     8   9
+## 102    NA     222  8.6   92     8  10
+## 103    NA     137 11.5   86     8  11
+## 104    44     192 11.5   86     8  12
+## 105    28     273 11.5   82     8  13
+## 106    65     157  9.7   80     8  14
+## 107    NA      64 11.5   79     8  15
+## 108    22      71 10.3   77     8  16
+## 109    59      51  6.3   79     8  17
+## 110    23     115  7.4   76     8  18
+## 111    31     244 10.9   78     8  19
+## 112    44     190 10.3   78     8  20
+## 113    21     259 15.5   77     8  21
+## 114     9      36 14.3   72     8  22
+## 115    NA     255 12.6   75     8  23
+## 116    45     212  9.7   79     8  24
+## 117   168     238  3.4   81     8  25
+## 118    73     215  8.0   86     8  26
+## 119    NA     153  5.7   88     8  27
+## 120    76     203  9.7   97     8  28
+## 121   118     225  2.3   94     8  29
+## 122    84     237  6.3   96     8  30
+## 123    85     188  6.3   94     8  31
+## 124    96     167  6.9   91     9   1
+## 125    78     197  5.1   92     9   2
+## 126    73     183  2.8   93     9   3
+## 127    91     189  4.6   93     9   4
+## 128    47      95  7.4   87     9   5
+## 129    32      92 15.5   84     9   6
+## 130    20     252 10.9   80     9   7
+## 131    23     220 10.3   78     9   8
+## 132    21     230 10.9   75     9   9
+## 133    24     259  9.7   73     9  10
+## 134    44     236 14.9   81     9  11
+## 135    21     259 15.5   76     9  12
+## 136    28     238  6.3   77     9  13
+## 137     9      24 10.9   71     9  14
+## 138    13     112 11.5   71     9  15
+## 139    46     237  6.9   78     9  16
+## 140    18     224 13.8   67     9  17
+## 141    13      27 10.3   76     9  18
+## 142    24     238 10.3   68     9  19
+## 143    16     201  8.0   82     9  20
+## 144    13     238 12.6   64     9  21
+## 145    23      14  9.2   71     9  22
+## 146    36     139 10.3   81     9  23
+## 147     7      49 10.3   69     9  24
+## 148    14      20 16.6   63     9  25
+## 149    30     193  6.9   70     9  26
+## 150    NA     145 13.2   77     9  27
+## 151    14     191 14.3   75     9  28
+## 152    18     131  8.0   76     9  29
+## 153    20     223 11.5   68     9  30</code></pre>
+</div>
+</div>
+<div id="step-0-what-data-are-missing" class="section level2" number="12.3">
+<h2><span class="header-section-number">12.3</span> Step 0: What data are missing?</h2>
+<p>There are some missing data. Use <code>md.pattern</code> to see patterns in missingness:</p>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb218-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb218-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md.pattern</span>(airquality)</span></code></pre></div>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<pre><code>##     Wind Temp Month Day Solar.R Ozone   
+## 111    1    1     1   1       1     1  0
+## 35     1    1     1   1       1     0  1
+## 5      1    1     1   1       0     1  1
+## 2      1    1     1   1       0     0  2
+##        0    0     0   0       7    37 44</code></pre>
+<p>Fill in the following:</p>
+<ul>
+<li>There are <strong>111</strong> rows of complete data.</li>
+<li>There are <strong>35</strong> rows where only ozone is missing.</li>
+<li>There are <strong>2</strong> rows where both ozone and Solar.R are missing.</li>
+<li>There are <strong>37</strong> rows missing an ozone measurement.</li>
+<li>There are <strong>44</strong> <code>NA</code>’s in the dataset.</li>
+</ul>
+</div>
+<div id="step-1-handling-missing-data" class="section level2" number="12.4">
+<h2><span class="header-section-number">12.4</span> Step 1: Handling Missing Data</h2>
+<div id="any-ideas" class="section level3" number="12.4.1">
+<h3><span class="header-section-number">12.4.1</span> Any Ideas?</h3>
+<p>Here is a scatterplot of <code>Solar.R</code> and <code>Ozone</code>, with missing values “pushed” to the intercepts:</p>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb220-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb220-1" aria-hidden="true" tabindex="-1"></a>airquality <span class="sc">%&gt;%</span> </span>
+<span id="cb220-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb220-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">missing =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(Solar.R) <span class="sc">|</span> <span class="fu">is.na</span>(Ozone), <span class="cn">TRUE</span>, <span class="cn">FALSE</span>),</span>
+<span id="cb220-3"><a href="regression-when-data-are-missing-multiple-imputation.html#cb220-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">Solar.R =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(Solar.R), <span class="dv">0</span>, Solar.R),</span>
+<span id="cb220-4"><a href="regression-when-data-are-missing-multiple-imputation.html#cb220-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">Ozone   =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(Ozone), <span class="dv">0</span>, Ozone)) <span class="sc">%&gt;%</span> </span>
+<span id="cb220-5"><a href="regression-when-data-are-missing-multiple-imputation.html#cb220-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(Solar.R, Ozone)) <span class="sc">+</span></span>
+<span id="cb220-6"><a href="regression-when-data-are-missing-multiple-imputation.html#cb220-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb220-7"><a href="regression-when-data-are-missing-multiple-imputation.html#cb220-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb220-8"><a href="regression-when-data-are-missing-multiple-imputation.html#cb220-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> missing)) <span class="sc">+</span></span>
+<span id="cb220-9"><a href="regression-when-data-are-missing-multiple-imputation.html#cb220-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb220-10"><a href="regression-when-data-are-missing-multiple-imputation.html#cb220-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_colour_discrete</span>(<span class="at">guide =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## Warning: It is deprecated to specify `guide = FALSE` to remove a guide. Please
+## use `guide = &quot;none&quot;` instead.</code></pre>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>Discussion: What are some ways of handling the missing data? What are the consequences of these ways?</p>
+<ol style="list-style-type: decimal">
+<li>Remove data.
+<ul>
+<li>Remove rows with missing data (called the <em>complete case</em>).
+<ul>
+<li>Consequence: We’re throwing away information that could be used to reduce the final model function’s SE.</li>
+</ul></li>
+<li>Remove rows where only the response is missing, and don’t use <code>Solar.R</code> in your regression (because it has some missing values).
+<ul>
+<li>Consequence: If <code>Solar.R</code> is predictive of <code>Ozone</code>, then we’d be losing that predictive power by not including it.</li>
+</ul></li>
+</ul></li>
+<li>Impute:
+<ul>
+<li>Mean imputation: replace an <code>NA</code> with a prediction of its mean using other variables as predictors.
+<ul>
+<li>Consequence: imputed data would fall artificially close to the center of the “data cloud”. This means a fitted model function would have an artificially small SE.</li>
+</ul></li>
+<li>Multiple imputation: impute with multiple draws from a predictive distribution.
+<ul>
+<li>A great choice! No real “consequences” here, aside from the inherent risk of biasing the model function that comes with imputing values.</li>
+</ul></li>
+</ul></li>
+</ol>
+</div>
+<div id="mice" class="section level3" number="12.4.2">
+<h3><span class="header-section-number">12.4.2</span> <code>mice</code></h3>
+<p>First, remove the day and month columns (we won’t be using them):</p>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb222-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb222-1" aria-hidden="true" tabindex="-1"></a>airquality <span class="ot">&lt;-</span> airquality <span class="sc">%&gt;%</span> </span>
+<span id="cb222-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb222-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>Month, <span class="sc">-</span>Day)</span></code></pre></div>
+<p>Make <code>m</code> random imputations using <code>mice::mice()</code>:</p>
+<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb223-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb223-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb223-2" aria-hidden="true" tabindex="-1"></a>(init <span class="ot">&lt;-</span> <span class="fu">mice</span>(airquality, <span class="at">m =</span> m, <span class="at">printFlag =</span> <span class="cn">FALSE</span>))</span></code></pre></div>
+<pre><code>## Class: mids
+## Number of multiple imputations:  10 
+## Imputation methods:
+##   Ozone Solar.R    Wind    Temp 
+##   &quot;pmm&quot;   &quot;pmm&quot;      &quot;&quot;      &quot;&quot; 
+## PredictorMatrix:
+##         Ozone Solar.R Wind Temp
+## Ozone       0       1    1    1
+## Solar.R     1       0    1    1
+## Wind        1       1    0    1
+## Temp        1       1    1    0</code></pre>
+<p>Check out the first imputed data set using <code>mice::complete()</code>. <strong>WARNING</strong>: there’s also a <code>tidyr::complete()</code>! Rows 5 and 6, for example, originally contained missing data.</p>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb225-1" aria-hidden="true" tabindex="-1"></a>mice<span class="sc">::</span><span class="fu">complete</span>(init, <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>##     Ozone Solar.R Wind Temp
+## 1      41     190  7.4   67
+## 2      36     118  8.0   72
+## 3      12     149 12.6   74
+## 4      18     313 11.5   62
+## 5       4      25 14.3   56
+## 6      28      49 14.9   66
+## 7      23     299  8.6   65
+## 8      19      99 13.8   59
+## 9       8      19 20.1   61
+## 10     13     194  8.6   69
+## 11      7     194  6.9   74
+## 12     16     256  9.7   69
+## 13     11     290  9.2   66
+## 14     14     274 10.9   68
+## 15     18      65 13.2   58
+## 16     14     334 11.5   64
+## 17     34     307 12.0   66
+## 18      6      78 18.4   57
+## 19     30     322 11.5   68
+## 20     11      44  9.7   62
+## 21      1       8  9.7   59
+## 22     11     320 16.6   73
+## 23      4      25  9.7   61
+## 24     32      92 12.0   61
+## 25      6      66 16.6   57
+## 26      1     266 14.9   58
+## 27     37     290  8.0   57
+## 28     23      13 12.0   67
+## 29     45     252 14.9   81
+## 30    115     223  5.7   79
+## 31     37     279  7.4   76
+## 32     16     286  8.6   78
+## 33     65     287  9.7   74
+## 34     11     242 16.1   67
+## 35     46     186  9.2   84
+## 36     47     220  8.6   85
+## 37     16     264 14.3   79
+## 38     29     127  9.7   82
+## 39    168     273  6.9   87
+## 40     71     291 13.8   90
+## 41     39     323 11.5   87
+## 42     85     259 10.9   93
+## 43     61     250  9.2   92
+## 44     23     148  8.0   82
+## 45     31     332 13.8   80
+## 46     20     322 11.5   79
+## 47     21     191 14.9   77
+## 48     37     284 20.7   72
+## 49     20      37  9.2   65
+## 50     12     120 11.5   73
+## 51     13     137 10.3   76
+## 52     37     150  6.3   77
+## 53     49      59  1.7   76
+## 54     23      91  4.6   76
+## 55    115     250  6.3   76
+## 56     44     135  8.0   75
+## 57     29     127  8.0   78
+## 58     14      47 10.3   73
+## 59     16      98 11.5   80
+## 60     18      31 14.9   77
+## 61     59     138  8.0   83
+## 62    135     269  4.1   84
+## 63     49     248  9.2   85
+## 64     32     236  9.2   81
+## 65     44     101 10.9   84
+## 66     64     175  4.6   83
+## 67     40     314 10.9   83
+## 68     77     276  5.1   88
+## 69     97     267  6.3   92
+## 70     97     272  5.7   92
+## 71     85     175  7.4   89
+## 72     16     139  8.6   82
+## 73     10     264 14.3   73
+## 74     27     175 14.9   81
+## 75     39     291 14.9   91
+## 76      7      48 14.3   80
+## 77     48     260  6.9   81
+## 78     35     274 10.3   82
+## 79     61     285  6.3   84
+## 80     79     187  5.1   87
+## 81     63     220 11.5   85
+## 82     16       7  6.9   74
+## 83     37     258  9.7   81
+## 84     44     295 11.5   82
+## 85     80     294  8.6   86
+## 86    108     223  8.0   85
+## 87     20      81  8.6   82
+## 88     52      82 12.0   86
+## 89     82     213  7.4   88
+## 90     50     275  7.4   86
+## 91     64     253  7.4   83
+## 92     59     254  9.2   81
+## 93     39      83  6.9   81
+## 94      9      24 13.8   81
+## 95     16      77  7.4   82
+## 96     78     157  6.9   86
+## 97     35      95  7.4   85
+## 98     66     183  4.6   87
+## 99    122     255  4.0   89
+## 100    89     229 10.3   90
+## 101   110     207  8.0   90
+## 102    50     222  8.6   92
+## 103    29     137 11.5   86
+## 104    44     192 11.5   86
+## 105    28     273 11.5   82
+## 106    65     157  9.7   80
+## 107    32      64 11.5   79
+## 108    22      71 10.3   77
+## 109    59      51  6.3   79
+## 110    23     115  7.4   76
+## 111    31     244 10.9   78
+## 112    44     190 10.3   78
+## 113    21     259 15.5   77
+## 114     9      36 14.3   72
+## 115    16     255 12.6   75
+## 116    45     212  9.7   79
+## 117   168     238  3.4   81
+## 118    73     215  8.0   86
+## 119    50     153  5.7   88
+## 120    76     203  9.7   97
+## 121   118     225  2.3   94
+## 122    84     237  6.3   96
+## 123    85     188  6.3   94
+## 124    96     167  6.9   91
+## 125    78     197  5.1   92
+## 126    73     183  2.8   93
+## 127    91     189  4.6   93
+## 128    47      95  7.4   87
+## 129    32      92 15.5   84
+## 130    20     252 10.9   80
+## 131    23     220 10.3   78
+## 132    21     230 10.9   75
+## 133    24     259  9.7   73
+## 134    44     236 14.9   81
+## 135    21     259 15.5   76
+## 136    28     238  6.3   77
+## 137     9      24 10.9   71
+## 138    13     112 11.5   71
+## 139    46     237  6.9   78
+## 140    18     224 13.8   67
+## 141    13      27 10.3   76
+## 142    24     238 10.3   68
+## 143    16     201  8.0   82
+## 144    13     238 12.6   64
+## 145    23      14  9.2   71
+## 146    36     139 10.3   81
+## 147     7      49 10.3   69
+## 148    14      20 16.6   63
+## 149    30     193  6.9   70
+## 150    21     145 13.2   77
+## 151    14     191 14.3   75
+## 152    18     131  8.0   76
+## 153    20     223 11.5   68</code></pre>
+<p>Plot one of them:</p>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb227-1" aria-hidden="true" tabindex="-1"></a>mice<span class="sc">::</span><span class="fu">complete</span>(init, <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb227-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb227-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">missing =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(airquality<span class="sc">$</span>Solar.R) <span class="sc">|</span> </span>
+<span id="cb227-3"><a href="regression-when-data-are-missing-multiple-imputation.html#cb227-3" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">is.na</span>(airquality<span class="sc">$</span>Ozone), <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb227-4"><a href="regression-when-data-are-missing-multiple-imputation.html#cb227-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(Solar.R, Ozone)) <span class="sc">+</span></span>
+<span id="cb227-5"><a href="regression-when-data-are-missing-multiple-imputation.html#cb227-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">colour =</span> missing)) <span class="sc">+</span></span>
+<span id="cb227-6"><a href="regression-when-data-are-missing-multiple-imputation.html#cb227-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="200-Regression_when_data_are_missing_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p>Now, fit a linear model on each data set using the <code>with()</code> generic function (method <code>with.mids()</code>:</p>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb228-1" aria-hidden="true" tabindex="-1"></a>(fits <span class="ot">&lt;-</span> <span class="fu">with</span>(init, <span class="fu">lm</span>(Ozone <span class="sc">~</span> Solar.R <span class="sc">+</span> Wind <span class="sc">+</span> Temp)))</span></code></pre></div>
+<pre><code>## call :
+## with.mids(data = init, expr = lm(Ozone ~ Solar.R + Wind + Temp))
+## 
+## call1 :
+## mice(data = airquality, m = m, printFlag = FALSE)
+## 
+## nmis :
+##   Ozone Solar.R    Wind    Temp 
+##      37       7       0       0 
+## 
+## analyses :
+## [[1]]
+## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -53.11243      0.06629     -3.34743      1.48175  
+## 
+## 
+## [[2]]
+## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -50.80543      0.05793     -3.85354      1.54888  
+## 
+## 
+## [[3]]
+## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -50.62717      0.07319     -3.58363      1.47478  
+## 
+## 
+## [[4]]
+## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -59.62411      0.06313     -3.02095      1.53625  
+## 
+## 
+## [[5]]
+## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -62.09685      0.06194     -2.98683      1.55723  
+## 
+## 
+## [[6]]
+## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -52.78210      0.06118     -3.00750      1.43609  
+## 
+## 
+## [[7]]
+## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -88.05491      0.04588     -2.47311      1.88132  
+## 
+## 
+## [[8]]
+## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -58.39802      0.06504     -3.12379      1.53293  
+## 
+## 
+## [[9]]
+## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -52.16945      0.07695     -3.38366      1.45056  
+## 
+## 
+## [[10]]
+## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -68.46852      0.05727     -2.86923      1.64138</code></pre>
+<p>Looks can be deceiving. This is not actually a list of length <code>m</code>! Unveil its true nature:</p>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb230-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unclass</span>(fits) <span class="sc">%&gt;%</span> </span>
+<span id="cb230-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb230-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str</span>(<span class="at">max.level =</span> <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## List of 4
+##  $ call    : language with.mids(data = init, expr = lm(Ozone ~ Solar.R + Wind + Temp))
+##  $ call1   : language mice(data = airquality, m = m, printFlag = FALSE)
+##  $ nmis    : Named int [1:4] 37 7 0 0
+##   ..- attr(*, &quot;names&quot;)= chr [1:4] &quot;Ozone&quot; &quot;Solar.R&quot; &quot;Wind&quot; &quot;Temp&quot;
+##  $ analyses:List of 10</code></pre>
+<p>It’s now easier to find the <code>lm</code> fit on the first dataset:</p>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb232-1" aria-hidden="true" tabindex="-1"></a>fits<span class="sc">$</span>analyses[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Ozone ~ Solar.R + Wind + Temp)
+## 
+## Coefficients:
+## (Intercept)      Solar.R         Wind         Temp  
+##   -53.11243      0.06629     -3.34743      1.48175</code></pre>
+<p>Or, we can obtain a summary of each fitted model:</p>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb234-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fits)</span></code></pre></div>
+<pre><code>## # A tibble: 40 × 6
+##    term        estimate std.error statistic  p.value  nobs
+##    &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
+##  1 (Intercept) -53.1      20.2        -2.63 9.34e- 3   153
+##  2 Solar.R       0.0663    0.0209      3.18 1.80e- 3   153
+##  3 Wind         -3.35      0.579      -5.78 4.16e- 8   153
+##  4 Temp          1.48      0.223       6.64 5.46e-10   153
+##  5 (Intercept) -50.8      21.1        -2.41 1.71e- 2   153
+##  6 Solar.R       0.0579    0.0220      2.63 9.37e- 3   153
+##  7 Wind         -3.85      0.606      -6.35 2.40e- 9   153
+##  8 Temp          1.55      0.232       6.68 4.50e-10   153
+##  9 (Intercept) -50.6      20.0        -2.53 1.24e- 2   153
+## 10 Solar.R       0.0732    0.0208      3.52 5.81e- 4   153
+## # … with 30 more rows</code></pre>
+<p>As an aside, let’s demonstrate that we can also use <code>mice</code> to fit GLM’s:</p>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb236-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(init, <span class="fu">glm</span>(</span>
+<span id="cb236-2"><a href="regression-when-data-are-missing-multiple-imputation.html#cb236-2" aria-hidden="true" tabindex="-1"></a>    Ozone <span class="sc">~</span> Solar.R <span class="sc">+</span> Wind <span class="sc">+</span> Temp, </span>
+<span id="cb236-3"><a href="regression-when-data-are-missing-multiple-imputation.html#cb236-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">family =</span> <span class="fu">Gamma</span>(<span class="at">link=</span><span class="st">&quot;log&quot;</span>)</span>
+<span id="cb236-4"><a href="regression-when-data-are-missing-multiple-imputation.html#cb236-4" aria-hidden="true" tabindex="-1"></a>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb236-5"><a href="regression-when-data-are-missing-multiple-imputation.html#cb236-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 40 × 6
+##    term        estimate std.error statistic  p.value  nobs
+##    &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;
+##  1 (Intercept)  0.654    0.461         1.42 1.58e- 1   153
+##  2 Solar.R      0.00202  0.000476      4.25 3.74e- 5   153
+##  3 Wind        -0.0745   0.0132       -5.63 8.62e- 8   153
+##  4 Temp         0.0416   0.00510       8.15 1.33e-13   153
+##  5 (Intercept)  0.977    0.448         2.18 3.09e- 2   153
+##  6 Solar.R      0.00204  0.000468      4.35 2.51e- 5   153
+##  7 Wind        -0.0848   0.0129       -6.57 7.87e-10   153
+##  8 Temp         0.0389   0.00494       7.88 6.19e-13   153
+##  9 (Intercept)  0.786    0.451         1.74 8.35e- 2   153
+## 10 Solar.R      0.00234  0.000469      4.99 1.64e- 6   153
+## # … with 30 more rows</code></pre>
+</div>
+</div>
+<div id="step-3-pool-results" class="section level2" number="12.5">
+<h2><span class="header-section-number">12.5</span> Step 3: Pool results</h2>
+<p>The last step is to pool the results together:</p>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="regression-when-data-are-missing-multiple-imputation.html#cb238-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pool</span>(fits)</span></code></pre></div>
+<pre><code>## Class: mipo    m = 10 
+##          term  m     estimate         ubar            b            t dfcom
+## 1 (Intercept) 10 -59.61389905 3.835088e+02 1.330724e+02 5.298884e+02   149
+## 2     Solar.R 10   0.06287982 4.093623e-04 7.439883e-05 4.912010e-04   149
+## 3        Wind 10  -3.16496740 3.157597e-01 1.528463e-01 4.838906e-01   149
+## 4        Temp 10   1.55411797 4.750070e-02 1.685197e-02 6.603786e-02   149
+##         df       riv    lambda       fmi
+## 1 55.94156 0.3816852 0.2762461 0.3008045
+## 2 88.92990 0.1999175 0.1666094 0.1847404
+## 3 41.95312 0.5324647 0.3474564 0.3764886
+## 4 54.91493 0.3902503 0.2807051 0.3055448</code></pre>
+<p>The <code>estimate</code> column you see are just the averages of all <code>m</code> models.</p>
+<p>Column names make more sense in light of the book “Multiple Imputation for Nonresponse in Surveys” by Rubin (1987), page 76-77:</p>
+<ul>
+<li><code>estimate</code>: the average of the regression coefficients across <code>m</code> models.</li>
+<li><code>ubar</code>: the average variance (i.e., average SE^2) across <code>m</code> models.</li>
+<li><code>b</code>: the sample variance of the <code>m</code> regression coefficients.</li>
+<li><code>t</code>: a final estimate of the SE^2 of each regression coefficient.
+<ul>
+<li>= <code>ubar + (1 + 1/m) b</code></li>
+</ul></li>
+<li><code>df</code>: the degrees of freedom associated with the final regression coefficient estimates.
+<ul>
+<li>An <code>alpha</code>-level CI: <code>estimate +/- qt(alpha/2, df) * sqrt(t)</code>.</li>
+</ul></li>
+<li><code>riv</code>: the relative increase in variance due to randomness.
+<ul>
+<li>= <code>t/ubar - 1</code></li>
+</ul></li>
+</ul>
+</div>
+<div id="concepts-2" class="section level2" number="12.6">
+<h2><span class="header-section-number">12.6</span> Concepts</h2>
+<ul>
+<li>There are three common missing data mechanisms:
+<ul>
+<li>Missing Completely At Random (MCAR): when the chance of missingness does not depend on any variable; missingness is totally random.</li>
+<li>Missing At Random (MAR): when the chance of missingness depends on other observed variables.</li>
+<li>Missing Not At Random (MNAR): when the chance of missingness depends on unobserved variables.</li>
+</ul></li>
+<li>Proceeding with an analysis by removing missing data can result in a model with standard errors of the estimates that are larger than they could be by including partially complete records.</li>
+<li>Proceeding with an analysis by imputing missing data by an estimate of the mean can result in a model with standard errors of the estimates that are smaller than they ought to be.</li>
+<li>An approach that uses the information contained in partially complete records, yet does not assume any more information, is to use multiple imputations. The approach contains three steps:
+<ol style="list-style-type: decimal">
+<li>Form multiple datasets containing imputed values. Each dataset should be formed by imputing the missing records in each unit/row with a random draw from a predictive distribution for those records.</li>
+<li>Fit the model of interest on each imputed dataset.</li>
+<li>Combine the models to obtain one final model.</li>
+</ol></li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="regression-when-data-are-ordinal.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="regression-on-an-entire-distribution-probabilistic-forecasting.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/vincenzocoia/Interpreting-Regression/edit/master/200-Regression_when_data_are_missing.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

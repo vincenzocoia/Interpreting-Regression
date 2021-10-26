@@ -1,0 +1,65 @@
+--- 
+title: "Interpreting Regression"
+author: "Vincenzo Coia"
+date: "2021-10-25"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+biblio-style: apalike
+link-citations: yes
+github-repo: vincenzocoia/Interpreting-Regression
+description: "A book about the why of regression to help you make decisions about your analysis."
+---
+
+# Preamble
+
+## Caution {#caution}
+
+**This book is in its very preliminary stages**. Content will be moving around and updated.
+
+Currently, much of the book is a stitching together of previous pieces of my writing that I think might be relevant to this book. These chapters will be updated to consider the different context, audience, and content organization that's best for this book.
+
+
+## Preamble
+
+This book explores statistics from a problem-first perspective, a topic I like to call "statistical data science". More broadly, data science is concerned with drawing insights from data, often relying on the interpretation of quantities -- whether that quantity be a prediction, a regression coefficient, or a mean squared error. The part of the data science process that provides precise interpretation is the topic of this book. 
+
+The book aims to cover fundamental topics in statistical data science, spanning a variety of regression models that are often seen in practice, and tying them together. Of course, there are many, many more advanced statistical topics that will not be covered in this book, including spatial statistics, state space models, etc.
+
+This book is written for data analysts who need to make decisions with data in hand, and for statistics and data science students who want to learn a unifying landscape of statistical methods. The practicality of the book comes by presenting a toolkit for making decisions on key model components, so that a model can be designed rather than simply chosen from a list of possibilities. Because many of the models taught in statistics courses can be arrived at through specific combinations of these decisions, the book provides a framework whereby seemingly different statistical methods can be related back to the bigger picture framework.
+
+<!-- Components: the quantity being modeled (mean, hazard function, odds, ...), the relationship to covariates (linear, exponential, ...), and distributional assumptions. Decisions on each of these key components results in  -->
+
+Texts in the traditional statistical sciences tend to use a lot of math. For these books, this is necessary, because statistical science tends to start with model assumptions, and work towards deriving results -- a process that requires mathematical precision. Take, for instance, linear regression. The topic is introduced by writing a linear equation relating a response to covariates, after which attention is turned to estimating the regression coefficients. Confidence intervals and hypothesis tests can then be derived, along with diagnostic checks on the model assumptions.
+
+Because statistical data science is not concerned with deriving results, but rather simply using them, mathematics becomes less relevant. As such, this book will not contain much math. Whenever equations are included, they are interpreted using simple language and diagrams. Or, sometimes equations will be included for those interested in seeing precise formulations, but are not needed to understand concepts. 
+
+Another consequence coming from treating statistics from a problem-first approach is that model assumptions never truly hold in practice. In practice, it's more realistic to ask whether an assumption is a realistic approximation to the truth. This question is in stark contrast to traditional statistical methods, which try to determine whether an assumption is true for your data. In reality, making an approximation results in a tradeoff, which unfortunately cannot be optimized based on your data. This book aims to provide guidance as to how to make a decision regarding model approximations. 
+
+Methods are demonstrated using the R Project for Statistical Computing, freely available online. This is because R has an extensive selection of packages available for statistical analysis, amongst which we will focus on the `tidyverse` and `tidymodels` meta-packages, and the `distplyr` package for working with distributions. 
+
+Even if you have not taken a statistics course before, I hope you find this book accessible, because fundamental concepts like probability and distributions are defined from scratch. Even if you are somewhat familiar with statistics, you may find these fundamental concepts worth revisiting, since you'll be challenged to re-think why well-known concepts such as the mean and variance are prominent, for example. 
+
+
+
+## A focus on Interpretation
+
+Regression analysis can help solve two main types of problems:
+
+1. Interpreting the relationship between variables.
+
+For example, we might want to know how someone's age influences the click-through rate on an online advertisement, taking into account other factors like their location and the type of ad presented. Or, perhaps we would like to find the factors that are most highly related to fatal car crashes. Or, how does age influence the chance of pregnancy? How does time of insemination after a spike in Luteinizing hormone affect the chance of pregnancy, and how is this different for people over 40?
+
+2. Predicting a new outcome.
+
+For example, we might want to predict the click-through rate of an online advertisement, given someone's age and location, and the type of ad presented. Or, we might want to predict the flow of a river given a certain amount of rainfall and snowmelt. 
+
+Although both problem types are considered, this book primarily focusses on building models for interpretation. A focus on prediction lies in the realm of machine learning, and a large part of the decision making here involves optimizing a model's fit to new data -- a problem for which there are many resources available. 
+
+
+
+
+
+
+
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.

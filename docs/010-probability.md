@@ -1,0 +1,168 @@
+# Interpreting a Random Quantity {-}
+
+How can we get a handle on an outcome that seems random? Although the score of a Canucks game, a stock price, or river flow is uncertain, their outcomes can still be described. For example, we can discover a range of likely possibilities, or what the most likely outcome is, or even get a sense of a worst-case scenario. This part of the book describes how to do just that, by shedding light on concepts of probability and univariate analysis as they apply to data science. 
+
+# Probability: When an Outcome is Unknown
+
+**Status: needs some elaborating and some good examples. See Section  \@ref(caution).**
+
+
+
+
+Imagine what life would be like if nothing was certain. If you let go of a ball, sometimes it falls, stays put, or adopts some other motion. If you wrap yourself in a blanket, sometimes it warms you up, and sometimes it cools you down. Or, taking pain medicine sometimes eases your pain, and sometimes makes it worse. Indeed, we rely on known cause-and-effect relationships in order to operate day to day. And whatever cause-and-effect relationships we don't know, we can learn them to allow us to expand our ability to operate in this world of ours. Don't know how to ski? Just learn the motions that will result in you descending a snowy mountain with control and a lot of fun. 
+
+<!-- Taking pain medicine lightens the pain from a surgical wound. Wrapping yourself in a cozy blanket will warm you up. Letting go of a ball results in the ball falling. We operate day to day based on this cause-and-effect framework, and we expand this framework as we learn new things. We can learn the motions of skiing that will result in descending a mountain with control. -->
+
+But there are many things that _are_ in fact uncertain. Maybe your income relies on how many clients you get, so that you don't even know your income next month. Maybe you don't know whether breast feeding your baby will result in less colic than bottle feeding, because you've seen your friends' colicky babies in both cases. Does uncertainty mean we should resort to claiming ignorance? That you have no idea what your income will be in a month? That it's impossible to know whether the way your baby is fed impacts colic? These might sound like realistic claims holding a rudimentary cause-and-effect mindset, but the reality is that we often _can_ in fact garner information from uncertain outcomes if we adopt a probabilistic mindset. 
+
+When the result of an outcome is known, it is referred to as _deterministic_, whereas an unknown outcome is referred to as _stochastic_. To understand a stochastic outcome and what influences it, it's key to understand _probability distributions_, which are the topic of this chapter.
+
+## Probability Distributions
+
+Before abstracting probability distributions to real examples, it's perhaps best to explore probability distributions using simple examples where probabilities are known. 
+
+A probability distribution is a complete indication of how much probability is associated with certain outcomes.
+
+If we roll a 6-sided die, since each of the six outcomes (the numbers 1 through 6) are equally likely, each outcome has a probability of 1/6. The _distribution_ of the dice roll is the specification of probabilities for each outcome:
+
+| Outcome | Probability |
+|---|---|
+| 1 | 1/6 |
+| 2 | 1/6 |
+
+
+
+
+I like to play Mario Kart 8, a racing game with some "combat" involved using items. In the game, you are given an item at random whenever you get an "item box".
+
+Suppose you're playing the game, and so far have gotten the following items in total:
+
+|Item                                  | Name    | Count|
+|:------------------------------------:|:-------:|:----:|
+|<img src='./img/banana.png'> | Banana  |     7|
+|<img src='./img/bobomb.png'> | Bob-omb |     3|
+|<img src='./img/coin.png'>   | Coin    |    37|
+|<img src='./img/horn.png'>   | Horn    |     1|
+|<img src='./img/shell.png'>  | Shell   |     2|
+| Total: | | 50 |
+
+Attribution: images from [pngkey](https://www.pngkey.com/detail/u2w7e6o0i1q8i1y3_randome-clipart-mario-kart-mario-kart-8-deluxe/).
+
+### Probability
+
+- What's the probability that your next item is a coin? 
+- How would you find the _actual_ probability? 
+- From this, how might you define probability?
+
+In general, the probability of an event $A$ occurring is denoted $P(A)$ and is defined as $$\frac{\text{Number of times event } A \text{ is observed}}{\text{Total number of events observed}}$$ as the number of events goes to infinity.
+
+### Probability Distributions
+
+So far, we've been discussing probabilities of single events. But it's often useful to characterize the full "spectrum" of uncertainty associated with an outcome. The set of all outcomes and their corresponding probabilities is called a __probability distribution__ (or, often, just __distribution__). 
+
+The outcome itself, which is uncertain, is called a __random variable__. (Note: technically, this definition only holds if the outcome is _numeric_, not categorical like our Mario Kart example, but we won't concern ourselves with such details)
+
+When the outcomes are _discrete_, the distributions are called __probability mass functions__ (or _pmf_'s for short).
+
+### Examples of Probability Distributions
+
+__Mario Kart Example__: The distribution of items is given by the above table.
+
+__Ship example__: Suppose a ship that arrives at the port of Vancouver will stay at port according to the following distribution:
+
+| Length of stay (days) | Probability |
+|---|------|
+| 1 | 0.25 |
+| 2 | 0.50 |
+| 3 | 0.15 |
+| 4 | 0.10 |
+
+The fact that the outcome is _numeric_ means that there are more ways we can talk about things, as we will see.
+
+## Continuous random variables (10 min)
+
+What is the current water level of the Bow River at Banff, Alberta? How tall is a tree? What about the current atmospheric temperature in Vancouver, BC? These are examples of _continuous_ random variables, because there are an _uncountably infinite_ amount of outcomes. Discrete random variables, on the other hand, are _countable_, even if there are infinitely many outcomes, because each outcome can be accounted for one-at-a-time by some pattern. 
+
+__Example__: The positive integers are discrete/countable: just start with 1 and keep adding 1 to get 1, 2, 3, etc., and that covers all possible outcomes. Positive real numbers are not countable because there's no way to cover all possibilities by considering one outcome at a time. 
+
+It turns out that it's trickier to interpret probabilities for continuous random variables, but it also turns out that they're in general easier to work with. 
+
+Not all random variables with infinitely many outcomes are continuous. Take, for example, a Poisson random variable, that can take values $0, 1, 2, \ldots$ with no upper limit. The difference here is that a smaller range of values _does_ have a finite amount of variables. By the way, this type of infinity is called "countably infinite", and a continuous random variable has "uncountably infinite" amount of outcomes.
+
+#### Advanced and Optional: Is anything actually continuous?
+
+In practice, we can never measure anything on a continuous scale, since any measuring instrument must always round to some precision. For example, your kitchen scale might only measure things to the nearest gram. But, these variables are well approximated by a continuous variable. As a rule of thumb, if the difference between neighbouring values isn't a big deal, consider the variable continuous. 
+
+__Example__:
+
+You'd like to get a handle on your monthly finances, so you record your total monthly expenses each month. You end up with 20 months worth of data:
+
+
+```
+##  [1] "$1903.68" "$3269.61" "$6594.05" "$1693.94" "$2863.71" "$3185.01"
+##  [7] "$4247.04" "$2644.27" "$8040.42" "$2781.11" "$3673.23" "$4870.13"
+## [13] "$2449.53" "$1772.53" "$7267.11" "$938.67"  "$4625.33" "$3034.81"
+## [19] "$4946.4"  "$3700.16"
+```
+
+Since a difference of $0.01 isn't a big deal, we may as well treat this as a continuous random variable. 
+
+__Example__:
+
+Back in the day when Canada had pennies, you liked to play "penny bingo", and wrote down your winnings after each day of playing the game with your friends. Here are your net winnings:
+
+
+```
+##  [1]  0.01 -0.01  0.02  0.01  0.04  0.02 -0.03 -0.01  0.05  0.04
+```
+
+Since a difference of $0.01 is a big deal, best to treat this as discrete. 
+
+
+## Density Functions (20 min)
+
+In the discrete case, we were able to specify a distribution by indicating a probability for each outcome. Even when there's an infinite amount of outcomes, such as in the case of a Poisson distribution, we can still place a non-zero probability on each outcome and have the probabilities sum to 1 (thanks to [convergent series](https://en.wikipedia.org/wiki/Convergent_series)). But an uncountable amount of outcomes cannot be all accounted for by a sum (i.e., the type of sum we denote by $\sum$), and this means that _continuous outcomes must have probability 0_. 
+
+__Example__: The probability that the temperature in Vancouver tomorrow will be 18 degrees celcius is 0. In fact, any temperature has a probability of 0 of occurring. 
+
+While individual outcomes have zero probability, _ranges_ can have non-zero probability. We can use this idea to figure out how "dense" the probability is at some areas of the outcome space. For example, if a randomly selected tree has a 0.05 probability of being within 0.1m of 5.0m, then as a rate, that's about 0.05/(0.1m) = 0.5 "probability per meter" here. Taking the limit as the range width $\rightarrow 0$, we obtain what's called the __density__ at 5m. 
+
+The density as a function over the outcome space is called the __probability density function__ (pdf), usually abbreviated to just the __density__, and denoted $f$. Sometimes we specify the random variable in the subscript, just to be clear about what random variable this density represents -- for example, $f_X$ is the density of random variable $X$.
+
+You'll see that the density is like a "continuous cousin" of the _probability mass function_ (pmf) in the case of discrete random variables. We'll also see in a future lecture that there are some random variables for which neither a density nor a pmf exist.
+
+ We can use the density to calculate probabilies of a range by integrating the density over that range: $$P(a < X < b) = \int_a^b f(x) \text{d}x.$$ This means that, integrating over the entire range of possibilities should give us 1:
+ $$\int_{-\infty}^\infty f(x) \text{d}x = 1$$
+This integral corresponds to the entire area under the density function.
+
+
+### Example: "Low Purity Octane"
+
+You just ran out of gas, but luckily, right in front of a gas station! Or maybe not so lucky, since the gas station is called "Low Purity Octane". They tell you that the octane purity of their gasoline is random, and has the following density:
+
+<img src="010-probability_files/figure-html/unnamed-chunk-4-1.png" width="288" style="display: block; margin: auto;" />
+
+1. What's the probability of getting 25% purity? That is, $P(\text{Purity} = 0.25)$?
+2. The density evaluates to be >1 in some places. Does this mean that this is not a valid density? Why is the density in fact valid?
+3. Is it possible for the density to be negative? Why or why not?
+4. What's the probability of getting gas that's $<50\%$ pure? That is, $P(\text{Purity} < 0.5)$?
+5. What's the probability of getting gas that's $\leq 50\%$ pure? That is, $P(\text{Purity} \leq 0.5)$?
+6. What's the _support_ of this random variable? That is, the set of all outcomes that have non-zero density?
+7. You decide to spend the day at Low Purity Octane, measuring the octane purity for each customer. You end up getting 100 observations, placing each measurement along the x-axis. Which of the following plots would be more likely, and why?
+
+<img src="010-probability_files/figure-html/unnamed-chunk-5-1.png" width="768" style="display: block; margin: auto;" />
+
+### Example: Monthly Expenses
+
+It turns out your monthly expenses have the following density, with your 20 observations plotted below it:
+
+<img src="010-probability_files/figure-html/unnamed-chunk-6-1.png" width="480" style="display: block; margin: auto;" />
+
+
+## Summary and take-aways
+
+- These distributions might not seem practical, but they certainly are. Even in cases where we are considering many other pieces of information aside from the response, we are still dealing with univariate distributions -- we'll see later that the only difference is that they are no longer marginal distributions (they are _conditional_).
+- It's important to consider whether you are interested in the result of a single observation, or whether you are more interested in outcomes observed in the long run. While Statistics uses repeated observations in the long run to identify patterns and distributions, how you use those distributions will depend on your interest.
+
+
+

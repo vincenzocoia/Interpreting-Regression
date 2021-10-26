@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 10 Regression when data are censored: survival analysis | Interpreting Regression</title>
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 10 Regression when data are censored: survival analysis | Interpreting Regression" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
+  <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 10 Regression when data are censored: survival analysis | Interpreting Regression" />
+  
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
+  
+
+<meta name="author" content="Vincenzo Coia" />
+
+
+<meta name="date" content="2021-10-25" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="special-cases.html"/>
+<link rel="next" href="regression-when-data-are-ordinal.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.19/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-111476782-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Interpreting Regression</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preamble</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#caution"><i class="fa fa-check"></i><b>1.1</b> Caution</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#preamble-1"><i class="fa fa-check"></i><b>1.2</b> Preamble</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#a-focus-on-interpretation"><i class="fa fa-check"></i><b>1.3</b> A focus on Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="interpreting-a-random-quantity.html"><a href="interpreting-a-random-quantity.html"><i class="fa fa-check"></i>Interpreting a Random Quantity</a></li>
+<li class="chapter" data-level="2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html"><i class="fa fa-check"></i><b>2</b> Probability: When an Outcome is Unknown</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#probability-distributions"><i class="fa fa-check"></i><b>2.1</b> Probability Distributions</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#probability"><i class="fa fa-check"></i><b>2.1.1</b> Probability</a></li>
+<li class="chapter" data-level="2.1.2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#probability-distributions-1"><i class="fa fa-check"></i><b>2.1.2</b> Probability Distributions</a></li>
+<li class="chapter" data-level="2.1.3" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#examples-of-probability-distributions"><i class="fa fa-check"></i><b>2.1.3</b> Examples of Probability Distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#continuous-random-variables-10-min"><i class="fa fa-check"></i><b>2.2</b> Continuous random variables (10 min)</a></li>
+<li class="chapter" data-level="2.3" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#density-functions-20-min"><i class="fa fa-check"></i><b>2.3</b> Density Functions (20 min)</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#example-low-purity-octane"><i class="fa fa-check"></i><b>2.3.1</b> Example: “Low Purity Octane”</a></li>
+<li class="chapter" data-level="2.3.2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#example-monthly-expenses"><i class="fa fa-check"></i><b>2.3.2</b> Example: Monthly Expenses</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#summary-and-take-aways"><i class="fa fa-check"></i><b>2.4</b> Summary and take-aways</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html"><i class="fa fa-check"></i><b>3</b> Distribution Properties: Quantities we can Interpret</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#probabilistic-quantities"><i class="fa fa-check"></i><b>3.1</b> Probabilistic Quantities</a></li>
+<li class="chapter" data-level="3.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#measures-of-central-tendency-and-uncertainty"><i class="fa fa-check"></i><b>3.2</b> Measures of central tendency and uncertainty</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#mode-and-entropy"><i class="fa fa-check"></i><b>3.2.1</b> Mode and Entropy</a></li>
+<li class="chapter" data-level="3.2.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#mean-and-variance"><i class="fa fa-check"></i><b>3.2.2</b> Mean and Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#what-is-the-mean-anyway"><i class="fa fa-check"></i><b>3.3</b> What is the mean, anyway?</a></li>
+<li class="chapter" data-level="3.4" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#quantiles"><i class="fa fa-check"></i><b>3.4</b> Quantiles</a></li>
+<li class="chapter" data-level="3.5" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#continuous-distribution-properties"><i class="fa fa-check"></i><b>3.5</b> Continuous Distribution Properties</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#mean-variance-mode-and-entropy-5-min"><i class="fa fa-check"></i><b>3.5.1</b> Mean, Variance, Mode, and Entropy (5 min)</a></li>
+<li class="chapter" data-level="3.5.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#median-5-min"><i class="fa fa-check"></i><b>3.5.2</b> Median (5 min)</a></li>
+<li class="chapter" data-level="3.5.3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#quantiles-5-min"><i class="fa fa-check"></i><b>3.5.3</b> Quantiles (5 min)</a></li>
+<li class="chapter" data-level="3.5.4" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#prediction-intervals-5-min"><i class="fa fa-check"></i><b>3.5.4</b> Prediction Intervals (5 min)</a></li>
+<li class="chapter" data-level="3.5.5" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#skewness-5-min"><i class="fa fa-check"></i><b>3.5.5</b> Skewness (5 min)</a></li>
+<li class="chapter" data-level="3.5.6" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#examples"><i class="fa fa-check"></i><b>3.5.6</b> Examples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#heavy-tailed-distributions"><i class="fa fa-check"></i><b>3.6</b> Heavy-Tailed Distributions</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#sensitivity-of-the-mean-to-extremes"><i class="fa fa-check"></i><b>3.6.1</b> Sensitivity of the mean to extremes</a></li>
+<li class="chapter" data-level="3.6.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#heavy-tailed-distributions-1"><i class="fa fa-check"></i><b>3.6.2</b> Heavy-tailed Distributions</a></li>
+<li class="chapter" data-level="3.6.3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#heavy-tailed-distribution-families"><i class="fa fa-check"></i><b>3.6.3</b> Heavy-tailed distribution families</a></li>
+<li class="chapter" data-level="3.6.4" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#extreme-value-analysis"><i class="fa fa-check"></i><b>3.6.4</b> Extreme Value Analysis</a></li>
+<li class="chapter" data-level="3.6.5" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#multivariate-students-t-distributions"><i class="fa fa-check"></i><b>3.6.5</b> Multivariate Student’s <em>t</em> distributions</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html"><i class="fa fa-check"></i><b>4</b> Explaining an uncertain outcome: interpretable quantities</a>
+<ul>
+<li class="chapter" data-level="4.0.1" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#cumulative-density-functions-cdfs-distribution-functions"><i class="fa fa-check"></i><b>4.0.1</b> Cumulative Density Functions (cdf’s) / Distribution Functions</a></li>
+<li class="chapter" data-level="4.0.2" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#survival-function-2-min"><i class="fa fa-check"></i><b>4.0.2</b> Survival Function (2 min)</a></li>
+<li class="chapter" data-level="4.0.3" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#quantile-function-5-min"><i class="fa fa-check"></i><b>4.0.3</b> Quantile Function (5 min)</a></li>
+<li class="chapter" data-level="4.0.4" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#other-ways-of-depicting-a-distribution-optional-1-min"><i class="fa fa-check"></i><b>4.0.4</b> Other ways of depicting a distribution (Optional) (1 min)</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html"><i class="fa fa-check"></i><b>5</b> Simulation: When calculations are difficult</a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#learning-objectives"><i class="fa fa-check"></i><b>5.0.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="5.0.2" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#review-activity-15-min"><i class="fa fa-check"></i><b>5.0.2</b> Review Activity (15 min)</a></li>
+<li class="chapter" data-level="5.0.3" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#random-samples-terminology-5-min"><i class="fa fa-check"></i><b>5.0.3</b> Random Samples: Terminology (5 min)</a></li>
+<li class="chapter" data-level="5.0.4" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#seeds-5-min"><i class="fa fa-check"></i><b>5.0.4</b> Seeds (5 min)</a></li>
+<li class="chapter" data-level="5.0.5" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#generating-random-samples-code"><i class="fa fa-check"></i><b>5.0.5</b> Generating Random Samples: Code</a></li>
+<li class="chapter" data-level="5.0.6" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#running-simulations"><i class="fa fa-check"></i><b>5.0.6</b> Running Simulations</a></li>
+<li class="chapter" data-level="5.0.7" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#multi-step-simulations-10-min"><i class="fa fa-check"></i><b>5.0.7</b> Multi-Step Simulations (10 min)</a></li>
+<li class="chapter" data-level="5.0.8" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#generating-continuous-data"><i class="fa fa-check"></i><b>5.0.8</b> Generating Continuous Data</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#concepts"><i class="fa fa-check"></i><b>6.1</b> Concepts</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#binomial-distribution"><i class="fa fa-check"></i><b>6.1.1</b> Binomial Distribution</a></li>
+<li class="chapter" data-level="6.1.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#families-vs.-distributions"><i class="fa fa-check"></i><b>6.1.2</b> Families vs. distributions</a></li>
+<li class="chapter" data-level="6.1.3" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parameters"><i class="fa fa-check"></i><b>6.1.3</b> Parameters</a></li>
+<li class="chapter" data-level="6.1.4" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parameterization"><i class="fa fa-check"></i><b>6.1.4</b> Parameterization</a></li>
+<li class="chapter" data-level="6.1.5" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#distribution-families-in-practice"><i class="fa fa-check"></i><b>6.1.5</b> Distribution Families in Practice</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#common-parametric-families"><i class="fa fa-check"></i><b>6.2</b> Common Parametric Families</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#geometric"><i class="fa fa-check"></i><b>6.2.1</b> <span>Geometric</span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#negative-binomial"><i class="fa fa-check"></i><b>6.2.2</b> <span>Negative Binomial</span></a></li>
+<li class="chapter" data-level="6.2.3" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#poisson"><i class="fa fa-check"></i><b>6.2.3</b> <span>Poisson</span></a></li>
+<li class="chapter" data-level="6.2.4" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#bernoulli"><i class="fa fa-check"></i><b>6.2.4</b> Bernoulli</a></li>
+<li class="chapter" data-level="6.2.5" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#uniform-3-min"><i class="fa fa-check"></i><b>6.2.5</b> <a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">Uniform</a> (3 min)</a></li>
+<li class="chapter" data-level="6.2.6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#gaussian-normal-4-min"><i class="fa fa-check"></i><b>6.2.6</b> <span>Gaussian / Normal</span> (4 min)</a></li>
+<li class="chapter" data-level="6.2.7" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#log-normal-family"><i class="fa fa-check"></i><b>6.2.7</b> <span>Log-Normal</span> Family</a></li>
+<li class="chapter" data-level="6.2.8" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#exponential-family"><i class="fa fa-check"></i><b>6.2.8</b> <span>Exponential</span> Family</a></li>
+<li class="chapter" data-level="6.2.9" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#weibull-family"><i class="fa fa-check"></i><b>6.2.9</b> <span>Weibull</span> Family</a></li>
+<li class="chapter" data-level="6.2.10" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#beta-family"><i class="fa fa-check"></i><b>6.2.10</b> <span>Beta</span> Family</a></li>
+<li class="chapter" data-level="6.2.11" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#activity"><i class="fa fa-check"></i><b>6.2.11</b> Activity</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#relevant-r-functions-8-min"><i class="fa fa-check"></i><b>6.3</b> Relevant R functions (8 min)</a></li>
+<li class="chapter" data-level="6.4" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.4</b> Analyses under a Distributional Assumption</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.4.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.4.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.4.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
+<li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: conditional distributions</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#conditional-distributions"><i class="fa fa-check"></i><b>7.1</b> Conditional Distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#joint-distributions"><i class="fa fa-check"></i><b>7.2</b> Joint Distributions</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#example-length-of-stay-vs.-gang-demand"><i class="fa fa-check"></i><b>7.2.1</b> Example: Length of Stay vs. Gang Demand</a></li>
+<li class="chapter" data-level="7.2.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-distributions"><i class="fa fa-check"></i><b>7.2.2</b> Marginal Distributions</a></li>
+<li class="chapter" data-level="7.2.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#calculating-marginals-from-the-joint"><i class="fa fa-check"></i><b>7.2.3</b> Calculating Marginals from the Joint</a></li>
+<li class="chapter" data-level="7.2.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#conditioning-on-one-variable"><i class="fa fa-check"></i><b>7.2.4</b> Conditioning on one Variable</a></li>
+<li class="chapter" data-level="7.2.5" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#law-of-total-probabilityexpectation"><i class="fa fa-check"></i><b>7.2.5</b> Law of Total Probability/Expectation</a></li>
+<li class="chapter" data-level="7.2.6" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#exercises"><i class="fa fa-check"></i><b>7.2.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#multivariate-densitiespdfs"><i class="fa fa-check"></i><b>7.3</b> Multivariate Densities/pdf’s</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#conditional-distributions-revisited"><i class="fa fa-check"></i><b>7.3.1</b> Conditional Distributions, revisited</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#dependence-concepts"><i class="fa fa-check"></i><b>7.4</b> Dependence concepts</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#independence"><i class="fa fa-check"></i><b>7.4.1</b> Independence</a></li>
+<li class="chapter" data-level="7.4.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#measures-of-dependence"><i class="fa fa-check"></i><b>7.4.2</b> Measures of dependence</a></li>
+<li class="chapter" data-level="7.4.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#dependence-as-separate-from-the-marginals"><i class="fa fa-check"></i><b>7.4.3</b> Dependence as separate from the marginals</a></li>
+<li class="chapter" data-level="7.4.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#dependence-as-giving-us-more-information"><i class="fa fa-check"></i><b>7.4.4</b> Dependence as giving us more information</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#harvesting-dependence"><i class="fa fa-check"></i><b>7.5</b> Harvesting Dependence</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#example-river-flow"><i class="fa fa-check"></i><b>7.5.1</b> Example: River Flow</a></li>
+<li class="chapter" data-level="7.5.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#direction-of-dependence"><i class="fa fa-check"></i><b>7.5.2</b> Direction of Dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-distributions-1"><i class="fa fa-check"></i><b>7.6</b> Marginal Distributions</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-distribution-from-conditional"><i class="fa fa-check"></i><b>7.6.1</b> Marginal Distribution from Conditional</a></li>
+<li class="chapter" data-level="7.6.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-mean-from-conditional"><i class="fa fa-check"></i><b>7.6.2</b> Marginal Mean from Conditional</a></li>
+<li class="chapter" data-level="7.6.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-quantiles-from-conditional"><i class="fa fa-check"></i><b>7.6.3</b> Marginal Quantiles from Conditional</a></li>
+<li class="chapter" data-level="7.6.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#activity-1"><i class="fa fa-check"></i><b>7.6.4</b> Activity</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html"><i class="fa fa-check"></i><b>8</b> Estimating parametric model functions</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#writing-the-sample-mean-as-an-optimization-problem"><i class="fa fa-check"></i><b>8.1</b> Writing the sample mean as an optimization problem</a></li>
+<li class="chapter" data-level="8.2" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#evaluating-model-goodness-quantiles"><i class="fa fa-check"></i><b>8.2</b> Evaluating Model Goodness: Quantiles</a></li>
+<li class="chapter" data-level="8.3" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#simple-linear-regression"><i class="fa fa-check"></i><b>8.3</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#model-specification"><i class="fa fa-check"></i><b>8.3.1</b> Model Specification</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#linear-models-in-general"><i class="fa fa-check"></i><b>8.4</b> Linear models in general</a></li>
+<li class="chapter" data-level="8.5" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#reference-treatment-parameterization"><i class="fa fa-check"></i><b>8.5</b> reference-treatment parameterization</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#more-than-one-category-lab-2"><i class="fa fa-check"></i><b>8.5.1</b> More than one category (Lab 2)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#concepts-1"><i class="fa fa-check"></i><b>8.6</b> Concepts</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><i class="fa fa-check"></i><b>9</b> Estimating assumption-free: the world of supervised learning techniques</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#what-machine-learning-is"><i class="fa fa-check"></i><b>9.1</b> What machine learning is</a></li>
+<li class="chapter" data-level="9.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#types-of-supervised-learning"><i class="fa fa-check"></i><b>9.2</b> Types of Supervised Learning</a></li>
+<li class="chapter" data-level="9.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#local-regression"><i class="fa fa-check"></i><b>9.3</b> Local Regression</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#knn"><i class="fa fa-check"></i><b>9.3.1</b> kNN</a></li>
+<li class="chapter" data-level="9.3.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess"><i class="fa fa-check"></i><b>9.3.2</b> loess</a></li>
+<li class="chapter" data-level="9.3.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#in-class-exercises"><i class="fa fa-check"></i><b>9.3.3</b> In-Class Exercises</a></li>
+<li class="chapter" data-level="9.3.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#hyperparameters-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>9.3.4</b> Hyperparameters and the bias/variance tradeoff</a></li>
+<li class="chapter" data-level="9.3.5" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#extensions-to-knn-and-loess"><i class="fa fa-check"></i><b>9.3.5</b> Extensions to kNN and loess</a></li>
+<li class="chapter" data-level="9.3.6" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#model-assumptions-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>9.3.6</b> Model assumptions and the bias/variance tradeoff</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#splines-and-loess-regression"><i class="fa fa-check"></i><b>9.4</b> Splines and Loess Regression</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess-1"><i class="fa fa-check"></i><b>9.4.1</b> Loess</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="special-cases.html"><a href="special-cases.html"><i class="fa fa-check"></i>Special cases</a></li>
+<li class="chapter" data-level="10" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html"><i class="fa fa-check"></i><b>10</b> Regression when data are censored: survival analysis</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#data"><i class="fa fa-check"></i><b>10.1</b> Data</a></li>
+<li class="chapter" data-level="10.2" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#univariate-estimation"><i class="fa fa-check"></i><b>10.2</b> Univariate Estimation</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#non-parametric-estimates-with-kaplan-meier"><i class="fa fa-check"></i><b>10.2.1</b> Non-parametric Estimates with Kaplan-Meier</a></li>
+<li class="chapter" data-level="10.2.2" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#parametric-estimation"><i class="fa fa-check"></i><b>10.2.2</b> Parametric Estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#regression-with-survival-data"><i class="fa fa-check"></i><b>10.3</b> Regression with Survival Data</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#proportional-hazards-model"><i class="fa fa-check"></i><b>10.3.1</b> Proportional Hazards Model</a></li>
+<li class="chapter" data-level="10.3.2" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#prediction"><i class="fa fa-check"></i><b>10.3.2</b> Prediction</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#concept-list"><i class="fa fa-check"></i><b>10.4</b> Concept list</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html"><i class="fa fa-check"></i><b>11</b> Regression when data are ordinal</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html#concept-list-1"><i class="fa fa-check"></i><b>11.1</b> Concept list</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html"><i class="fa fa-check"></i><b>12</b> Regression when data are missing: multiple imputation</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#mean-imputation"><i class="fa fa-check"></i><b>12.1</b> Mean Imputation</a></li>
+<li class="chapter" data-level="12.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#multiple-imputation"><i class="fa fa-check"></i><b>12.2</b> Multiple Imputation</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#patterns"><i class="fa fa-check"></i><b>12.2.1</b> Patterns</a></li>
+<li class="chapter" data-level="12.2.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#multiple-imputation-1"><i class="fa fa-check"></i><b>12.2.2</b> Multiple Imputation</a></li>
+<li class="chapter" data-level="12.2.3" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#pooling"><i class="fa fa-check"></i><b>12.2.3</b> Pooling</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#step-0-what-data-are-missing"><i class="fa fa-check"></i><b>12.3</b> Step 0: What data are missing?</a></li>
+<li class="chapter" data-level="12.4" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#step-1-handling-missing-data"><i class="fa fa-check"></i><b>12.4</b> Step 1: Handling Missing Data</a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#any-ideas"><i class="fa fa-check"></i><b>12.4.1</b> Any Ideas?</a></li>
+<li class="chapter" data-level="12.4.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#mice"><i class="fa fa-check"></i><b>12.4.2</b> <code>mice</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#step-3-pool-results"><i class="fa fa-check"></i><b>12.5</b> Step 3: Pool results</a></li>
+<li class="chapter" data-level="12.6" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#concepts-2"><i class="fa fa-check"></i><b>12.6</b> Concepts</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html"><i class="fa fa-check"></i><b>13</b> Regression on an entire distribution: Probabilistic Forecasting</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasting-what-it-is"><i class="fa fa-check"></i><b>13.1</b> Probabilistic Forecasting: What it is</a></li>
+<li class="chapter" data-level="13.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#review-univariate-distribution-estimates"><i class="fa fa-check"></i><b>13.2</b> Review: Univariate distribution estimates</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#continuous-response"><i class="fa fa-check"></i><b>13.2.1</b> Continuous response</a></li>
+<li class="chapter" data-level="13.2.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discrete-response"><i class="fa fa-check"></i><b>13.2.2</b> Discrete Response</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasts-subset-based-learning-methods"><i class="fa fa-check"></i><b>13.3</b> Probabilistic Forecasts: subset-based learning methods</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#the-techniques"><i class="fa fa-check"></i><b>13.3.1</b> The techniques</a></li>
+<li class="chapter" data-level="13.3.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#exercise"><i class="fa fa-check"></i><b>13.3.2</b> Exercise</a></li>
+<li class="chapter" data-level="13.3.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>13.3.3</b> Bias-variance tradeoff</a></li>
+<li class="chapter" data-level="13.3.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#evaluating-model-goodness"><i class="fa fa-check"></i><b>13.3.4</b> Evaluating Model Goodness</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discussion-points"><i class="fa fa-check"></i><b>13.4</b> Discussion Points</a></li>
+<li class="chapter" data-level="13.5" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#when-are-they-not-useful"><i class="fa fa-check"></i><b>13.5</b> When are they not useful?</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Interpreting Regression</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="regression-when-data-are-censored-survival-analysis" class="section level1" number="10">
+<h1><span class="header-section-number">Chapter 10</span> Regression when data are censored: survival analysis</h1>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(tidyverse))</span>
+<span id="cb139-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb139-2" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(survival))</span>
+<span id="cb139-3"><a href="regression-when-data-are-censored-survival-analysis.html#cb139-3" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(ggfortify))</span>
+<span id="cb139-4"><a href="regression-when-data-are-censored-survival-analysis.html#cb139-4" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(broom))</span></code></pre></div>
+<p>In this case study, we will use the <code>ovarian</code> data from the <code>survival</code> R package to investigate survival times (<code>futime</code>) for ovarian cancer patients. Specifically, we will focus on both regression tasks:</p>
+<ul>
+<li>prediction, given treatment (<code>rx</code>)</li>
+<li>interpreting/inferring the effect of treatment (<code>rx</code>)</li>
+</ul>
+<p>To get started, ensure you have the requisite R packages installed. You probably already have <code>broom</code> and <code>tidyverse</code> installed, but not these:</p>
+<pre><code>install.packages(&quot;survival&quot;)
+install.packages(&quot;ggfortify&quot;)</code></pre>
+<div id="data" class="section level2" number="10.1">
+<h2><span class="header-section-number">10.1</span> Data</h2>
+<p>Here is a snippet of the relevant data. Notice a defining feature of this dataset: not all survival times are complete!</p>
+<p><strong>Censored observation</strong>: a number for which we know the actual outcome is larger. An “incomplete” observation. Also called <strong>survival data</strong>.</p>
+<p>(Naturally, we can extend the notion of censoring to “smaller”, and to other notions, but we won’t consider this here)</p>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb141-1" aria-hidden="true" tabindex="-1"></a>ovarian <span class="ot">&lt;-</span> survival<span class="sc">::</span>ovarian <span class="sc">%&gt;%</span> </span>
+<span id="cb141-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb141-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb141-3"><a href="regression-when-data-are-censored-survival-analysis.html#cb141-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(futime, fustat, rx) <span class="sc">%&gt;%</span> </span>
+<span id="cb141-4"><a href="regression-when-data-are-censored-survival-analysis.html#cb141-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">rx =</span> <span class="fu">factor</span>(rx),</span>
+<span id="cb141-5"><a href="regression-when-data-are-censored-survival-analysis.html#cb141-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">fustat =</span> fustat)</span>
+<span id="cb141-6"><a href="regression-when-data-are-censored-survival-analysis.html#cb141-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ovarian)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 3
+##   futime fustat rx   
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt;
+## 1     59      1 1    
+## 2    115      1 1    
+## 3    156      1 1    
+## 4    421      0 2    
+## 5    431      1 1    
+## 6    448      0 1</code></pre>
+<p>With R, we can indicate a response is censored using the <code>survival::Surv()</code> function. This forms the foundation to survival analysis in R.</p>
+<p><code>Surv()</code> takes the survival times and the censoring indicator</p>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Surv</span>(ovarian<span class="sc">$</span>futime, </span>
+<span id="cb143-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb143-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">event =</span> (ovarian<span class="sc">$</span>fustat))</span></code></pre></div>
+<pre><code>##  [1]   59   115   156   421+  431   448+  464   475   477+  563   638   744+
+## [13]  769+  770+  803+  855+ 1040+ 1106+ 1129+ 1206+ 1227+  268   329   353 
+## [25]  365   377+</code></pre>
+<p>Here is a plot of the data:</p>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb145-1" aria-hidden="true" tabindex="-1"></a>ovarian <span class="sc">%&gt;%</span> </span>
+<span id="cb145-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb145-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">censor =</span> <span class="fu">if_else</span>(fustat <span class="sc">==</span> <span class="dv">1</span>, <span class="st">&quot;Died&quot;</span>, <span class="st">&quot;Ongoing&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb145-3"><a href="regression-when-data-are-censored-survival-analysis.html#cb145-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(rx, futime)) <span class="sc">+</span></span>
+<span id="cb145-4"><a href="regression-when-data-are-censored-survival-analysis.html#cb145-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">colour =</span> censor), <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb145-5"><a href="regression-when-data-are-censored-survival-analysis.html#cb145-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb145-6"><a href="regression-when-data-are-censored-survival-analysis.html#cb145-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Treatment&quot;</span>,</span>
+<span id="cb145-7"><a href="regression-when-data-are-censored-survival-analysis.html#cb145-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">&quot;Survival time&quot;</span>) <span class="sc">+</span></span>
+<span id="cb145-8"><a href="regression-when-data-are-censored-survival-analysis.html#cb145-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_colour_discrete</span>(<span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p><img src="160-Regression_when_data_are_censored_files/figure-html/unnamed-chunk-4-1.png" width="384" /></p>
+<p>Other data examples:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Churn</strong>. You want to keep subscribers to your YouTube channel. Google has given you the subscription date and drop-out date (if applicable) for all subscribers you’ve ever had.</li>
+<li><strong>Light Bulbs</strong>. You’ve designed a new light bulb, and wish to tell buyers how long they will last.</li>
+</ol>
+</div>
+<div id="univariate-estimation" class="section level2" number="10.2">
+<h2><span class="header-section-number">10.2</span> Univariate Estimation</h2>
+<p>No matter whether we’re interested in prediction or interpretation, we first need to be able to estimate things from univariate data.</p>
+<p>But how can we even estimate something as simple as the mean? What are the consequences for the following two approaches?</p>
+<ol style="list-style-type: decimal">
+<li>Ignore the censoring:</li>
+</ol>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(ovarian<span class="sc">$</span>futime)</span></code></pre></div>
+<pre><code>## [1] 599.5385</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Remove censored data:</li>
+</ol>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb148-1" aria-hidden="true" tabindex="-1"></a>ovarian <span class="sc">%&gt;%</span> </span>
+<span id="cb148-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb148-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(fustat <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb148-3"><a href="regression-when-data-are-censored-survival-analysis.html#cb148-3" aria-hidden="true" tabindex="-1"></a>    .[[<span class="st">&quot;futime&quot;</span>]] <span class="sc">%&gt;%</span> </span>
+<span id="cb148-4"><a href="regression-when-data-are-censored-survival-analysis.html#cb148-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mean</span>()</span></code></pre></div>
+<pre><code>## [1] 812.2857</code></pre>
+<div id="non-parametric-estimates-with-kaplan-meier" class="section level3" number="10.2.1">
+<h3><span class="header-section-number">10.2.1</span> Non-parametric Estimates with Kaplan-Meier</h3>
+<p><strong>Survival Function</strong></p>
+<p><em>Question</em>: In what ways can we define a distribution?</p>
+<p>Obtain the Kaplan-Meier estimate of the survival function using <code>survival::survfit()</code>. It’s expecting a formula, but we’re still working with the null model.</p>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb150-1" aria-hidden="true" tabindex="-1"></a>(fit_km <span class="ot">&lt;-</span> <span class="fu">survfit</span>(</span>
+<span id="cb150-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb150-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Surv</span>(futime, fustat) <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb150-3"><a href="regression-when-data-are-censored-survival-analysis.html#cb150-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> ovarian</span>
+<span id="cb150-4"><a href="regression-when-data-are-censored-survival-analysis.html#cb150-4" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div>
+<pre><code>## Call: survfit(formula = Surv(futime, fustat) ~ 1, data = ovarian)
+## 
+##       n  events  median 0.95LCL 0.95UCL 
+##      26      12     638     464      NA</code></pre>
+<p>To obtain the survival function, we have two options.</p>
+<ol style="list-style-type: decimal">
+<li>Obtain the heights of each “step” of the survival function, and their corresponding time-values (y). Use <code>summary()</code>, or better, <code>broom::tidy()</code>:</li>
+</ol>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb152-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit_km)</span></code></pre></div>
+<pre><code>## # A tibble: 26 × 8
+##     time n.risk n.event n.censor estimate std.error conf.high conf.low
+##    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1    59     26       1        0    0.962    0.0392     1        0.890
+##  2   115     25       1        0    0.923    0.0566     1        0.826
+##  3   156     24       1        0    0.885    0.0708     1        0.770
+##  4   268     23       1        0    0.846    0.0836     0.997    0.718
+##  5   329     22       1        0    0.808    0.0957     0.974    0.670
+##  6   353     21       1        0    0.769    0.107      0.949    0.623
+##  7   365     20       1        0    0.731    0.119      0.923    0.579
+##  8   377     19       0        1    0.731    0.119      0.923    0.579
+##  9   421     18       0        1    0.731    0.119      0.923    0.579
+## 10   431     17       1        0    0.688    0.134      0.894    0.529
+## # … with 16 more rows</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Just want the plot? <code>ggfortify::autoplot()</code> to the rescue! You can even add other layers to the resulting <code>ggplot2</code> object. Notice the “notches” wherever there’s a censored observation.</li>
+</ol>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb154-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(fit_km) <span class="sc">+</span></span>
+<span id="cb154-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb154-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb154-3"><a href="regression-when-data-are-censored-survival-analysis.html#cb154-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">&quot;Survival Function&quot;</span>) <span class="sc">+</span></span>
+<span id="cb154-4"><a href="regression-when-data-are-censored-survival-analysis.html#cb154-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div>
+<pre><code>## Scale for &#39;y&#39; is already present. Adding another scale for &#39;y&#39;, which will
+## replace the existing scale.</code></pre>
+<p><img src="160-Regression_when_data_are_censored_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><strong>Quantiles</strong></p>
+<p>You can find the median on the printout of <code>survfit</code> above. But in general, we can use the <code>survival::quantile()</code> S3 generic function.</p>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb156-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(fit_km, </span>
+<span id="cb156-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb156-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>), </span>
+<span id="cb156-3"><a href="regression-when-data-are-censored-survival-analysis.html#cb156-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">conf.int =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>##  25  50 
+## 365 638</code></pre>
+<p>What quantiles do not exist?</p>
+<p><strong>Mean</strong></p>
+<p>Does the mean exist?</p>
+<p>Obtain the restricted mean using <code>print.survfit()</code>, or better, <code>broom::glance()</code>. Where is the restriction?</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb158-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(fit_km)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 10
+##   records n.max n.start events rmean rmean.std.error median conf.low conf.high
+##     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;           &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1      26    26      26     12  794.            91.5    638      464        NA
+## # … with 1 more variable: nobs &lt;int&gt;</code></pre>
+</div>
+<div id="parametric-estimation" class="section level3" number="10.2.2">
+<h3><span class="header-section-number">10.2.2</span> Parametric Estimation</h3>
+<p>The Weibull family of distributions is a flexible and popular distributional assumption to make. Fit using <code>survival::survreg()</code>, just like <code>survival::survfit()</code>, but with <code>dist="weibull"</code>.</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb160-1" aria-hidden="true" tabindex="-1"></a>(fit_wei <span class="ot">&lt;-</span> <span class="fu">survreg</span>(</span>
+<span id="cb160-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb160-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Surv</span>(futime, fustat) <span class="sc">~</span> <span class="dv">1</span>, </span>
+<span id="cb160-3"><a href="regression-when-data-are-censored-survival-analysis.html#cb160-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> ovarian,</span>
+<span id="cb160-4"><a href="regression-when-data-are-censored-survival-analysis.html#cb160-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">dist =</span> <span class="st">&quot;weibull&quot;</span></span>
+<span id="cb160-5"><a href="regression-when-data-are-censored-survival-analysis.html#cb160-5" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div>
+<pre><code>## Call:
+## survreg(formula = Surv(futime, fustat) ~ 1, data = ovarian, dist = &quot;weibull&quot;)
+## 
+## Coefficients:
+## (Intercept) 
+##    7.111038 
+## 
+## Scale= 0.9024784 
+## 
+## Loglik(model)= -98   Loglik(intercept only)= -98
+## n= 26</code></pre>
+<p>Get at the model parameters using <code>summary()</code>, or better, using <code>broom::tidy()</code>:</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(fit_wei)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)    7.11      0.293    24.3   2.36e-130
+## 2 Log(scale)    -0.103     0.254    -0.405 6.86e-  1</code></pre>
+<p>Lab assignment: calculate Weibull parameters using these estimates; then calculate estimates of probabilistic quantities. Hint: see the bottom of the <code>?survreg</code> documentation.</p>
+</div>
+</div>
+<div id="regression-with-survival-data" class="section level2" number="10.3">
+<h2><span class="header-section-number">10.3</span> Regression with Survival Data</h2>
+<p>The tricky part here? When there’s a parametric assumption on the “model function” – or perhaps it’s more accurate here to say across the predictor space.</p>
+<p><strong>Question</strong>: How can we set up a regression model with a linear predictor? Feel free to use a link function to solve the restricted range problem.</p>
+<div id="proportional-hazards-model" class="section level3" number="10.3.1">
+<h3><span class="header-section-number">10.3.1</span> Proportional Hazards Model</h3>
+<p>We can add “hazard function” to our list of things that can define a distribution. Why is this useful to model?</p>
+<p>Fit a proportional hazards model with <code>survival::coxph()</code>. Our predictor is treatment (<code>rx</code>).</p>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb164-1" aria-hidden="true" tabindex="-1"></a>(fit_ph <span class="ot">&lt;-</span> <span class="fu">coxph</span>(</span>
+<span id="cb164-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb164-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Surv</span>(futime, fustat) <span class="sc">~</span> rx, </span>
+<span id="cb164-3"><a href="regression-when-data-are-censored-survival-analysis.html#cb164-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> ovarian</span>
+<span id="cb164-4"><a href="regression-when-data-are-censored-survival-analysis.html#cb164-4" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div>
+<pre><code>## Call:
+## coxph(formula = Surv(futime, fustat) ~ rx, data = ovarian)
+## 
+##        coef exp(coef) se(coef)      z    p
+## rx2 -0.5964    0.5508   0.5870 -1.016 0.31
+## 
+## Likelihood ratio test=1.05  on 1 df, p=0.3052
+## n= 26, number of events= 12</code></pre>
+<p><em>Question</em>: Linear regression over two categories is the same as estimating the mean for both categories. Is the Proportional Hazards regression model also estimating the hazard function separately for each category?</p>
+<p>We can already see Treatment 2 is not significant (under a 0.05 level). If it was significant, we’d interpet the hazard function under Treatment 2 to be exp(-0.5964) = 0.55 as much as the hazard function under Treatment 1.</p>
+</div>
+<div id="prediction" class="section level3" number="10.3.2">
+<h3><span class="header-section-number">10.3.2</span> Prediction</h3>
+<p><strong>Your turn</strong>:</p>
+<p>Under the Proportional Hazards model, plot the survival function and obtain a mean estimate for Treatment 1 by filling in the following steps.</p>
+<ol style="list-style-type: decimal">
+<li>Convert the fitted model to a <code>survfit</code> object (which you can think of as a specific distribution).
+<ul>
+<li>Be sure to specify the <code>newdata</code> argument like you would when using <code>predict()</code>.</li>
+</ul></li>
+</ol>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb166-1" aria-hidden="true" tabindex="-1"></a>(fit_ph_survfit <span class="ot">&lt;-</span> <span class="fu">survfit</span>(</span>
+<span id="cb166-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb166-2" aria-hidden="true" tabindex="-1"></a>    fit_ph, </span>
+<span id="cb166-3"><a href="regression-when-data-are-censored-survival-analysis.html#cb166-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">newdata =</span> <span class="fu">data.frame</span>(<span class="at">rx =</span> <span class="dv">1</span>)<span class="co">#ovarian[1, ]</span></span>
+<span id="cb166-4"><a href="regression-when-data-are-censored-survival-analysis.html#cb166-4" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div>
+<pre><code>## Warning in model.frame.default(data = structure(list(rx = 1), class =
+## &quot;data.frame&quot;, row.names = c(NA, : variable &#39;rx&#39; is not a factor</code></pre>
+<pre><code>## Call: survfit(formula = fit_ph, newdata = data.frame(rx = 1))
+## 
+##       n  events  median 0.95LCL 0.95UCL 
+##      26      12      NA     475      NA</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Plot the survival function that’s stored in this new variable.
+<ul>
+<li>Hint: there’s a handy function for that.</li>
+</ul></li>
+</ol>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb169-1" aria-hidden="true" tabindex="-1"></a>fit_ph_survfit <span class="sc">%&gt;%</span> </span>
+<span id="cb169-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb169-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">autoplot</span>()</span></code></pre></div>
+<p><img src="160-Regression_when_data_are_censored_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<ol start="3" style="list-style-type: decimal">
+<li>Obtain a mean estimate using a function from the <code>broom</code> package.</li>
+</ol>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb170-1" aria-hidden="true" tabindex="-1"></a>fit_ph_survfit <span class="sc">%&gt;%</span> </span>
+<span id="cb170-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb170-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">glance</span>()</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 10
+##   records n.max n.start events rmean rmean.std.error median conf.low conf.high
+##     &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;           &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1      26    26      26     12  892.            108.     NA      475        NA
+## # … with 1 more variable: nobs &lt;int&gt;</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Obtain a median estimate using the <code>quantile</code> function.</li>
+</ol>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="regression-when-data-are-censored-survival-analysis.html#cb172-1" aria-hidden="true" tabindex="-1"></a>fit_ph_survfit <span class="sc">%&gt;%</span> </span>
+<span id="cb172-2"><a href="regression-when-data-are-censored-survival-analysis.html#cb172-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">quantile</span>(<span class="at">probs =</span> <span class="fl">0.5</span>)</span></code></pre></div>
+<pre><code>## $quantile
+## 50 
+## NA 
+## 
+## $lower
+##  50 
+## 475 
+## 
+## $upper
+## 50 
+## NA</code></pre>
+</div>
+</div>
+<div id="concept-list" class="section level2" number="10.4">
+<h2><span class="header-section-number">10.4</span> Concept list</h2>
+<ul>
+<li>A measurement is <em>censored</em> if we only know that its true value lies above some point.
+<ul>
+<li>For ease of discussion, we call the random variable of interest “time until event”.</li>
+<li>There are other types of censoring, but they are a simple extension of this definition.</li>
+</ul></li>
+<li>Removing censored data will result in uncertainty in our estimates to be larger than it could be, if we were to include the censored data.
+<ul>
+<li>Removing censored data could also result in <em>biased</em> estimates, if data have only been collected for a short duration.</li>
+</ul></li>
+<li>Ignoring the censorship status (i.e., taking a censored observations to be the actual observations) will likely result in a biased (overly small) estimate.</li>
+<li>There are many ways a distribution can be depicted. Aside from the density/pmf and cdf, there’s also:
+<ul>
+<li>The <em>survival function</em> (= 1 - cdf) at <code>t</code> evaluates to the probability that the outcome exceeds <code>t</code>.</li>
+<li>The <em>hazard function</em> (= density / survival function) at <code>t</code> can be interpreted as the instantaneous “chance” of the event occuring, given that the event has not occured up until time <code>t</code>.</li>
+</ul></li>
+<li>Options for estimating quantities by incorporating the partial information contained in censored observations:
+<ul>
+<li>Survival function: if no distributional assumption is made, the Kaplan-Meier method can be used to estimate the survival function.</li>
+<li>Mean: can be estimated as the area under an estimate of the survival function.</li>
+<li>Quantiles: can be estimated by inverting an estimate of the survival function.</li>
+<li>If a distributional assumption is made, the partial likelihood can be used to fit the distribution, and any quantity can be extracted from that distribution (not necessarily through the survival function).</li>
+</ul></li>
+<li>The Kaplan-Meier estimate of the survival function does not always drop to zero (when the largest observation is censored), in which case estimates of some high quantiles and the mean would not exist. A common “fix” is to force the survival function to drop to zero at the largest observation.
+<ul>
+<li>The mean estimate that results is called the <em>restricted</em> mean.</li>
+</ul></li>
+<li>The Cox proportional hazards model is a commonly used model that allows us to interpret how predictors influence a censored response. It models an individual’s hazard function as some baseline hazard, multiplied by <code>exp(eta)</code>, where <code>eta</code> is a linear combination of predictors.
+<ul>
+<li>The coefficient <code>beta</code> on a predictor <code>X</code> (contained in <code>eta</code>) has the following interpretation: an increase in <code>X</code> by one unit is associated with an increase in hazard (at any time) by <code>exp(beta)</code> times (i.e., the effect is multiplicative).</li>
+<li>This assumes that any two hazard functions on the predictor space are the same, up to some multiplicative constant.</li>
+<li>The hazard is useful to model due to its flexibility and interpretability.</li>
+</ul></li>
+<li>We can obtain a prediction at <code>X=x</code> from a proportional hazards model by converting the estimated hazard function evaluated at <code>x</code> to a survival function, and obtaining a univariate estimate as described above.</li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="special-cases.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="regression-when-data-are-ordinal.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/vincenzocoia/Interpreting-Regression/edit/master/160-Regression_when_data_are_censored.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

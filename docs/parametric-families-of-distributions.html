@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Parametric Families of Distributions | Interpreting Regression</title>
+  <meta name="description" content="A book about the why of regression to help you make decisions about your analysis." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Parametric Families of Distributions | Interpreting Regression" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="A book about the why of regression to help you make decisions about your analysis." />
+  <meta name="github-repo" content="vincenzocoia/Interpreting-Regression" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Parametric Families of Distributions | Interpreting Regression" />
+  
+  <meta name="twitter:description" content="A book about the why of regression to help you make decisions about your analysis." />
+  
+
+<meta name="author" content="Vincenzo Coia" />
+
+
+<meta name="date" content="2021-10-25" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="simulation-when-calculations-are-difficult.html"/>
+<link rel="next" href="prediction-harnessing-the-signal.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.19/datatables.js"></script>
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    
+    ga('create', 'UA-111476782-2', 'auto');
+    ga('send', 'pageview');
+  </script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Interpreting Regression</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Preamble</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#caution"><i class="fa fa-check"></i><b>1.1</b> Caution</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#preamble-1"><i class="fa fa-check"></i><b>1.2</b> Preamble</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#a-focus-on-interpretation"><i class="fa fa-check"></i><b>1.3</b> A focus on Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="interpreting-a-random-quantity.html"><a href="interpreting-a-random-quantity.html"><i class="fa fa-check"></i>Interpreting a Random Quantity</a></li>
+<li class="chapter" data-level="2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html"><i class="fa fa-check"></i><b>2</b> Probability: When an Outcome is Unknown</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#probability-distributions"><i class="fa fa-check"></i><b>2.1</b> Probability Distributions</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#probability"><i class="fa fa-check"></i><b>2.1.1</b> Probability</a></li>
+<li class="chapter" data-level="2.1.2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#probability-distributions-1"><i class="fa fa-check"></i><b>2.1.2</b> Probability Distributions</a></li>
+<li class="chapter" data-level="2.1.3" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#examples-of-probability-distributions"><i class="fa fa-check"></i><b>2.1.3</b> Examples of Probability Distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#continuous-random-variables-10-min"><i class="fa fa-check"></i><b>2.2</b> Continuous random variables (10 min)</a></li>
+<li class="chapter" data-level="2.3" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#density-functions-20-min"><i class="fa fa-check"></i><b>2.3</b> Density Functions (20 min)</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#example-low-purity-octane"><i class="fa fa-check"></i><b>2.3.1</b> Example: “Low Purity Octane”</a></li>
+<li class="chapter" data-level="2.3.2" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#example-monthly-expenses"><i class="fa fa-check"></i><b>2.3.2</b> Example: Monthly Expenses</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="probability-when-an-outcome-is-unknown.html"><a href="probability-when-an-outcome-is-unknown.html#summary-and-take-aways"><i class="fa fa-check"></i><b>2.4</b> Summary and take-aways</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html"><i class="fa fa-check"></i><b>3</b> Distribution Properties: Quantities we can Interpret</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#probabilistic-quantities"><i class="fa fa-check"></i><b>3.1</b> Probabilistic Quantities</a></li>
+<li class="chapter" data-level="3.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#measures-of-central-tendency-and-uncertainty"><i class="fa fa-check"></i><b>3.2</b> Measures of central tendency and uncertainty</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#mode-and-entropy"><i class="fa fa-check"></i><b>3.2.1</b> Mode and Entropy</a></li>
+<li class="chapter" data-level="3.2.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#mean-and-variance"><i class="fa fa-check"></i><b>3.2.2</b> Mean and Variance</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#what-is-the-mean-anyway"><i class="fa fa-check"></i><b>3.3</b> What is the mean, anyway?</a></li>
+<li class="chapter" data-level="3.4" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#quantiles"><i class="fa fa-check"></i><b>3.4</b> Quantiles</a></li>
+<li class="chapter" data-level="3.5" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#continuous-distribution-properties"><i class="fa fa-check"></i><b>3.5</b> Continuous Distribution Properties</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#mean-variance-mode-and-entropy-5-min"><i class="fa fa-check"></i><b>3.5.1</b> Mean, Variance, Mode, and Entropy (5 min)</a></li>
+<li class="chapter" data-level="3.5.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#median-5-min"><i class="fa fa-check"></i><b>3.5.2</b> Median (5 min)</a></li>
+<li class="chapter" data-level="3.5.3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#quantiles-5-min"><i class="fa fa-check"></i><b>3.5.3</b> Quantiles (5 min)</a></li>
+<li class="chapter" data-level="3.5.4" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#prediction-intervals-5-min"><i class="fa fa-check"></i><b>3.5.4</b> Prediction Intervals (5 min)</a></li>
+<li class="chapter" data-level="3.5.5" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#skewness-5-min"><i class="fa fa-check"></i><b>3.5.5</b> Skewness (5 min)</a></li>
+<li class="chapter" data-level="3.5.6" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#examples"><i class="fa fa-check"></i><b>3.5.6</b> Examples</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#heavy-tailed-distributions"><i class="fa fa-check"></i><b>3.6</b> Heavy-Tailed Distributions</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#sensitivity-of-the-mean-to-extremes"><i class="fa fa-check"></i><b>3.6.1</b> Sensitivity of the mean to extremes</a></li>
+<li class="chapter" data-level="3.6.2" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#heavy-tailed-distributions-1"><i class="fa fa-check"></i><b>3.6.2</b> Heavy-tailed Distributions</a></li>
+<li class="chapter" data-level="3.6.3" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#heavy-tailed-distribution-families"><i class="fa fa-check"></i><b>3.6.3</b> Heavy-tailed distribution families</a></li>
+<li class="chapter" data-level="3.6.4" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#extreme-value-analysis"><i class="fa fa-check"></i><b>3.6.4</b> Extreme Value Analysis</a></li>
+<li class="chapter" data-level="3.6.5" data-path="distribution-properties-quantities-we-can-interpret.html"><a href="distribution-properties-quantities-we-can-interpret.html#multivariate-students-t-distributions"><i class="fa fa-check"></i><b>3.6.5</b> Multivariate Student’s <em>t</em> distributions</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html"><i class="fa fa-check"></i><b>4</b> Explaining an uncertain outcome: interpretable quantities</a>
+<ul>
+<li class="chapter" data-level="4.0.1" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#cumulative-density-functions-cdfs-distribution-functions"><i class="fa fa-check"></i><b>4.0.1</b> Cumulative Density Functions (cdf’s) / Distribution Functions</a></li>
+<li class="chapter" data-level="4.0.2" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#survival-function-2-min"><i class="fa fa-check"></i><b>4.0.2</b> Survival Function (2 min)</a></li>
+<li class="chapter" data-level="4.0.3" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#quantile-function-5-min"><i class="fa fa-check"></i><b>4.0.3</b> Quantile Function (5 min)</a></li>
+<li class="chapter" data-level="4.0.4" data-path="explaining-an-uncertain-outcome-interpretable-quantities.html"><a href="explaining-an-uncertain-outcome-interpretable-quantities.html#other-ways-of-depicting-a-distribution-optional-1-min"><i class="fa fa-check"></i><b>4.0.4</b> Other ways of depicting a distribution (Optional) (1 min)</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html"><i class="fa fa-check"></i><b>5</b> Simulation: When calculations are difficult</a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#learning-objectives"><i class="fa fa-check"></i><b>5.0.1</b> Learning Objectives</a></li>
+<li class="chapter" data-level="5.0.2" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#review-activity-15-min"><i class="fa fa-check"></i><b>5.0.2</b> Review Activity (15 min)</a></li>
+<li class="chapter" data-level="5.0.3" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#random-samples-terminology-5-min"><i class="fa fa-check"></i><b>5.0.3</b> Random Samples: Terminology (5 min)</a></li>
+<li class="chapter" data-level="5.0.4" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#seeds-5-min"><i class="fa fa-check"></i><b>5.0.4</b> Seeds (5 min)</a></li>
+<li class="chapter" data-level="5.0.5" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#generating-random-samples-code"><i class="fa fa-check"></i><b>5.0.5</b> Generating Random Samples: Code</a></li>
+<li class="chapter" data-level="5.0.6" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#running-simulations"><i class="fa fa-check"></i><b>5.0.6</b> Running Simulations</a></li>
+<li class="chapter" data-level="5.0.7" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#multi-step-simulations-10-min"><i class="fa fa-check"></i><b>5.0.7</b> Multi-Step Simulations (10 min)</a></li>
+<li class="chapter" data-level="5.0.8" data-path="simulation-when-calculations-are-difficult.html"><a href="simulation-when-calculations-are-difficult.html#generating-continuous-data"><i class="fa fa-check"></i><b>5.0.8</b> Generating Continuous Data</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html"><i class="fa fa-check"></i><b>6</b> Parametric Families of Distributions</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#concepts"><i class="fa fa-check"></i><b>6.1</b> Concepts</a>
+<ul>
+<li class="chapter" data-level="6.1.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#binomial-distribution"><i class="fa fa-check"></i><b>6.1.1</b> Binomial Distribution</a></li>
+<li class="chapter" data-level="6.1.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#families-vs.-distributions"><i class="fa fa-check"></i><b>6.1.2</b> Families vs. distributions</a></li>
+<li class="chapter" data-level="6.1.3" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parameters"><i class="fa fa-check"></i><b>6.1.3</b> Parameters</a></li>
+<li class="chapter" data-level="6.1.4" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#parameterization"><i class="fa fa-check"></i><b>6.1.4</b> Parameterization</a></li>
+<li class="chapter" data-level="6.1.5" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#distribution-families-in-practice"><i class="fa fa-check"></i><b>6.1.5</b> Distribution Families in Practice</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#common-parametric-families"><i class="fa fa-check"></i><b>6.2</b> Common Parametric Families</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#geometric"><i class="fa fa-check"></i><b>6.2.1</b> <span>Geometric</span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#negative-binomial"><i class="fa fa-check"></i><b>6.2.2</b> <span>Negative Binomial</span></a></li>
+<li class="chapter" data-level="6.2.3" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#poisson"><i class="fa fa-check"></i><b>6.2.3</b> <span>Poisson</span></a></li>
+<li class="chapter" data-level="6.2.4" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#bernoulli"><i class="fa fa-check"></i><b>6.2.4</b> Bernoulli</a></li>
+<li class="chapter" data-level="6.2.5" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#uniform-3-min"><i class="fa fa-check"></i><b>6.2.5</b> <a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">Uniform</a> (3 min)</a></li>
+<li class="chapter" data-level="6.2.6" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#gaussian-normal-4-min"><i class="fa fa-check"></i><b>6.2.6</b> <span>Gaussian / Normal</span> (4 min)</a></li>
+<li class="chapter" data-level="6.2.7" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#log-normal-family"><i class="fa fa-check"></i><b>6.2.7</b> <span>Log-Normal</span> Family</a></li>
+<li class="chapter" data-level="6.2.8" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#exponential-family"><i class="fa fa-check"></i><b>6.2.8</b> <span>Exponential</span> Family</a></li>
+<li class="chapter" data-level="6.2.9" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#weibull-family"><i class="fa fa-check"></i><b>6.2.9</b> <span>Weibull</span> Family</a></li>
+<li class="chapter" data-level="6.2.10" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#beta-family"><i class="fa fa-check"></i><b>6.2.10</b> <span>Beta</span> Family</a></li>
+<li class="chapter" data-level="6.2.11" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#activity"><i class="fa fa-check"></i><b>6.2.11</b> Activity</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#relevant-r-functions-8-min"><i class="fa fa-check"></i><b>6.3</b> Relevant R functions (8 min)</a></li>
+<li class="chapter" data-level="6.4" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#analyses-under-a-distributional-assumption"><i class="fa fa-check"></i><b>6.4</b> Analyses under a Distributional Assumption</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#maximum-likelihood-estimation"><i class="fa fa-check"></i><b>6.4.1</b> Maximum Likelihood Estimation</a></li>
+<li class="chapter" data-level="6.4.2" data-path="parametric-families-of-distributions.html"><a href="parametric-families-of-distributions.html#usefulness-in-practice"><i class="fa fa-check"></i><b>6.4.2</b> Usefulness in Practice</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="prediction-harnessing-the-signal.html"><a href="prediction-harnessing-the-signal.html"><i class="fa fa-check"></i>Prediction: harnessing the signal</a></li>
+<li class="chapter" data-level="7" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><i class="fa fa-check"></i><b>7</b> Reducing uncertainty of the outcome: conditional distributions</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#conditional-distributions"><i class="fa fa-check"></i><b>7.1</b> Conditional Distributions</a></li>
+<li class="chapter" data-level="7.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#joint-distributions"><i class="fa fa-check"></i><b>7.2</b> Joint Distributions</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#example-length-of-stay-vs.-gang-demand"><i class="fa fa-check"></i><b>7.2.1</b> Example: Length of Stay vs. Gang Demand</a></li>
+<li class="chapter" data-level="7.2.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-distributions"><i class="fa fa-check"></i><b>7.2.2</b> Marginal Distributions</a></li>
+<li class="chapter" data-level="7.2.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#calculating-marginals-from-the-joint"><i class="fa fa-check"></i><b>7.2.3</b> Calculating Marginals from the Joint</a></li>
+<li class="chapter" data-level="7.2.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#conditioning-on-one-variable"><i class="fa fa-check"></i><b>7.2.4</b> Conditioning on one Variable</a></li>
+<li class="chapter" data-level="7.2.5" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#law-of-total-probabilityexpectation"><i class="fa fa-check"></i><b>7.2.5</b> Law of Total Probability/Expectation</a></li>
+<li class="chapter" data-level="7.2.6" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#exercises"><i class="fa fa-check"></i><b>7.2.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#multivariate-densitiespdfs"><i class="fa fa-check"></i><b>7.3</b> Multivariate Densities/pdf’s</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#conditional-distributions-revisited"><i class="fa fa-check"></i><b>7.3.1</b> Conditional Distributions, revisited</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#dependence-concepts"><i class="fa fa-check"></i><b>7.4</b> Dependence concepts</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#independence"><i class="fa fa-check"></i><b>7.4.1</b> Independence</a></li>
+<li class="chapter" data-level="7.4.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#measures-of-dependence"><i class="fa fa-check"></i><b>7.4.2</b> Measures of dependence</a></li>
+<li class="chapter" data-level="7.4.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#dependence-as-separate-from-the-marginals"><i class="fa fa-check"></i><b>7.4.3</b> Dependence as separate from the marginals</a></li>
+<li class="chapter" data-level="7.4.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#dependence-as-giving-us-more-information"><i class="fa fa-check"></i><b>7.4.4</b> Dependence as giving us more information</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#harvesting-dependence"><i class="fa fa-check"></i><b>7.5</b> Harvesting Dependence</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#example-river-flow"><i class="fa fa-check"></i><b>7.5.1</b> Example: River Flow</a></li>
+<li class="chapter" data-level="7.5.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#direction-of-dependence"><i class="fa fa-check"></i><b>7.5.2</b> Direction of Dependence</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-distributions-1"><i class="fa fa-check"></i><b>7.6</b> Marginal Distributions</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-distribution-from-conditional"><i class="fa fa-check"></i><b>7.6.1</b> Marginal Distribution from Conditional</a></li>
+<li class="chapter" data-level="7.6.2" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-mean-from-conditional"><i class="fa fa-check"></i><b>7.6.2</b> Marginal Mean from Conditional</a></li>
+<li class="chapter" data-level="7.6.3" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#marginal-quantiles-from-conditional"><i class="fa fa-check"></i><b>7.6.3</b> Marginal Quantiles from Conditional</a></li>
+<li class="chapter" data-level="7.6.4" data-path="reducing-uncertainty-of-the-outcome-conditional-distributions.html"><a href="reducing-uncertainty-of-the-outcome-conditional-distributions.html#activity-1"><i class="fa fa-check"></i><b>7.6.4</b> Activity</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html"><i class="fa fa-check"></i><b>8</b> Estimating parametric model functions</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#writing-the-sample-mean-as-an-optimization-problem"><i class="fa fa-check"></i><b>8.1</b> Writing the sample mean as an optimization problem</a></li>
+<li class="chapter" data-level="8.2" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#evaluating-model-goodness-quantiles"><i class="fa fa-check"></i><b>8.2</b> Evaluating Model Goodness: Quantiles</a></li>
+<li class="chapter" data-level="8.3" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#simple-linear-regression"><i class="fa fa-check"></i><b>8.3</b> Simple Linear Regression</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#model-specification"><i class="fa fa-check"></i><b>8.3.1</b> Model Specification</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#linear-models-in-general"><i class="fa fa-check"></i><b>8.4</b> Linear models in general</a></li>
+<li class="chapter" data-level="8.5" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#reference-treatment-parameterization"><i class="fa fa-check"></i><b>8.5</b> reference-treatment parameterization</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#more-than-one-category-lab-2"><i class="fa fa-check"></i><b>8.5.1</b> More than one category (Lab 2)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="estimating-parametric-model-functions.html"><a href="estimating-parametric-model-functions.html#concepts-1"><i class="fa fa-check"></i><b>8.6</b> Concepts</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><i class="fa fa-check"></i><b>9</b> Estimating assumption-free: the world of supervised learning techniques</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#what-machine-learning-is"><i class="fa fa-check"></i><b>9.1</b> What machine learning is</a></li>
+<li class="chapter" data-level="9.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#types-of-supervised-learning"><i class="fa fa-check"></i><b>9.2</b> Types of Supervised Learning</a></li>
+<li class="chapter" data-level="9.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#local-regression"><i class="fa fa-check"></i><b>9.3</b> Local Regression</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#knn"><i class="fa fa-check"></i><b>9.3.1</b> kNN</a></li>
+<li class="chapter" data-level="9.3.2" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess"><i class="fa fa-check"></i><b>9.3.2</b> loess</a></li>
+<li class="chapter" data-level="9.3.3" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#in-class-exercises"><i class="fa fa-check"></i><b>9.3.3</b> In-Class Exercises</a></li>
+<li class="chapter" data-level="9.3.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#hyperparameters-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>9.3.4</b> Hyperparameters and the bias/variance tradeoff</a></li>
+<li class="chapter" data-level="9.3.5" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#extensions-to-knn-and-loess"><i class="fa fa-check"></i><b>9.3.5</b> Extensions to kNN and loess</a></li>
+<li class="chapter" data-level="9.3.6" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#model-assumptions-and-the-biasvariance-tradeoff"><i class="fa fa-check"></i><b>9.3.6</b> Model assumptions and the bias/variance tradeoff</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#splines-and-loess-regression"><i class="fa fa-check"></i><b>9.4</b> Splines and Loess Regression</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="estimating-assumption-free-the-world-of-supervised-learning-techniques.html"><a href="estimating-assumption-free-the-world-of-supervised-learning-techniques.html#loess-1"><i class="fa fa-check"></i><b>9.4.1</b> Loess</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="special-cases.html"><a href="special-cases.html"><i class="fa fa-check"></i>Special cases</a></li>
+<li class="chapter" data-level="10" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html"><i class="fa fa-check"></i><b>10</b> Regression when data are censored: survival analysis</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#data"><i class="fa fa-check"></i><b>10.1</b> Data</a></li>
+<li class="chapter" data-level="10.2" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#univariate-estimation"><i class="fa fa-check"></i><b>10.2</b> Univariate Estimation</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#non-parametric-estimates-with-kaplan-meier"><i class="fa fa-check"></i><b>10.2.1</b> Non-parametric Estimates with Kaplan-Meier</a></li>
+<li class="chapter" data-level="10.2.2" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#parametric-estimation"><i class="fa fa-check"></i><b>10.2.2</b> Parametric Estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#regression-with-survival-data"><i class="fa fa-check"></i><b>10.3</b> Regression with Survival Data</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#proportional-hazards-model"><i class="fa fa-check"></i><b>10.3.1</b> Proportional Hazards Model</a></li>
+<li class="chapter" data-level="10.3.2" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#prediction"><i class="fa fa-check"></i><b>10.3.2</b> Prediction</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="regression-when-data-are-censored-survival-analysis.html"><a href="regression-when-data-are-censored-survival-analysis.html#concept-list"><i class="fa fa-check"></i><b>10.4</b> Concept list</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html"><i class="fa fa-check"></i><b>11</b> Regression when data are ordinal</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="regression-when-data-are-ordinal.html"><a href="regression-when-data-are-ordinal.html#concept-list-1"><i class="fa fa-check"></i><b>11.1</b> Concept list</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html"><i class="fa fa-check"></i><b>12</b> Regression when data are missing: multiple imputation</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#mean-imputation"><i class="fa fa-check"></i><b>12.1</b> Mean Imputation</a></li>
+<li class="chapter" data-level="12.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#multiple-imputation"><i class="fa fa-check"></i><b>12.2</b> Multiple Imputation</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#patterns"><i class="fa fa-check"></i><b>12.2.1</b> Patterns</a></li>
+<li class="chapter" data-level="12.2.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#multiple-imputation-1"><i class="fa fa-check"></i><b>12.2.2</b> Multiple Imputation</a></li>
+<li class="chapter" data-level="12.2.3" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#pooling"><i class="fa fa-check"></i><b>12.2.3</b> Pooling</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#step-0-what-data-are-missing"><i class="fa fa-check"></i><b>12.3</b> Step 0: What data are missing?</a></li>
+<li class="chapter" data-level="12.4" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#step-1-handling-missing-data"><i class="fa fa-check"></i><b>12.4</b> Step 1: Handling Missing Data</a>
+<ul>
+<li class="chapter" data-level="12.4.1" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#any-ideas"><i class="fa fa-check"></i><b>12.4.1</b> Any Ideas?</a></li>
+<li class="chapter" data-level="12.4.2" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#mice"><i class="fa fa-check"></i><b>12.4.2</b> <code>mice</code></a></li>
+</ul></li>
+<li class="chapter" data-level="12.5" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#step-3-pool-results"><i class="fa fa-check"></i><b>12.5</b> Step 3: Pool results</a></li>
+<li class="chapter" data-level="12.6" data-path="regression-when-data-are-missing-multiple-imputation.html"><a href="regression-when-data-are-missing-multiple-imputation.html#concepts-2"><i class="fa fa-check"></i><b>12.6</b> Concepts</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html"><i class="fa fa-check"></i><b>13</b> Regression on an entire distribution: Probabilistic Forecasting</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasting-what-it-is"><i class="fa fa-check"></i><b>13.1</b> Probabilistic Forecasting: What it is</a></li>
+<li class="chapter" data-level="13.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#review-univariate-distribution-estimates"><i class="fa fa-check"></i><b>13.2</b> Review: Univariate distribution estimates</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#continuous-response"><i class="fa fa-check"></i><b>13.2.1</b> Continuous response</a></li>
+<li class="chapter" data-level="13.2.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discrete-response"><i class="fa fa-check"></i><b>13.2.2</b> Discrete Response</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#probabilistic-forecasts-subset-based-learning-methods"><i class="fa fa-check"></i><b>13.3</b> Probabilistic Forecasts: subset-based learning methods</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#the-techniques"><i class="fa fa-check"></i><b>13.3.1</b> The techniques</a></li>
+<li class="chapter" data-level="13.3.2" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#exercise"><i class="fa fa-check"></i><b>13.3.2</b> Exercise</a></li>
+<li class="chapter" data-level="13.3.3" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#bias-variance-tradeoff"><i class="fa fa-check"></i><b>13.3.3</b> Bias-variance tradeoff</a></li>
+<li class="chapter" data-level="13.3.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#evaluating-model-goodness"><i class="fa fa-check"></i><b>13.3.4</b> Evaluating Model Goodness</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#discussion-points"><i class="fa fa-check"></i><b>13.4</b> Discussion Points</a></li>
+<li class="chapter" data-level="13.5" data-path="regression-on-an-entire-distribution-probabilistic-forecasting.html"><a href="regression-on-an-entire-distribution-probabilistic-forecasting.html#when-are-they-not-useful"><i class="fa fa-check"></i><b>13.5</b> When are they not useful?</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Interpreting Regression</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="parametric-families-of-distributions" class="section level1" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Parametric Families of Distributions</h1>
+<p><strong>Caution: in a highly developmental stage! See Section <a href="index.html#caution">1.1</a>.</strong></p>
+<p>Concepts:</p>
+<ul>
+<li>Common scales: Positive ratio scale, binary, (0,1)</li>
+<li>Different data generating processes give rise to various <em>parametric families</em> of distributions. We’ll explain a good chunk of them.</li>
+<li>These are useful in data analysis because they narrow down the things that need to be estimated. Improving estimator quality by parametric distributional assumptions and MLE</li>
+</ul>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="parametric-families-of-distributions.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(tidyverse))</span></code></pre></div>
+<div id="concepts" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Concepts</h2>
+<p>Aside from the Binomial family of distributions, there are many other families that come up in practice. Here are some of them. For a more complete list, check out <a href="https://en.wikipedia.org/wiki/List_of_probability_distributions">Wikipedia’s list of probability distributions</a>.</p>
+<p>In practice, it’s rare to encounter situations that are exactly described by a distribution family, but distribution families still act as useful approximations.</p>
+<p>Details about these distributions are specified abundantly online. My favourite resource is Wikipedia, which organizes a distribution family’s properties in a fairly consistent way – for example <a href="https://en.wikipedia.org/wiki/Binomial_distribution">here</a> is the page on the Binomial family. We won’t bother transcribing these details here, but instead focus on some highlights.</p>
+<p>What is meant by “family”? This means that there are more than one of them, and that a specific distribution from the family can be characterized the family’s parameters. This is what is meant by “parametric” – the distribution can be distilled down to a set of parameters.</p>
+<p>For example, to identify a Gaussian distribution, we need to know the mean and variance. Note that some families are characterized by parameters that do not necessarily have an interpretation (or at least an easy one) – for example, to identify a Beta distribution, we need to know the two shape parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>.</p>
+<p><strong>Technicality that you can safely skip</strong>: It’s not that there are “set” parameters that identify a distribution. For example, although a Beta distribution is identified by the two shape parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>, the distribution can also be uniquely identified by its mean and variance. Or, by two quantiles. In general, we need as many pieces of information as there are parameters. This needs to be done in an <em>identifiable</em> way, however. For example, it’s not enough to identify an Exponential distibution by its skewness, because all Exponential distributions have a skewness of 2! The way in which we identify a distribution from parameters is called the <em>parameterization</em> of the distribution.</p>
+<hr />
+<p>So far in our discussion of distributions, we’ve been talking about properties of distributions in general. Again, this is important because a huge component of data science is in attempting to describe an uncertain outcome, like the number of ships that arrive to the port of Vancouver on a given day, or the identity of a rock.</p>
+<p>There are some common processes that give rise to probability distributions having a very specific form, and these distributions are very useful in practice.</p>
+<p>Let’s use the Binomial family of distributions as an example.</p>
+<div id="binomial-distribution" class="section level3" number="6.1.1">
+<h3><span class="header-section-number">6.1.1</span> Binomial Distribution</h3>
+<p><strong>Process</strong>: Suppose you play a game, and win with probability <span class="math inline">\(p\)</span>. Let <span class="math inline">\(X\)</span> be the number of games you win after playing <span class="math inline">\(N\)</span> games. <span class="math inline">\(X\)</span> is said to have a <em>Binomial</em> distribution, written <span class="math inline">\(X \sim \text{Binomial} (N, p)\)</span>.</p>
+<p><strong>Example</strong>: (Demonstration on the board) Let’s derive the probability of winning exactly two games out of three. That is, <span class="math inline">\(P(X=2)\)</span> when <span class="math inline">\(N=3\)</span>.</p>
+<p><strong>pmf</strong>: A binomial distribution is characterized by the following pmf: <span class="math display">\[P(X=x) = {N \choose x} p^x (1-p)^{N-x}.\]</span></p>
+<p>Remember, <span class="math inline">\(N \choose x\)</span> is read as “N choose x”. You can think of it as the number of ways you can make a team of <span class="math inline">\(x\)</span> people from a total of <span class="math inline">\(N\)</span> people. You can calculate this in R with <code>choose(N, x)</code>, and its formula is <span class="math display">\[{N \choose x} = \frac{N!}{x!(N-x)!}.\]</span></p>
+<p><strong>mean</strong>: <span class="math inline">\(Np\)</span></p>
+<p><strong>variance</strong>: <span class="math inline">\(Np(1-p)\)</span></p>
+<p><strong>Code</strong>: The pmf can be calculated in R with <code>dbinom()</code>; in python, <code>scipy.stats.binom</code>.</p>
+<p>Here is an example pmf for a Binomial(N = 5, p = 0.2) distribution:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="parametric-families-of-distributions.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">probability =</span> <span class="fu">dbinom</span>(x, <span class="at">size =</span> <span class="dv">5</span>, <span class="at">prob =</span> <span class="fl">0.25</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb55-2"><a href="parametric-families-of-distributions.html#cb55-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, probability)) <span class="sc">+</span></span>
+<span id="cb55-3"><a href="parametric-families-of-distributions.html#cb55-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">&quot;maroon&quot;</span>) <span class="sc">+</span></span>
+<span id="cb55-4"><a href="parametric-families-of-distributions.html#cb55-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">&quot;Binomial(5, 0.2)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb55-5"><a href="parametric-families-of-distributions.html#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-2-1.png" width="288" /></p>
+</div>
+<div id="families-vs.-distributions" class="section level3" number="6.1.2">
+<h3><span class="header-section-number">6.1.2</span> Families vs. distributions</h3>
+<p>Specifying a value for both <span class="math inline">\(p\)</span> and <span class="math inline">\(N\)</span> results in a unique Binomial distribution. For example, the Binomial(N = 5, p = 0.2) distribution is plotted above. It’s therefore helpful to remember that there are in fact <em>many</em> Binomial distributions (actually infinite), one for each choice of <span class="math inline">\(p\)</span> and <span class="math inline">\(N\)</span>. We refer to the entire set of probability distributions as the Binomial <strong>family</strong> of distributions.</p>
+<p>This means that it doesn’t actually make sense to talk about “the” Binomial distribution! This is important to remember as we add on concepts throughout MDS, such as the maximum likelihood estimator that you’ll see in a future course.</p>
+</div>
+<div id="parameters" class="section level3" number="6.1.3">
+<h3><span class="header-section-number">6.1.3</span> Parameters</h3>
+<p>True or false:</p>
+<ul>
+<li>For a distribution with possible values {0, 1, 2, 3, 4, 5}, five probabilities need to be specified in order to fully describe the distribution.</li>
+<li>For a Binomial distribution with <span class="math inline">\(N=5\)</span>, five probabilities need to be specified in order to fully describe the distribution.</li>
+</ul>
+<p>Knowing <span class="math inline">\(p\)</span> and <span class="math inline">\(N\)</span> is enough to know the entire distribution within the Binomial family. That is, no further information is needed – we know all <span class="math inline">\(N+1\)</span> probabilities based on only two numbers! Since <span class="math inline">\(p\)</span> and <span class="math inline">\(N\)</span> fully specify a Binomial distribution, we call them <strong>parameters</strong> of the Binomial family, and we call the Binomial family a <strong>parametric family</strong> of distributions.</p>
+<p>In general, a <strong>parameter</strong> is a variable whose specification narrows down the space of possible distributions (or to be even more general, the space of possible models).</p>
+</div>
+<div id="parameterization" class="section level3" number="6.1.4">
+<h3><span class="header-section-number">6.1.4</span> Parameterization</h3>
+<p>A Binomial distribution can be specified by knowing <span class="math inline">\(N\)</span> and <span class="math inline">\(p\)</span>, but there are other ways we can specify the distribution. For instance, specifying the mean and variance is enough to specify a Binomial distribution.</p>
+<p>Demonstration: Which Binomial distribution has mean 2 and variance 1? (on the whiteboard)</p>
+<p><em>Exactly which</em> variables we decide to use to identify a distribution within a family is called the family’s <strong>parameterization</strong>. So, the Binomial distribution is usually <em>parameterized</em> according to <span class="math inline">\(N\)</span> and <span class="math inline">\(p\)</span>, but could also be parameterized in terms of the mean and variance. The “usual” parameterization of a distribution family is sometimes called the <em>canonical</em> parameterization.</p>
+<p>In general, there are many ways in which a distribution family can be parameterized. The parameterization you use in practice will depend on the information you can more easily obtain.</p>
+</div>
+<div id="distribution-families-in-practice" class="section level3" number="6.1.5">
+<h3><span class="header-section-number">6.1.5</span> Distribution Families in Practice</h3>
+<p>Why is it useful to know about distribution families?</p>
+<p>In general when we’re modelling something, like river flow or next month’s net gains or the number of ships arriving at port tomorrow, you have the choice to make a distributional assumption or not. That is, do you want to declare the random variable of interest as belonging to a certain distribution family, or do you want to allow the random variable to have a fully general distribution? Both are good options depending on the scenario, and later in the program, we’ll explore the tradeoff with both options in more detail.</p>
+</div>
+</div>
+<div id="common-parametric-families" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Common Parametric Families</h2>
+<div id="geometric" class="section level3" number="6.2.1">
+<h3><span class="header-section-number">6.2.1</span> <a href="https://en.wikipedia.org/wiki/Geometric_distribution">Geometric</a></h3>
+<p><strong>Process</strong>: Suppose you play a game, and win with probability <span class="math inline">\(p\)</span>. Let <span class="math inline">\(X\)</span> be the number of attempts at playing the game before experiencing a win. Then <span class="math inline">\(X\)</span> is said to have a <em>Geometric</em> distribution.</p>
+<p>Note:</p>
+<ul>
+<li>Sometimes this family is defined so that <span class="math inline">\(X\)</span> <em>includes</em> the winning attempt. The properties of the distribution differ, so be sure to be deliberate about which one you use.</li>
+<li>Since there’s only one parameter, this means that if you know the mean, you also know the variance!</li>
+</ul>
+<p><strong>Code</strong>: The pmf can be calculated in R with <code>dgeom()</code>; in python, <code>scipy.stats.geom</code>.</p>
+</div>
+<div id="negative-binomial" class="section level3" number="6.2.2">
+<h3><span class="header-section-number">6.2.2</span> <a href="https://en.wikipedia.org/wiki/Negative_binomial_distribution">Negative Binomial</a></h3>
+<p><strong>Process</strong>: Suppose you play a game, and win with probability <span class="math inline">\(p\)</span>. Let <span class="math inline">\(X\)</span> be the number of attempts at playing the game before experiencing <span class="math inline">\(k\)</span> wins. Then <span class="math inline">\(X\)</span> is said to have a <em>Negative Binomial</em> distribution.</p>
+<ul>
+<li>Two parameters.</li>
+<li>The Geometric family results with <span class="math inline">\(k=1\)</span>.</li>
+</ul>
+<p><strong>Code</strong>: The pmf can be calculated in R with <code>dnb()</code>; in python, <code>scipy.stats.nbinom</code>.</p>
+</div>
+<div id="poisson" class="section level3" number="6.2.3">
+<h3><span class="header-section-number">6.2.3</span> <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson</a></h3>
+<p><strong>Process</strong>: Suppose customers independently arrive at a store at some average rate. The total number of customers having arrived after a pre-specified length of time follows a <em>Poisson</em> distribution, and can be parameterized by a single parameter, usually the mean <span class="math inline">\(\lambda\)</span>.</p>
+<p>A noteable property of this family is that the mean is equal to the variance.</p>
+<p>Examples that are indicative of this process:</p>
+<ul>
+<li>The number of ships that arrive at the port of Vancouver in a given day.</li>
+<li>The number of emails you receive in a given day.</li>
+</ul>
+<p><strong>Code</strong>: The pmf can be calculated in R with <code>dpois()</code>; in python, <code>scipy.stats.poisson</code>.</p>
+</div>
+<div id="bernoulli" class="section level3" number="6.2.4">
+<h3><span class="header-section-number">6.2.4</span> Bernoulli</h3>
+<ul>
+<li>A random variable that is either <span class="math inline">\(1\)</span> (with probability <span class="math inline">\(p\)</span>) or <span class="math inline">\(0\)</span> (with probability <span class="math inline">\(1-p\)</span>).</li>
+<li>Parameterized by <span class="math inline">\(p\)</span>.</li>
+<li>A special case of the Binomial family, with <span class="math inline">\(N=1\)</span>.</li>
+</ul>
+</div>
+<div id="uniform-3-min" class="section level3" number="6.2.5">
+<h3><span class="header-section-number">6.2.5</span> <a href="https://en.wikipedia.org/wiki/Uniform_distribution_(continuous)">Uniform</a> (3 min)</h3>
+<p>A Uniform distribution has equal density in between two points <span class="math inline">\(a\)</span> and <span class="math inline">\(b\)</span> (for <span class="math inline">\(a &lt; b\)</span>), and is usually denoted by
+<span class="math display">\[\text{Unif}(a, b).\]</span>
+That means that there are two parameters: one for each end-point. Reference to a “Uniform distribution” usually implies <em>continuous</em> uniform, as opposed to discrete uniform.</p>
+<p>The density is
+<span class="math display">\[f(x) = \frac{1}{b - a} \text{ for } a \leq x \leq b.\]</span>
+Here are some densities from members of this family:</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="parametric-families-of-distributions.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb56-2"><a href="parametric-families-of-distributions.html#cb56-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">3.5</span>, <span class="fl">1.5</span>, <span class="at">length.out =</span> <span class="dv">1000</span>),</span>
+<span id="cb56-3"><a href="parametric-families-of-distributions.html#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Unif(0,1)</span><span class="st">`</span>      <span class="ot">=</span> <span class="fu">dunif</span>(x, <span class="at">min =</span> <span class="dv">0</span>,  <span class="at">max =</span> <span class="dv">1</span>),</span>
+<span id="cb56-4"><a href="parametric-families-of-distributions.html#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Unif(-3, 1)</span><span class="st">`</span>    <span class="ot">=</span> <span class="fu">dunif</span>(x, <span class="at">min =</span> <span class="sc">-</span><span class="dv">3</span>, <span class="at">max =</span> <span class="dv">1</span>),</span>
+<span id="cb56-5"><a href="parametric-families-of-distributions.html#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Unif(-2, -1.5)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">dunif</span>(x, <span class="at">min =</span> <span class="sc">-</span><span class="dv">2</span>, <span class="at">max =</span> <span class="sc">-</span><span class="fl">1.5</span>)</span>
+<span id="cb56-6"><a href="parametric-families-of-distributions.html#cb56-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> </span>
+<span id="cb56-7"><a href="parametric-families-of-distributions.html#cb56-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">contains</span>(<span class="st">&quot;Unif&quot;</span>), <span class="at">names_to =</span> <span class="st">&quot;distribution&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;density&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb56-8"><a href="parametric-families-of-distributions.html#cb56-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, density)) <span class="sc">+</span></span>
+<span id="cb56-9"><a href="parametric-families-of-distributions.html#cb56-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> distribution) <span class="sc">+</span></span>
+<span id="cb56-10"><a href="parametric-families-of-distributions.html#cb56-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb56-11"><a href="parametric-families-of-distributions.html#cb56-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-3-1.png" width="768" /></p>
+</div>
+<div id="gaussian-normal-4-min" class="section level3" number="6.2.6">
+<h3><span class="header-section-number">6.2.6</span> <a href="https://en.wikipedia.org/wiki/Normal_distribution">Gaussian / Normal</a> (4 min)</h3>
+<p>Probably the most famous family of distributions. Has a density that follows a “bell-shaped” curve. Is usually parameterized by its mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span> (or sometimes just the standard deviation). A Normal distribution is usually denoted as
+<span class="math display">\[N(\mu, \sigma^2).\]</span></p>
+<p>The density is
+<span class="math display">\[f(x)=\frac{1}{\sqrt{2\pi \sigma^2}}\exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right).\]</span>
+Here are some densities from members of this family:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="parametric-families-of-distributions.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">expand_grid</span>(<span class="at">mu =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">3</span>),</span>
+<span id="cb57-2"><a href="parametric-families-of-distributions.html#cb57-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-3"><a href="parametric-families-of-distributions.html#cb57-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">f =</span> <span class="fu">map2</span>(</span>
+<span id="cb57-4"><a href="parametric-families-of-distributions.html#cb57-4" aria-hidden="true" tabindex="-1"></a>        mu, sd, </span>
+<span id="cb57-5"><a href="parametric-families-of-distributions.html#cb57-5" aria-hidden="true" tabindex="-1"></a>        <span class="sc">~</span> <span class="fu">tibble</span>(</span>
+<span id="cb57-6"><a href="parametric-families-of-distributions.html#cb57-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">x       =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">8</span>, <span class="dv">8</span>, <span class="at">length.out =</span> <span class="dv">1000</span>),</span>
+<span id="cb57-7"><a href="parametric-families-of-distributions.html#cb57-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">density =</span> <span class="fu">dnorm</span>(x, <span class="at">mean =</span> .x, <span class="at">sd =</span> .y)</span>
+<span id="cb57-8"><a href="parametric-families-of-distributions.html#cb57-8" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb57-9"><a href="parametric-families-of-distributions.html#cb57-9" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-10"><a href="parametric-families-of-distributions.html#cb57-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest</span>(f) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-11"><a href="parametric-families-of-distributions.html#cb57-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">mu  =</span> <span class="fu">str_c</span>(<span class="st">&quot;mean = &quot;</span>, mu),</span>
+<span id="cb57-12"><a href="parametric-families-of-distributions.html#cb57-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">var =</span> <span class="fu">str_c</span>(<span class="st">&quot;variance = &quot;</span>, sd<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb57-13"><a href="parametric-families-of-distributions.html#cb57-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, density)) <span class="sc">+</span></span>
+<span id="cb57-14"><a href="parametric-families-of-distributions.html#cb57-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(mu <span class="sc">~</span> var) <span class="sc">+</span></span>
+<span id="cb57-15"><a href="parametric-families-of-distributions.html#cb57-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb57-16"><a href="parametric-families-of-distributions.html#cb57-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-4-1.png" width="576" /></p>
+</div>
+<div id="log-normal-family" class="section level3" number="6.2.7">
+<h3><span class="header-section-number">6.2.7</span> <a href="https://en.wikipedia.org/wiki/Log-normal_distribution">Log-Normal</a> Family</h3>
+<p>A random variable <span class="math inline">\(X\)</span> as a Log-Normal distribution if <span class="math inline">\(\log X\)</span> is Normal. This family is often parameterized by the mean <span class="math inline">\(\mu\)</span> and variance <span class="math inline">\(\sigma^2\)</span> of <span class="math inline">\(\log X\)</span>. The Log-Normal family is sometimes denoted, and this course will denote this family, as
+<span class="math display">\[LN(\mu, \sigma^2).\]</span></p>
+<p>Here are some densities from members of this family:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="parametric-families-of-distributions.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">expand_grid</span>(<span class="at">meanlog =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb58-2"><a href="parametric-families-of-distributions.html#cb58-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">sdlog   =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fu">sqrt</span>(<span class="fl">0.75</span>), <span class="fl">1.5</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-3"><a href="parametric-families-of-distributions.html#cb58-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">f =</span> <span class="fu">map2</span>(</span>
+<span id="cb58-4"><a href="parametric-families-of-distributions.html#cb58-4" aria-hidden="true" tabindex="-1"></a>        meanlog, sdlog, </span>
+<span id="cb58-5"><a href="parametric-families-of-distributions.html#cb58-5" aria-hidden="true" tabindex="-1"></a>        <span class="sc">~</span> <span class="fu">tibble</span>(</span>
+<span id="cb58-6"><a href="parametric-families-of-distributions.html#cb58-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">x       =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">8</span>, <span class="at">length.out =</span> <span class="dv">1000</span>),</span>
+<span id="cb58-7"><a href="parametric-families-of-distributions.html#cb58-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">density =</span> <span class="fu">dlnorm</span>(x, <span class="at">meanlog =</span> .x, <span class="at">sdlog =</span> .y)</span>
+<span id="cb58-8"><a href="parametric-families-of-distributions.html#cb58-8" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb58-9"><a href="parametric-families-of-distributions.html#cb58-9" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-10"><a href="parametric-families-of-distributions.html#cb58-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest</span>(f) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-11"><a href="parametric-families-of-distributions.html#cb58-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">meanlog =</span> <span class="fu">str_c</span>(<span class="st">&quot;mu = &quot;</span>, meanlog),</span>
+<span id="cb58-12"><a href="parametric-families-of-distributions.html#cb58-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">varlog  =</span> <span class="fu">str_c</span>(<span class="st">&quot;sigma^2 = &quot;</span>, sdlog<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb58-13"><a href="parametric-families-of-distributions.html#cb58-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, density)) <span class="sc">+</span></span>
+<span id="cb58-14"><a href="parametric-families-of-distributions.html#cb58-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(meanlog <span class="sc">~</span> varlog) <span class="sc">+</span></span>
+<span id="cb58-15"><a href="parametric-families-of-distributions.html#cb58-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb58-16"><a href="parametric-families-of-distributions.html#cb58-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-5-1.png" width="576" /></p>
+</div>
+<div id="exponential-family" class="section level3" number="6.2.8">
+<h3><span class="header-section-number">6.2.8</span> <a href="https://en.wikipedia.org/wiki/Exponential_distribution">Exponential</a> Family</h3>
+<p>The exponential family is for positive random variables, often interpreted as “wait time” for some event to happen. Characterized by a “memoryless” property, where after waiting for a certain period of time, the remaining wait time has the same distribution.</p>
+<p>The family is characterized by a single parameter, usually either the <em>mean</em> wait time, or its reciprocal, the average <em>rate</em> at which events happen.</p>
+<p>The densities from this family all decay starting at <span class="math inline">\(x=0\)</span> for rate <span class="math inline">\(\beta\)</span>:</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="parametric-families-of-distributions.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">beta =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.25</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb59-2"><a href="parametric-families-of-distributions.html#cb59-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">f =</span> <span class="fu">map</span>(</span>
+<span id="cb59-3"><a href="parametric-families-of-distributions.html#cb59-3" aria-hidden="true" tabindex="-1"></a>        beta,</span>
+<span id="cb59-4"><a href="parametric-families-of-distributions.html#cb59-4" aria-hidden="true" tabindex="-1"></a>        <span class="sc">~</span> <span class="fu">tibble</span>(</span>
+<span id="cb59-5"><a href="parametric-families-of-distributions.html#cb59-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">x       =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="dv">1000</span>),</span>
+<span id="cb59-6"><a href="parametric-families-of-distributions.html#cb59-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">density =</span> <span class="fu">dexp</span>(x, <span class="at">rate =</span> .x)</span>
+<span id="cb59-7"><a href="parametric-families-of-distributions.html#cb59-7" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb59-8"><a href="parametric-families-of-distributions.html#cb59-8" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span> </span>
+<span id="cb59-9"><a href="parametric-families-of-distributions.html#cb59-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest</span>(f) <span class="sc">%&gt;%</span> </span>
+<span id="cb59-10"><a href="parametric-families-of-distributions.html#cb59-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">beta =</span> <span class="fu">str_c</span>(<span class="st">&quot;beta = &quot;</span>, beta)) <span class="sc">%&gt;%</span> </span>
+<span id="cb59-11"><a href="parametric-families-of-distributions.html#cb59-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, density)) <span class="sc">+</span></span>
+<span id="cb59-12"><a href="parametric-families-of-distributions.html#cb59-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> beta) <span class="sc">+</span></span>
+<span id="cb59-13"><a href="parametric-families-of-distributions.html#cb59-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb59-14"><a href="parametric-families-of-distributions.html#cb59-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-6-1.png" width="576" /></p>
+</div>
+<div id="weibull-family" class="section level3" number="6.2.9">
+<h3><span class="header-section-number">6.2.9</span> <a href="https://en.wikipedia.org/wiki/Weibull_distribution">Weibull</a> Family</h3>
+<p>A generalization of the Exponential family, which allows for an event to be more or less likely the longer you wait. Because of this flexibility and interpretation, this family is used heavily in <em>survival analysis</em> when modelling “time until an event”.</p>
+<p>This family is characterized by two parameters, a <em>scale parameter</em> <span class="math inline">\(\lambda\)</span> and a <em>shape parameter</em> <span class="math inline">\(k\)</span> (where <span class="math inline">\(k=1\)</span> results in the Exponential family).</p>
+<p>Here are some densities:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="parametric-families-of-distributions.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">expand_grid</span>(<span class="at">k      =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">2</span>, <span class="dv">5</span>),</span>
+<span id="cb60-2"><a href="parametric-families-of-distributions.html#cb60-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">lambda =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="fl">1.5</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-3"><a href="parametric-families-of-distributions.html#cb60-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">f =</span> <span class="fu">map2</span>(</span>
+<span id="cb60-4"><a href="parametric-families-of-distributions.html#cb60-4" aria-hidden="true" tabindex="-1"></a>        k, lambda, </span>
+<span id="cb60-5"><a href="parametric-families-of-distributions.html#cb60-5" aria-hidden="true" tabindex="-1"></a>        <span class="sc">~</span> <span class="fu">tibble</span>(</span>
+<span id="cb60-6"><a href="parametric-families-of-distributions.html#cb60-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">x       =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="at">length.out =</span> <span class="dv">1000</span>),</span>
+<span id="cb60-7"><a href="parametric-families-of-distributions.html#cb60-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">density =</span> <span class="fu">dweibull</span>(x, <span class="at">shape =</span> .x, <span class="at">scale =</span> .y)</span>
+<span id="cb60-8"><a href="parametric-families-of-distributions.html#cb60-8" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb60-9"><a href="parametric-families-of-distributions.html#cb60-9" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-10"><a href="parametric-families-of-distributions.html#cb60-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest</span>(f) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-11"><a href="parametric-families-of-distributions.html#cb60-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">k      =</span> <span class="fu">str_c</span>(<span class="st">&quot;k = &quot;</span>, k),</span>
+<span id="cb60-12"><a href="parametric-families-of-distributions.html#cb60-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">lambda =</span> <span class="fu">str_c</span>(<span class="st">&quot;lambda = &quot;</span>, lambda)) <span class="sc">%&gt;%</span> </span>
+<span id="cb60-13"><a href="parametric-families-of-distributions.html#cb60-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, density)) <span class="sc">+</span></span>
+<span id="cb60-14"><a href="parametric-families-of-distributions.html#cb60-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(k <span class="sc">~</span> lambda) <span class="sc">+</span></span>
+<span id="cb60-15"><a href="parametric-families-of-distributions.html#cb60-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb60-16"><a href="parametric-families-of-distributions.html#cb60-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb60-17"><a href="parametric-families-of-distributions.html#cb60-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>))</span></code></pre></div>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-7-1.png" width="576" /></p>
+</div>
+<div id="beta-family" class="section level3" number="6.2.10">
+<h3><span class="header-section-number">6.2.10</span> <a href="https://en.wikipedia.org/wiki/Beta_distribution">Beta</a> Family</h3>
+<p>The Beta family of distributions is defined for random variables taking values between 0 and 1, so is useful for modelling the distribution of proportions. This family is quite flexible, and has the Uniform distribution as a special case.</p>
+<p>Characterized by two positive shape parameters, <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>.</p>
+<p>Examples of densities:</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="parametric-families-of-distributions.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">expand_grid</span>(<span class="at">alpha =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb61-2"><a href="parametric-families-of-distributions.html#cb61-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">beta  =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="dv">1</span>, <span class="fl">1.25</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb61-3"><a href="parametric-families-of-distributions.html#cb61-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">f =</span> <span class="fu">map2</span>(</span>
+<span id="cb61-4"><a href="parametric-families-of-distributions.html#cb61-4" aria-hidden="true" tabindex="-1"></a>        alpha, beta, </span>
+<span id="cb61-5"><a href="parametric-families-of-distributions.html#cb61-5" aria-hidden="true" tabindex="-1"></a>        <span class="sc">~</span> <span class="fu">tibble</span>(</span>
+<span id="cb61-6"><a href="parametric-families-of-distributions.html#cb61-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">x       =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">1000</span>),</span>
+<span id="cb61-7"><a href="parametric-families-of-distributions.html#cb61-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">density =</span> <span class="fu">dbeta</span>(x, <span class="at">shape1 =</span> .x, <span class="at">shape2 =</span> .y)</span>
+<span id="cb61-8"><a href="parametric-families-of-distributions.html#cb61-8" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb61-9"><a href="parametric-families-of-distributions.html#cb61-9" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">%&gt;%</span> </span>
+<span id="cb61-10"><a href="parametric-families-of-distributions.html#cb61-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unnest</span>(f) <span class="sc">%&gt;%</span> </span>
+<span id="cb61-11"><a href="parametric-families-of-distributions.html#cb61-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alpha =</span> <span class="fu">str_c</span>(<span class="st">&quot;alpha = &quot;</span>, alpha),</span>
+<span id="cb61-12"><a href="parametric-families-of-distributions.html#cb61-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">beta  =</span> <span class="fu">str_c</span>(<span class="st">&quot;beta = &quot;</span>, beta)) <span class="sc">%&gt;%</span> </span>
+<span id="cb61-13"><a href="parametric-families-of-distributions.html#cb61-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(x, density)) <span class="sc">+</span></span>
+<span id="cb61-14"><a href="parametric-families-of-distributions.html#cb61-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(beta <span class="sc">~</span> alpha) <span class="sc">+</span></span>
+<span id="cb61-15"><a href="parametric-families-of-distributions.html#cb61-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb61-16"><a href="parametric-families-of-distributions.html#cb61-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb61-17"><a href="parametric-families-of-distributions.html#cb61-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">4</span>))</span></code></pre></div>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
+</div>
+<div id="activity" class="section level3" number="6.2.11">
+<h3><span class="header-section-number">6.2.11</span> Activity</h3>
+<p>True or False?</p>
+<ol style="list-style-type: decimal">
+<li>Knowing the probability of an event means that we also know the odds; but knowing the odds is not enough to calculate probability.</li>
+<li>A Binomial distribution only has one mean, but there are many Binomial distributions that have the same mean.</li>
+<li>A Poisson distribution only has one mean, but there are many Poisson distributions that have the same mean.</li>
+</ol>
+</div>
+</div>
+<div id="relevant-r-functions-8-min" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Relevant R functions (8 min)</h2>
+<p>R has functions for many distribution families. We’ve seen a few already in the case of discrete families, but here’s a more complete overview. The functions are of the form <code>&lt;x&gt;&lt;dist&gt;</code>, where <code>&lt;dist&gt;</code> is an abbreviation of a distribution family, and <code>&lt;x&gt;</code> is one of <code>d</code>, <code>p</code>, <code>q</code>, or <code>r</code>, depending on exactly what about the distribution you’d like to calculate.</p>
+<p>Possible prefixes <code>&lt;x&gt;</code>:</p>
+<ul>
+<li><code>d</code>: density function - we call this <span class="math inline">\(p\)</span></li>
+<li><code>p</code>: cumulative distribution function (cdf) - we call this <span class="math inline">\(F\)</span></li>
+<li><code>q</code>: quantile function (inverse cdf)</li>
+<li><code>r</code>: random sample generation</li>
+</ul>
+<p>Some abbreviations <code>&lt;dist&gt;</code>:</p>
+<ul>
+<li><code>unif</code>: Uniform (continuous)</li>
+<li><code>norm</code>: Normal (continuous)</li>
+<li><code>lnorm</code>: Log-Normal (continuous)</li>
+<li><code>geom</code>: Geometric (discrete)</li>
+<li><code>pois</code>: Poisson (discrete)</li>
+<li><code>binom</code>: Binomial (discrete)</li>
+<li>etc.</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<p>The uniform family:</p>
+<ul>
+<li><code>dunif()</code>, <code>punif()</code>, <code>qunif()</code>, <code>runif()</code></li>
+</ul>
+<p>The Gaussian family:</p>
+<ul>
+<li><code>dnorm()</code>, <code>pnorm()</code>, <code>qnorm()</code>, <code>rnorm()</code></li>
+</ul>
+<p><strong>Demonstration</strong>:</p>
+<ol style="list-style-type: decimal">
+<li>What’s the density of the N(2, 4) distribution evaluated at the point <span class="math inline">\(x = 3\)</span>?</li>
+<li>What’s the cdf of the Unif(0, 1) distribution evaluated at the points <span class="math inline">\(x = 0.25, 0.5, 0.75\)</span>?</li>
+<li>What’s the median of the Unif(0, 2) distribution?</li>
+<li>Generate a random sample from the N(0, 1) distribution of size 10.</li>
+</ol>
+</div>
+<div id="analyses-under-a-distributional-assumption" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> Analyses under a Distributional Assumption</h2>
+<p>Remember that the purpose of a univariate analysis on its own is to estimate parameters, communicate uncertainty about the estimates, and specify the distribution that “generated” the data. So far, we’ve seen how to do this using empirical methods, which don’t make any assumptions about how the data were obtained. But, if we suspect we know what distribution family generated the data, then this is potentially valuable information that can benefit the analysis.</p>
+<p>This chapter explains how to proceed with your analysis by making a distributional assumption, and when this might be a good idea.</p>
+<p><del>In the previous chapter, we estimated parameters like means and probabilities using empirical (or “sample versions”) of these parameters. Usually, these estimators perform well in the univariate setting, but there are some circumstances where they do not. There is a technique called <em>Maximum Likelihood Estimation</em> (MLE) that approximates the data distribution using a parametric family, and if done carefully, allows for significant improvements to estimation.</del></p>
+<p><del>This chapter first explains what MLE is and how to implement the technique, as well as why and when it would be of use.</del></p>
+<div id="maximum-likelihood-estimation" class="section level3" number="6.4.1">
+<h3><span class="header-section-number">6.4.1</span> Maximum Likelihood Estimation</h3>
+<p>Maximum likelihood estimation is a way of estimating parameters <em>by first estimating the data distribution</em> from a specified parametric family. The steps are as follows.</p>
+<ol style="list-style-type: decimal">
+<li><strong>Make a distributional assumption</strong>: Choose a parametric family of distributions that you think is a decent approximation to the data distribution.</li>
+<li><strong>Estimate</strong>: From that family, choose the distribution that fits the data “best”.</li>
+<li><strong>Extract</strong>: Using the fitted distribution, extract the parameter(s) of interest (such as the mean and/or quantiles).</li>
+<li><strong>Check the assumption</strong>: Check that the fitted distribution is a reasonable approximation to the data distribution (not required for estimation, but is good practice).</li>
+</ol>
+<p>Let’s look at these steps in turn, together with the following examples.</p>
+<p>Consider the following data set of damages caused by hurricanes, in billions of USD. The distribution of the 144 observations is depicted in the following histogram:</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="parametric-families-of-distributions.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">suppressPackageStartupMessages</span>(<span class="fu">library</span>(tidyverse))</span>
+<span id="cb62-2"><a href="parametric-families-of-distributions.html#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(damage, <span class="at">package =</span> <span class="st">&quot;extRemes&quot;</span>)</span>
+<span id="cb62-3"><a href="parametric-families-of-distributions.html#cb62-3" aria-hidden="true" tabindex="-1"></a>house <span class="ot">&lt;-</span> <span class="fu">suppressMessages</span>(<span class="fu">read_csv</span>(<span class="st">&quot;data/house.csv&quot;</span>))</span>
+<span id="cb62-4"><a href="parametric-families-of-distributions.html#cb62-4" aria-hidden="true" tabindex="-1"></a>(hurricane_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(damage, <span class="fu">aes</span>(Dam)) <span class="sc">+</span></span>
+<span id="cb62-5"><a href="parametric-families-of-distributions.html#cb62-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">bins =</span> <span class="dv">50</span>, <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb62-6"><a href="parametric-families-of-distributions.html#cb62-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb62-7"><a href="parametric-families-of-distributions.html#cb62-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_x_continuous</span>(<span class="st">&quot;Damage (billions of USD)&quot;</span>, </span>
+<span id="cb62-8"><a href="parametric-families-of-distributions.html#cb62-8" aria-hidden="true" tabindex="-1"></a>                           <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">dollar_format</span>()) <span class="sc">+</span></span>
+<span id="cb62-9"><a href="parametric-families-of-distributions.html#cb62-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ylab</span>(<span class="st">&quot;Density&quot;</span>))</span></code></pre></div>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Data such as this can help an insurance company with their financial planning. Knowing an upper quantile, such as the 0.8-quantile, would give a sense of the damage caused by the “worst” hurricanes.</p>
+<p>Consider the following sale prices of houses:</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="parametric-families-of-distributions.html#cb63-1" aria-hidden="true" tabindex="-1"></a>house <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/house.csv&quot;</span>)</span></code></pre></div>
+<pre><code>## Rows: 1460 Columns: 81</code></pre>
+<pre><code>## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr (43): MSZoning, Street, Alley, LotShape, LandContour, Utilities, LotConf...
+## dbl (38): Id, MSSubClass, LotFrontage, LotArea, OverallQual, OverallCond, Ye...</code></pre>
+<pre><code>## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="parametric-families-of-distributions.html#cb67-1" aria-hidden="true" tabindex="-1"></a>house_hist <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(house, <span class="fu">aes</span>(SalePrice)) <span class="sc">+</span> </span>
+<span id="cb67-2"><a href="parametric-families-of-distributions.html#cb67-2" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">alpha =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb67-3"><a href="parametric-families-of-distributions.html#cb67-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb67-4"><a href="parametric-families-of-distributions.html#cb67-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Price&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Density&quot;</span>) <span class="sc">+</span></span>
+<span id="cb67-5"><a href="parametric-families-of-distributions.html#cb67-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">dollar_format</span>())</span>
+<span id="cb67-6"><a href="parametric-families-of-distributions.html#cb67-6" aria-hidden="true" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(</span>
+<span id="cb67-7"><a href="parametric-families-of-distributions.html#cb67-7" aria-hidden="true" tabindex="-1"></a>    house_hist,</span>
+<span id="cb67-8"><a href="parametric-families-of-distributions.html#cb67-8" aria-hidden="true" tabindex="-1"></a>    house_hist <span class="sc">+</span> <span class="fu">scale_x_log10</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">dollar_format</span>())</span>
+<span id="cb67-9"><a href="parametric-families-of-distributions.html#cb67-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<pre><code>## Scale for &#39;x&#39; is already present. Adding another scale for &#39;x&#39;, which will
+## replace the existing scale.</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<div id="step-1-make-a-distributional-assumption" class="section level4" number="6.4.1.1">
+<h4><span class="header-section-number">6.4.1.1</span> Step 1: Make a distributional assumption</h4>
+<p>This step requires choosing a family to approximate the data distribution (you can find several families defined in the previous chapter). Here are two general guidelines that may help you choose a distribution family.</p>
+<ol style="list-style-type: decimal">
+<li>Visually match the variable characteristics and shape of the data distribution to a distribution family.</li>
+<li>If possible, think about the process that “generated” the data, and match that process to the data-generating process defining a family.</li>
+</ol>
+<p>Always keep in mind that there is almost never a “correct” choice! Remember, we are making an approximation here, not seeking a “true” distribution family.</p>
+<p><strong>Example 1.</strong> In the hurricane damages example, the data variable is a positive continuous variable, and has a histogram that appears to decay starting from a damage of zero. The selected distribution should accomodate this – Weibull, Gamma, or GPD can all accomodate this. But the family should allow for heavy-tailed distributions to accomodate the two large data values that we see in the histogram, leaving a GPD as a good candidate. As for the way the data are “generated”, the data are inherently recorded because they are extreme, and this matches the way that a GPD is derived.</p>
+<p><strong>Example 2.</strong> In the house prices example, the family should also accomodate a positive continuous random variable, should be unimodal with two tails, and be skewed to the right. A Weibull or lognormal distribution so far seem like good candidates. Since the log of house prices looks like a Gaussian distribution, we choose a lognormal distribution, since this is how the lognormal family is defined.</p>
+</div>
+<div id="step-2-estimate" class="section level4" number="6.4.1.2">
+<h4><span class="header-section-number">6.4.1.2</span> Step 2: Estimate</h4>
+<p>So far, we’ve selected a <em>family</em> of distributions. Now, in this step, we need to select the distribution from this family that best matches the data. This step is the namesake of MLE.</p>
+<p>The key is to <em>select the distribution for which the observed data are most likely to have been drawn from</em>. We can do this through a quantity called the <em>likelihood</em>, which can be calculated for any distribution that has a density/pmf, then finding the distribution that has the largest likelihood. Let’s break these two concepts down.</p>
+<ol style="list-style-type: decimal">
+<li><strong>Likelihood</strong>.</li>
+</ol>
+<p>The likelihood is a useful way to measure how well a distribution fits the data. To calculate the likelihood, denoted <span class="math inline">\(\mathcal{L}\)</span>, from data <span class="math inline">\(y_1, \ldots, y_n\)</span> and a distribution with density/pmf <span class="math inline">\(f\)</span>, calculate the product of the densities/pmf’s evaluated at the data:
+<span class="math display">\[\mathcal{L} = \prod_{i=1}^n f(y_i).\]</span></p>
+<p>When <span class="math inline">\(f\)</span> is a pmf, you can interpret the likelihood as the probability of observing the data under the distribution <span class="math inline">\(f\)</span>. When <span class="math inline">\(f\)</span> is a density, the interpretation of likelihood is less tangible, and is the probability density of observing the data under the distribution <span class="math inline">\(f\)</span>. These interpretations are exactly true if the data are independent, but are still approximately true if data are “almost” independent. Even with non-independent data, the likelihood is still a useful measurement.</p>
+<p>A similar quantity to the likelihood is the <em>negative log likelihood</em> (nllh), defined as
+<span class="math display">\[\ell = -\log\mathcal{L} = -\sum_{i=1}^n \log f(y_i).\]</span>
+The nllh is numerically more convenient than the likelihood. For example, the likelihood (<span class="math inline">\(\mathcal{L}\)</span>) tends to be an extremely small number, whereas the nllh typically is not. For instance, 100 draws from a N(0,1) distribution results in a likelihood that’s typically around <span class="math inline">\(3 \times 10^{-62},\)</span> whereas the nllh is typically around 141.5. Note that <em>minimizing</em> the nllh is the same as maximizing the likelihood.</p>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>Finding the distribution that has the largest likelihood</strong></li>
+</ol>
+<p>Remember that each distribution in the distribution family that we selected can be represented by its parameters – for example, the Normal distribution by its mean and variance, or the Beta distribution by <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. This means that we can view the likelihood as a function of the family’s parameters, and optimize this function! This can sometimes be done using calculus, but is most often done numerically.</p>
+<p>We end up with estimates of the distribution’s parameters, which is the same thing as having an estimate of the data’s distribution. Don’t stop here if you are looking to estimate something other than the distibution’s parameters – move on to Step 3.</p>
+<p><strong>Example 1</strong>. For the hurricane example, first find the GPD shape and scale parameters that maximize the likelihood (or, minimize the nllh).</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="parametric-families-of-distributions.html#cb70-1" aria-hidden="true" tabindex="-1"></a>gpd_nllh <span class="ot">&lt;-</span> <span class="cf">function</span>(parameters) {</span>
+<span id="cb70-2"><a href="parametric-families-of-distributions.html#cb70-2" aria-hidden="true" tabindex="-1"></a>    scale <span class="ot">&lt;-</span> parameters[<span class="dv">1</span>]</span>
+<span id="cb70-3"><a href="parametric-families-of-distributions.html#cb70-3" aria-hidden="true" tabindex="-1"></a>    shape <span class="ot">&lt;-</span> parameters[<span class="dv">2</span>]</span>
+<span id="cb70-4"><a href="parametric-families-of-distributions.html#cb70-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (scale <span class="sc">&lt;=</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="cn">Inf</span>)</span>
+<span id="cb70-5"><a href="parametric-families-of-distributions.html#cb70-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">sum</span>(evd<span class="sc">::</span><span class="fu">dgpd</span>(damage<span class="sc">$</span>Dam, <span class="at">scale =</span> scale, <span class="at">shape =</span> shape, <span class="at">log =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb70-6"><a href="parametric-families-of-distributions.html#cb70-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb70-7"><a href="parametric-families-of-distributions.html#cb70-7" aria-hidden="true" tabindex="-1"></a>gpd_optim <span class="ot">&lt;-</span> <span class="fu">optim</span>(<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>), gpd_nllh)</span>
+<span id="cb70-8"><a href="parametric-families-of-distributions.html#cb70-8" aria-hidden="true" tabindex="-1"></a>gpd_scale <span class="ot">&lt;-</span> gpd_optim<span class="sc">$</span>par[<span class="dv">1</span>]</span>
+<span id="cb70-9"><a href="parametric-families-of-distributions.html#cb70-9" aria-hidden="true" tabindex="-1"></a>gpd_shape <span class="ot">&lt;-</span> gpd_optim<span class="sc">$</span>par[<span class="dv">2</span>]</span></code></pre></div>
+<p>Take a look at the GPD density corresponding to these parameters, with the data histogram in the background:</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="parametric-families-of-distributions.html#cb71-1" aria-hidden="true" tabindex="-1"></a>gpd_density <span class="ot">&lt;-</span> <span class="cf">function</span>(x) evd<span class="sc">::</span><span class="fu">dgpd</span>(x, <span class="at">scale =</span> gpd_scale, <span class="at">shape =</span> gpd_shape)</span>
+<span id="cb71-2"><a href="parametric-families-of-distributions.html#cb71-2" aria-hidden="true" tabindex="-1"></a>hurricane_hist <span class="sc">+</span></span>
+<span id="cb71-3"><a href="parametric-families-of-distributions.html#cb71-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> gpd_density, <span class="at">colour =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb71-4"><a href="parametric-families-of-distributions.html#cb71-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.13</span>))</span></code></pre></div>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_bar).</code></pre>
+<pre><code>## Warning: Removed 2 row(s) containing missing values (geom_path).</code></pre>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><strong>Example 2.</strong></p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="parametric-families-of-distributions.html#cb74-1" aria-hidden="true" tabindex="-1"></a>ln_nllh <span class="ot">&lt;-</span> <span class="cf">function</span>(parameters) {</span>
+<span id="cb74-2"><a href="parametric-families-of-distributions.html#cb74-2" aria-hidden="true" tabindex="-1"></a>    loc   <span class="ot">&lt;-</span> parameters[<span class="dv">1</span>]</span>
+<span id="cb74-3"><a href="parametric-families-of-distributions.html#cb74-3" aria-hidden="true" tabindex="-1"></a>    scale <span class="ot">&lt;-</span> parameters[<span class="dv">2</span>]</span>
+<span id="cb74-4"><a href="parametric-families-of-distributions.html#cb74-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (scale <span class="sc">&lt;=</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="cn">Inf</span>)</span>
+<span id="cb74-5"><a href="parametric-families-of-distributions.html#cb74-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span><span class="fu">sum</span>(<span class="fu">dlnorm</span>(house<span class="sc">$</span>SalePrice, <span class="at">meanlog =</span> loc, <span class="at">sdlog =</span> scale, <span class="at">log =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb74-6"><a href="parametric-families-of-distributions.html#cb74-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb74-7"><a href="parametric-families-of-distributions.html#cb74-7" aria-hidden="true" tabindex="-1"></a>ln_optim <span class="ot">&lt;-</span> <span class="fu">optim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), ln_nllh)</span>
+<span id="cb74-8"><a href="parametric-families-of-distributions.html#cb74-8" aria-hidden="true" tabindex="-1"></a>ln_loc   <span class="ot">&lt;-</span> ln_optim<span class="sc">$</span>par[<span class="dv">1</span>]</span>
+<span id="cb74-9"><a href="parametric-families-of-distributions.html#cb74-9" aria-hidden="true" tabindex="-1"></a>ln_scale <span class="ot">&lt;-</span> ln_optim<span class="sc">$</span>par[<span class="dv">2</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="parametric-families-of-distributions.html#cb75-1" aria-hidden="true" tabindex="-1"></a>ln_density <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">dlnorm</span>(x, <span class="at">meanlog =</span> ln_loc, <span class="at">sdlog =</span> ln_scale)</span>
+<span id="cb75-2"><a href="parametric-families-of-distributions.html#cb75-2" aria-hidden="true" tabindex="-1"></a>house_hist <span class="sc">+</span></span>
+<span id="cb75-3"><a href="parametric-families-of-distributions.html#cb75-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_function</span>(<span class="at">fun =</span> ln_density, <span class="at">colour =</span> <span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
+<div id="step-3-extract" class="section level4" number="6.4.1.3">
+<h4><span class="header-section-number">6.4.1.3</span> Step 3: Extract</h4>
+<p>Now that we have the data distribution estimated, we can extract any parameter we’d like, such as the mean or quantiles. This might involve looking up formulas based on the distribution’s parameters – for example, the mean of a Beta distribution with parameters <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> is <span class="math inline">\(\alpha/(\alpha + \beta)\)</span>.</p>
+<p><strong>Example 1.</strong> Here is the MLE of the median hurricane damage:</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="parametric-families-of-distributions.html#cb77-1" aria-hidden="true" tabindex="-1"></a>gpd_qf <span class="ot">&lt;-</span> <span class="cf">function</span>(p) evd<span class="sc">::</span><span class="fu">qgpd</span>(p, <span class="at">scale =</span> gpd_scale, <span class="at">shape =</span> gpd_shape)</span>
+<span id="cb77-2"><a href="parametric-families-of-distributions.html#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gpd_qf</span>(<span class="fl">0.5</span>)</span></code></pre></div>
+<pre><code>## [1] 0.1884567</code></pre>
+<p>Here is the MLE of the 0.9-quantile:</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="parametric-families-of-distributions.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gpd_qf</span>(<span class="fl">0.9</span>)</span></code></pre></div>
+<pre><code>## [1] 6.659546</code></pre>
+<p>Here is the MLE of the IQR:</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="parametric-families-of-distributions.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gpd_qf</span>(<span class="fl">0.75</span>) <span class="sc">-</span> <span class="fu">gpd_qf</span>(<span class="fl">0.25</span>)</span></code></pre></div>
+<pre><code>## [1] 0.9199308</code></pre>
+<p><strong>Example 2.</strong></p>
+<p>Mean of the Lognormal distribution can be computed as <span class="math inline">\(\exp(\mu + \sigma^2/2)\)</span>; so the MLE for the mean is:</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="parametric-families-of-distributions.html#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(ln_loc <span class="sc">+</span> ln_scale<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span><span class="dv">2</span>)</span></code></pre></div>
+<pre><code>## [1] 180579.9</code></pre>
+<p>Variance of the Lognormal distribution can be computed as <span class="math inline">\((\exp(\sigma^2)-1)(\exp(2\mu + \sigma^2)\)</span>; so the MLE for the variance is:</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="parametric-families-of-distributions.html#cb85-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">exp</span>(ln_scale<span class="sc">^</span><span class="dv">2</span>) <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (<span class="fu">exp</span>(<span class="dv">2</span><span class="sc">*</span>ln_loc <span class="sc">+</span> ln_scale<span class="sc">^</span><span class="dv">2</span>))</span></code></pre></div>
+<pre><code>## [1] 5642912264</code></pre>
+<p>The MLE for the 0.9-quantile is:</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="parametric-families-of-distributions.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qlnorm</span>(<span class="fl">0.9</span>, <span class="at">meanlog =</span> ln_loc, <span class="at">sdlog =</span> ln_scale)</span></code></pre></div>
+<pre><code>## [1] 278205</code></pre>
+</div>
+<div id="step-4-check-the-assumption" class="section level4" number="6.4.1.4">
+<h4><span class="header-section-number">6.4.1.4</span> Step 4: Check the Assumption</h4>
+<p>In order to end up with “good” estimates from MLE, the fitted distribution from Step 2 should be a decent approximation to the data distribution.</p>
+<p>To see why, consider a poor distributional assumption – such as approximating the distribution of house prices as Uniform. We end up with the following density fitted by MLE:</p>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="040-Parametric_families_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<pre><code>## [1] 214925</code></pre>
+<pre><code>## [1] 574975</code></pre>
+<p>The fitted density is flat, and does not match the data (histogram) at all. This means we can anticipate parameter estimates to be way off. For example, according to the model, the mean is somewhere around $400,000, and a half of the house prices roughly lie somewhere between $200,000 and $600,000.</p>
+<p>The above method of comparing the modelled density to the histogram is one effective way of checking the distributional assumption. Another way is to use a QQ-plot.</p>
+<p>These visual methods might seem informal, but they are very powerful, and should always be investigated if possible. After visualizing the fit, if you want to add more rigor to your assumption checking, you can consider a hypothesis test such as the Kolmogorov-Smirnov test, the Anderson-Darling test, or the Cram'{e}r-von Mises test for equality of distributions.</p>
+<p>Just remember that there is no such thing as a “correct” distributional assumption in practice, but rather just approximations that have different degrees of plausibility. The key is in avoiding bad assumptions, as opposed to finding the “right” assumption.</p>
+</div>
+</div>
+<div id="usefulness-in-practice" class="section level3" number="6.4.2">
+<h3><span class="header-section-number">6.4.2</span> Usefulness in Practice</h3>
+<p>The MLE is an overall superior way to estimate parameters, and has some theoretically desirable properties – as long as the distributional assumption from Step 1 is not a bad one. Overall, in the univariate setting, the improvement brought about by MLE is in general underwhelming, except in some situations. Where MLE really shines is in the regression setting, as is shown in a later chapter, but it’s important to understand the fundamentals in the univariate case before extending concepts to the regression setting. This chapter explores the following:</p>
+<ul>
+<li>Under what situations in the univariate setting does the MLE really shine?</li>
+<li>Just how “bad” does an assumption have to be in order for the MLE to be worse than the empirical estimate?</li>
+</ul>
+<p>Ultimately, the question is not whether the MLE is better than empirical estimates, but rather <em>whether making a distributional assumption is better than not</em>.</p>
+<div id="where-mle-really-shines" class="section level4" number="6.4.2.1">
+<h4><span class="header-section-number">6.4.2.1</span> Where MLE really shines</h4>
+</div>
+<div id="effect-of-assumption-badness" class="section level4" number="6.4.2.2">
+<h4><span class="header-section-number">6.4.2.2</span> Effect of Assumption Badness</h4>
+<p>Take-aways:</p>
+<ul>
+<li>sampling distributions are narrower for MLE, but more and more biased as the distributional assumption gets worse and worse.</li>
+<li>Most of the time in the univariate setting, the MLE is often not much better than the empirical estimate, and is sometimes even identical. Aside from the cases described below, where MLE really shines is in the regression setting,</li>
+</ul>
+<p>Take a look at the sampling distributions of three estimators of the 0.8-quantile: the sample version, the MLE under a Gaussian assumption, and the MLE under a generalized Pareto distribution (GPD) assumption. The sampling distributions are obtained using bootstrapping. The Gaussian-based MLE is an example of a <em>bad</em> MLE that uses a poorly chosen assumption – its sampling distribution is much wider than that of the sample version. On the other hand, the GPD-based MLE is based on a much more realistic assumption, and shows a significant improvement to the sample version – its sampling distribution is much narrower.</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="parametric-families-of-distributions.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dgpd &lt;- function(x, sig, xi) 1/sig*(1 + xi*(x/sig))^(-1/(xi+1)) </span></span>
+<span id="cb92-2"><a href="parametric-families-of-distributions.html#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="co"># gpd_quantile &lt;- function(x, p = 0.5) {</span></span>
+<span id="cb92-3"><a href="parametric-families-of-distributions.html#cb92-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     fit &lt;- ismev::gpd.fit(x, 0, show = FALSE)</span></span>
+<span id="cb92-4"><a href="parametric-families-of-distributions.html#cb92-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     sigma &lt;- fit$mle[1]</span></span>
+<span id="cb92-5"><a href="parametric-families-of-distributions.html#cb92-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     xi &lt;- fit$mle[2]</span></span>
+<span id="cb92-6"><a href="parametric-families-of-distributions.html#cb92-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     sigma * (p^(-xi) - 1) / xi</span></span>
+<span id="cb92-7"><a href="parametric-families-of-distributions.html#cb92-7" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb92-8"><a href="parametric-families-of-distributions.html#cb92-8" aria-hidden="true" tabindex="-1"></a><span class="co"># wei_quantile &lt;- function(x, p = 0.5) {</span></span>
+<span id="cb92-9"><a href="parametric-families-of-distributions.html#cb92-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     nllh &lt;- function(par) -sum(dweibull(x, par[1], par[2], log = TRUE))</span></span>
+<span id="cb92-10"><a href="parametric-families-of-distributions.html#cb92-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     par_hat &lt;- optim(c(1,1), nllh)$par</span></span>
+<span id="cb92-11"><a href="parametric-families-of-distributions.html#cb92-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     qweibull(p, par_hat[1], par_hat[2])</span></span>
+<span id="cb92-12"><a href="parametric-families-of-distributions.html#cb92-12" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb92-13"><a href="parametric-families-of-distributions.html#cb92-13" aria-hidden="true" tabindex="-1"></a><span class="co"># sampling_dist &lt;- damage %&gt;% </span></span>
+<span id="cb92-14"><a href="parametric-families-of-distributions.html#cb92-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     bootstraps(times = 1000) %&gt;%</span></span>
+<span id="cb92-15"><a href="parametric-families-of-distributions.html#cb92-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     pull(splits) %&gt;%</span></span>
+<span id="cb92-16"><a href="parametric-families-of-distributions.html#cb92-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     map(as_tibble) %&gt;% </span></span>
+<span id="cb92-17"><a href="parametric-families-of-distributions.html#cb92-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     map_df(~ summarise(</span></span>
+<span id="cb92-18"><a href="parametric-families-of-distributions.html#cb92-18" aria-hidden="true" tabindex="-1"></a><span class="co">#         .x, </span></span>
+<span id="cb92-19"><a href="parametric-families-of-distributions.html#cb92-19" aria-hidden="true" tabindex="-1"></a><span class="co">#         bar = quantile(Dam, probs = 0.8), </span></span>
+<span id="cb92-20"><a href="parametric-families-of-distributions.html#cb92-20" aria-hidden="true" tabindex="-1"></a><span class="co">#         mle_gpd = gpd_quantile(Dam, 0.8),</span></span>
+<span id="cb92-21"><a href="parametric-families-of-distributions.html#cb92-21" aria-hidden="true" tabindex="-1"></a><span class="co">#         mle_gau = qnorm(0.8, mean = mean(Dam), sd = sd(Dam)))</span></span>
+<span id="cb92-22"><a href="parametric-families-of-distributions.html#cb92-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     )</span></span>
+<span id="cb92-23"><a href="parametric-families-of-distributions.html#cb92-23" aria-hidden="true" tabindex="-1"></a><span class="co"># sampling_dist %&gt;% </span></span>
+<span id="cb92-24"><a href="parametric-families-of-distributions.html#cb92-24" aria-hidden="true" tabindex="-1"></a><span class="co">#     gather(key = &quot;method&quot;, value = &quot;estimate&quot;) %&gt;% </span></span>
+<span id="cb92-25"><a href="parametric-families-of-distributions.html#cb92-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     ggplot(aes(estimate)) +</span></span>
+<span id="cb92-26"><a href="parametric-families-of-distributions.html#cb92-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     facet_wrap(~method, nrow = 1, scales = &quot;free_x&quot;) +</span></span>
+<span id="cb92-27"><a href="parametric-families-of-distributions.html#cb92-27" aria-hidden="true" tabindex="-1"></a><span class="co">#     geom_histogram(bins = 30) +</span></span>
+<span id="cb92-28"><a href="parametric-families-of-distributions.html#cb92-28" aria-hidden="true" tabindex="-1"></a><span class="co">#     theme_bw() </span></span></code></pre></div>
+<p><strong>Caution</strong>: A common misconception is that the two large observations in the dataset are outliers, and therefore should be removed. However, doing so would bias our understanding of hurricance damages, since these “outliers” are real occurences.</p>
+<p>In other cases, an MLE does not result in much of an improvement at all.</p>
+<p>Although there are far fewer cases in the univariate case compared to the regression setting where MLE gives a dramatic improvement to estimation, it’s still worth discussing when it’s most useful in the univariate setting and to ground concepts.</p>
+<p>High quantile example for a PI:</p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="parametric-families-of-distributions.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># N &lt;- 10000</span></span>
+<span id="cb93-2"><a href="parametric-families-of-distributions.html#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rate &lt;- 1</span></span>
+<span id="cb93-3"><a href="parametric-families-of-distributions.html#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ordered &lt;- numeric(0)</span></span>
+<span id="cb93-4"><a href="parametric-families-of-distributions.html#cb93-4" aria-hidden="true" tabindex="-1"></a><span class="co"># mle &lt;- numeric(0)</span></span>
+<span id="cb93-5"><a href="parametric-families-of-distributions.html#cb93-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for (i in 1:N) {</span></span>
+<span id="cb93-6"><a href="parametric-families-of-distributions.html#cb93-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     x &lt;- rexp(10, rate = rate)</span></span>
+<span id="cb93-7"><a href="parametric-families-of-distributions.html#cb93-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     ordered[i] &lt;- quantile(x, probs = 0.975, type = 1)</span></span>
+<span id="cb93-8"><a href="parametric-families-of-distributions.html#cb93-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     mle[i] &lt;- qexp(0.975, rate = 1/mean(x))</span></span>
+<span id="cb93-9"><a href="parametric-families-of-distributions.html#cb93-9" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb93-10"><a href="parametric-families-of-distributions.html#cb93-10" aria-hidden="true" tabindex="-1"></a><span class="co"># tibble(ordered, mle) %&gt;% </span></span>
+<span id="cb93-11"><a href="parametric-families-of-distributions.html#cb93-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     gather(value = &quot;estimate&quot;) %&gt;%</span></span>
+<span id="cb93-12"><a href="parametric-families-of-distributions.html#cb93-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     ggplot(aes(estimate)) +</span></span>
+<span id="cb93-13"><a href="parametric-families-of-distributions.html#cb93-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     geom_density(aes(group = key, fill = key), alpha = 0.5) +</span></span>
+<span id="cb93-14"><a href="parametric-families-of-distributions.html#cb93-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     geom_vline(xintercept = qexp(0.975, rate = rate),</span></span>
+<span id="cb93-15"><a href="parametric-families-of-distributions.html#cb93-15" aria-hidden="true" tabindex="-1"></a><span class="co">#                linetype = &quot;dashed&quot;) +</span></span>
+<span id="cb93-16"><a href="parametric-families-of-distributions.html#cb93-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     theme_bw()</span></span>
+<span id="cb93-17"><a href="parametric-families-of-distributions.html#cb93-17" aria-hidden="true" tabindex="-1"></a><span class="co"># sd(ordered)</span></span>
+<span id="cb93-18"><a href="parametric-families-of-distributions.html#cb93-18" aria-hidden="true" tabindex="-1"></a><span class="co"># sd(mle)</span></span></code></pre></div>
+<p>In both cases, the sampling distribution of the MLE is better than that of the sample version – that is, more narrow and (sometimes) centered closer to the true value.</p>
+<p>Is there a better estimator than the MLE? It turns out that the MLE is realistically the best that we can do – as long as the distributional assumption is not too bad of an approximation. If you’re curious to learn more, the end of this chapter fleshes this out using precise terminology.</p>
+<p>If the improvement by using MLE does not seem very impressive to you, you’d be right – at least in the univariate world. To see much difference between the MLE and sample version estimators, you’d need to be estimating low-probability events with a small amount of data. In fact, estimating the mean using MLE most often results in the same estimator as the sample mean! Don’t write off the MLE just yet – it really shines in the regression setting, where it has even more benefits than just improved estimation. Tune in to Part II to learn more.</p>
+<p>As an example of (1), suppose you are measuring the ratio of torso height to body height. Since your sample falls between 0 and 1, and probably does not have a weirdly shaped density, a Beta distribution would be a good assumption, since the Beta family spans non-weird densities over (0, 1). However, not knowing the data-generating process, you would not be able to justify the distribution completely (and that’s OK). As an example of (2), perhaps you are operating the port of Vancouver, BC, and based on your experience, know that vessels arrive more-or-less independently at some average rate. This is how a Poisson distribution is defined. Not only that, but the data appear to be shaped like a Poisson distribution. Then it would be justifiable to assume the data follow a Poisson distribution.</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="parametric-families-of-distributions.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># n &lt;- 50</span></span>
+<span id="cb94-2"><a href="parametric-families-of-distributions.html#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="co"># N &lt;- 1000</span></span>
+<span id="cb94-3"><a href="parametric-families-of-distributions.html#cb94-3" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_mle &lt;- numeric(0)</span></span>
+<span id="cb94-4"><a href="parametric-families-of-distributions.html#cb94-4" aria-hidden="true" tabindex="-1"></a><span class="co"># fit_ls &lt;- numeric(0)</span></span>
+<span id="cb94-5"><a href="parametric-families-of-distributions.html#cb94-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for (i in 1:N) {</span></span>
+<span id="cb94-6"><a href="parametric-families-of-distributions.html#cb94-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     x &lt;- rnorm(n)</span></span>
+<span id="cb94-7"><a href="parametric-families-of-distributions.html#cb94-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     mu &lt;- 1/(1+exp(-x))</span></span>
+<span id="cb94-8"><a href="parametric-families-of-distributions.html#cb94-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     y &lt;- rbinom(n, size = 1, prob = mu)</span></span>
+<span id="cb94-9"><a href="parametric-families-of-distributions.html#cb94-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     fit_mle[i] &lt;- glm(y ~ x, family = &quot;binomial&quot;)$coefficients[2]</span></span>
+<span id="cb94-10"><a href="parametric-families-of-distributions.html#cb94-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     ls &lt;- function(par) sum((y - 1/(1+exp(-par[1]-par[2]*x)))^2)</span></span>
+<span id="cb94-11"><a href="parametric-families-of-distributions.html#cb94-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     fit_ls[i] &lt;- optim(c(0,1), ls)$par[2]</span></span>
+<span id="cb94-12"><a href="parametric-families-of-distributions.html#cb94-12" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb94-13"><a href="parametric-families-of-distributions.html#cb94-13" aria-hidden="true" tabindex="-1"></a><span class="co"># tibble(fit_mle, fit_ls) %&gt;% </span></span>
+<span id="cb94-14"><a href="parametric-families-of-distributions.html#cb94-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     gather(value = &quot;beta&quot;) %&gt;% </span></span>
+<span id="cb94-15"><a href="parametric-families-of-distributions.html#cb94-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     ggplot(aes(beta)) +</span></span>
+<span id="cb94-16"><a href="parametric-families-of-distributions.html#cb94-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     # scale_x_log10() +</span></span>
+<span id="cb94-17"><a href="parametric-families-of-distributions.html#cb94-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     geom_density(aes(group = key, fill = key), alpha = 0.5)</span></span>
+<span id="cb94-18"><a href="parametric-families-of-distributions.html#cb94-18" aria-hidden="true" tabindex="-1"></a><span class="co"># sd(fit_mle)</span></span>
+<span id="cb94-19"><a href="parametric-families-of-distributions.html#cb94-19" aria-hidden="true" tabindex="-1"></a><span class="co"># sd(fit_ls)</span></span>
+<span id="cb94-20"><a href="parametric-families-of-distributions.html#cb94-20" aria-hidden="true" tabindex="-1"></a><span class="co"># IQR(fit_mle)</span></span>
+<span id="cb94-21"><a href="parametric-families-of-distributions.html#cb94-21" aria-hidden="true" tabindex="-1"></a><span class="co"># IQR(fit_ls)</span></span>
+<span id="cb94-22"><a href="parametric-families-of-distributions.html#cb94-22" aria-hidden="true" tabindex="-1"></a><span class="co"># ## More extremes show up with LS (at least with n=50):</span></span>
+<span id="cb94-23"><a href="parametric-families-of-distributions.html#cb94-23" aria-hidden="true" tabindex="-1"></a><span class="co"># sort(fit_ls) %&gt;% tail(10)</span></span>
+<span id="cb94-24"><a href="parametric-families-of-distributions.html#cb94-24" aria-hidden="true" tabindex="-1"></a><span class="co"># sort(fit_mle) %&gt;% tail(10)</span></span>
+<span id="cb94-25"><a href="parametric-families-of-distributions.html#cb94-25" aria-hidden="true" tabindex="-1"></a><span class="co"># ## Gaussian assumption</span></span>
+<span id="cb94-26"><a href="parametric-families-of-distributions.html#cb94-26" aria-hidden="true" tabindex="-1"></a><span class="co"># ##  - LS not even that good at n=100 -- bowed down. MLE is good.</span></span>
+<span id="cb94-27"><a href="parametric-families-of-distributions.html#cb94-27" aria-hidden="true" tabindex="-1"></a><span class="co"># ##  - MLE qqplot with n=50 looks about the same as LS with n=100</span></span>
+<span id="cb94-28"><a href="parametric-families-of-distributions.html#cb94-28" aria-hidden="true" tabindex="-1"></a><span class="co"># ##  - LS at n=50 is heavy tailed (seemingly).</span></span>
+<span id="cb94-29"><a href="parametric-families-of-distributions.html#cb94-29" aria-hidden="true" tabindex="-1"></a><span class="co"># qqnorm(fit_mle)</span></span>
+<span id="cb94-30"><a href="parametric-families-of-distributions.html#cb94-30" aria-hidden="true" tabindex="-1"></a><span class="co"># qqnorm(fit_ls)</span></span></code></pre></div>
+<p>For n=50, check out an example that results in an extreme beta:</p>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb95-1"><a href="parametric-families-of-distributions.html#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># n &lt;- 50</span></span>
+<span id="cb95-2"><a href="parametric-families-of-distributions.html#cb95-2" aria-hidden="true" tabindex="-1"></a><span class="co"># beta &lt;- 0</span></span>
+<span id="cb95-3"><a href="parametric-families-of-distributions.html#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="co"># while (beta &lt; 300) {</span></span>
+<span id="cb95-4"><a href="parametric-families-of-distributions.html#cb95-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     x &lt;- rnorm(n)</span></span>
+<span id="cb95-5"><a href="parametric-families-of-distributions.html#cb95-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     mu &lt;- 1/(1+exp(-x))</span></span>
+<span id="cb95-6"><a href="parametric-families-of-distributions.html#cb95-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     y &lt;- rbinom(n, size = 1, prob = mu)</span></span>
+<span id="cb95-7"><a href="parametric-families-of-distributions.html#cb95-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     ls &lt;- function(par) sum((y - 1/(1+exp(-par[1]-par[2]*x)))^2)</span></span>
+<span id="cb95-8"><a href="parametric-families-of-distributions.html#cb95-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     .optim &lt;- optim(c(0,1), ls)</span></span>
+<span id="cb95-9"><a href="parametric-families-of-distributions.html#cb95-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     beta &lt;- .optim$par[2]</span></span>
+<span id="cb95-10"><a href="parametric-families-of-distributions.html#cb95-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     alpha &lt;- .optim$par[1]</span></span>
+<span id="cb95-11"><a href="parametric-families-of-distributions.html#cb95-11" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb95-12"><a href="parametric-families-of-distributions.html#cb95-12" aria-hidden="true" tabindex="-1"></a><span class="co"># if (.optim$convergence == 0) stop(&quot;optim didn&#39;t successfully converge.&quot;)</span></span>
+<span id="cb95-13"><a href="parametric-families-of-distributions.html#cb95-13" aria-hidden="true" tabindex="-1"></a><span class="co"># mle &lt;- glm(y ~ x, family = &quot;binomial&quot;)$coefficients</span></span>
+<span id="cb95-14"><a href="parametric-families-of-distributions.html#cb95-14" aria-hidden="true" tabindex="-1"></a><span class="co"># qplot(x, y) + </span></span>
+<span id="cb95-15"><a href="parametric-families-of-distributions.html#cb95-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     stat_function(fun = function(x) 1/(1+exp(-alpha-beta*x)), mapping = aes(colour = &quot;LS&quot;)) +</span></span>
+<span id="cb95-16"><a href="parametric-families-of-distributions.html#cb95-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     stat_function(fun = function(x) 1/(1+exp(-mle[1]-mle[2]*x)), mapping = aes(colour = &quot;MLE&quot;))</span></span></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="parametric-families-of-distributions.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # MLE is still slightly narrower, even for a Beta(2,2) distribution (which is</span></span>
+<span id="cb96-2"><a href="parametric-families-of-distributions.html#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="co"># # symmetric and bell-like) -- for n=5 and n=50. Both close to Gaussian, even at</span></span>
+<span id="cb96-3"><a href="parametric-families-of-distributions.html#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="co"># # n=5 (as expected).</span></span>
+<span id="cb96-4"><a href="parametric-families-of-distributions.html#cb96-4" aria-hidden="true" tabindex="-1"></a><span class="co"># shape1 &lt;- 2</span></span>
+<span id="cb96-5"><a href="parametric-families-of-distributions.html#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="co"># shape2 &lt;- 2</span></span>
+<span id="cb96-6"><a href="parametric-families-of-distributions.html#cb96-6" aria-hidden="true" tabindex="-1"></a><span class="co"># foo &lt;- function(x) dbeta(x, shape1, shape2)</span></span>
+<span id="cb96-7"><a href="parametric-families-of-distributions.html#cb96-7" aria-hidden="true" tabindex="-1"></a><span class="co"># curve(foo, 0, 1)</span></span>
+<span id="cb96-8"><a href="parametric-families-of-distributions.html#cb96-8" aria-hidden="true" tabindex="-1"></a><span class="co"># n &lt;- 5</span></span>
+<span id="cb96-9"><a href="parametric-families-of-distributions.html#cb96-9" aria-hidden="true" tabindex="-1"></a><span class="co"># N &lt;- 1000</span></span>
+<span id="cb96-10"><a href="parametric-families-of-distributions.html#cb96-10" aria-hidden="true" tabindex="-1"></a><span class="co"># xbar &lt;- numeric(0)</span></span>
+<span id="cb96-11"><a href="parametric-families-of-distributions.html#cb96-11" aria-hidden="true" tabindex="-1"></a><span class="co"># mle &lt;- numeric(0)</span></span>
+<span id="cb96-12"><a href="parametric-families-of-distributions.html#cb96-12" aria-hidden="true" tabindex="-1"></a><span class="co"># for (i in 1:N) {</span></span>
+<span id="cb96-13"><a href="parametric-families-of-distributions.html#cb96-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     x &lt;- rbeta(n, shape1, shape2)</span></span>
+<span id="cb96-14"><a href="parametric-families-of-distributions.html#cb96-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     xbar[i] &lt;- mean(x)</span></span>
+<span id="cb96-15"><a href="parametric-families-of-distributions.html#cb96-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     nllh &lt;- function(par) {</span></span>
+<span id="cb96-16"><a href="parametric-families-of-distributions.html#cb96-16" aria-hidden="true" tabindex="-1"></a><span class="co">#         if (min(par) &lt;= 0) return(Inf)</span></span>
+<span id="cb96-17"><a href="parametric-families-of-distributions.html#cb96-17" aria-hidden="true" tabindex="-1"></a><span class="co">#         -sum(dbeta(x, par[1], par[2], log = TRUE))</span></span>
+<span id="cb96-18"><a href="parametric-families-of-distributions.html#cb96-18" aria-hidden="true" tabindex="-1"></a><span class="co">#     }</span></span>
+<span id="cb96-19"><a href="parametric-families-of-distributions.html#cb96-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     .optim &lt;- optim(c(shape1, shape2), nllh)</span></span>
+<span id="cb96-20"><a href="parametric-families-of-distributions.html#cb96-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     par_hat &lt;- .optim$par</span></span>
+<span id="cb96-21"><a href="parametric-families-of-distributions.html#cb96-21" aria-hidden="true" tabindex="-1"></a><span class="co">#     mle[i] &lt;- par_hat[1] / sum(par_hat)</span></span>
+<span id="cb96-22"><a href="parametric-families-of-distributions.html#cb96-22" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb96-23"><a href="parametric-families-of-distributions.html#cb96-23" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(mle - xbar) # The estimates aren&#39;t the same.</span></span>
+<span id="cb96-24"><a href="parametric-families-of-distributions.html#cb96-24" aria-hidden="true" tabindex="-1"></a><span class="co"># tibble(mle, xbar) %&gt;% </span></span>
+<span id="cb96-25"><a href="parametric-families-of-distributions.html#cb96-25" aria-hidden="true" tabindex="-1"></a><span class="co">#     gather() %&gt;% </span></span>
+<span id="cb96-26"><a href="parametric-families-of-distributions.html#cb96-26" aria-hidden="true" tabindex="-1"></a><span class="co">#     ggplot(aes(value)) +</span></span>
+<span id="cb96-27"><a href="parametric-families-of-distributions.html#cb96-27" aria-hidden="true" tabindex="-1"></a><span class="co">#     geom_density(aes(group = key, fill = key), alpha = 0.5)</span></span>
+<span id="cb96-28"><a href="parametric-families-of-distributions.html#cb96-28" aria-hidden="true" tabindex="-1"></a><span class="co"># sd(mle)</span></span>
+<span id="cb96-29"><a href="parametric-families-of-distributions.html#cb96-29" aria-hidden="true" tabindex="-1"></a><span class="co"># sd(xbar)</span></span>
+<span id="cb96-30"><a href="parametric-families-of-distributions.html#cb96-30" aria-hidden="true" tabindex="-1"></a><span class="co"># qqnorm(mle)</span></span>
+<span id="cb96-31"><a href="parametric-families-of-distributions.html#cb96-31" aria-hidden="true" tabindex="-1"></a><span class="co"># qqnorm(xbar)</span></span></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb97-1"><a href="parametric-families-of-distributions.html#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # Univariate MLE *especially* important for heavy tailed distributions!</span></span>
+<span id="cb97-2"><a href="parametric-families-of-distributions.html#cb97-2" aria-hidden="true" tabindex="-1"></a><span class="co"># nu &lt;- 1.5</span></span>
+<span id="cb97-3"><a href="parametric-families-of-distributions.html#cb97-3" aria-hidden="true" tabindex="-1"></a><span class="co"># n &lt;- 5</span></span>
+<span id="cb97-4"><a href="parametric-families-of-distributions.html#cb97-4" aria-hidden="true" tabindex="-1"></a><span class="co"># N &lt;- 1000</span></span>
+<span id="cb97-5"><a href="parametric-families-of-distributions.html#cb97-5" aria-hidden="true" tabindex="-1"></a><span class="co"># xbar &lt;- numeric(0)</span></span>
+<span id="cb97-6"><a href="parametric-families-of-distributions.html#cb97-6" aria-hidden="true" tabindex="-1"></a><span class="co"># mle &lt;- numeric(0)</span></span>
+<span id="cb97-7"><a href="parametric-families-of-distributions.html#cb97-7" aria-hidden="true" tabindex="-1"></a><span class="co"># for (i in 1:N) {</span></span>
+<span id="cb97-8"><a href="parametric-families-of-distributions.html#cb97-8" aria-hidden="true" tabindex="-1"></a><span class="co">#     x &lt;- rt(n, df = nu)</span></span>
+<span id="cb97-9"><a href="parametric-families-of-distributions.html#cb97-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     xbar[i] &lt;- mean(x)</span></span>
+<span id="cb97-10"><a href="parametric-families-of-distributions.html#cb97-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     nllh &lt;- function(par) -sum(dt(x, df = par[1], ncp = par[2], log = TRUE))</span></span>
+<span id="cb97-11"><a href="parametric-families-of-distributions.html#cb97-11" aria-hidden="true" tabindex="-1"></a><span class="co">#     .optim &lt;- optim(c(nu, 0), nllh)</span></span>
+<span id="cb97-12"><a href="parametric-families-of-distributions.html#cb97-12" aria-hidden="true" tabindex="-1"></a><span class="co">#     mle[i] &lt;- .optim$par[2]</span></span>
+<span id="cb97-13"><a href="parametric-families-of-distributions.html#cb97-13" aria-hidden="true" tabindex="-1"></a><span class="co"># }</span></span>
+<span id="cb97-14"><a href="parametric-families-of-distributions.html#cb97-14" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(mle - xbar) # The estimates aren&#39;t the same.</span></span>
+<span id="cb97-15"><a href="parametric-families-of-distributions.html#cb97-15" aria-hidden="true" tabindex="-1"></a><span class="co"># tibble(mle, xbar) %&gt;% </span></span>
+<span id="cb97-16"><a href="parametric-families-of-distributions.html#cb97-16" aria-hidden="true" tabindex="-1"></a><span class="co">#     gather() %&gt;% </span></span>
+<span id="cb97-17"><a href="parametric-families-of-distributions.html#cb97-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     ggplot(aes(value)) +</span></span>
+<span id="cb97-18"><a href="parametric-families-of-distributions.html#cb97-18" aria-hidden="true" tabindex="-1"></a><span class="co">#     geom_density(aes(group = key, fill = key), alpha = 0.5)</span></span>
+<span id="cb97-19"><a href="parametric-families-of-distributions.html#cb97-19" aria-hidden="true" tabindex="-1"></a><span class="co"># sd(mle)</span></span>
+<span id="cb97-20"><a href="parametric-families-of-distributions.html#cb97-20" aria-hidden="true" tabindex="-1"></a><span class="co"># sd(xbar)</span></span>
+<span id="cb97-21"><a href="parametric-families-of-distributions.html#cb97-21" aria-hidden="true" tabindex="-1"></a><span class="co"># qqnorm(mle)</span></span>
+<span id="cb97-22"><a href="parametric-families-of-distributions.html#cb97-22" aria-hidden="true" tabindex="-1"></a><span class="co"># qqnorm(xbar)</span></span></code></pre></div>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="simulation-when-calculations-are-difficult.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="prediction-harnessing-the-signal.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/vincenzocoia/Interpreting-Regression/edit/master/040-Parametric_families.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["Interpreting-Regression.pdf", "Interpreting-Regression.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
